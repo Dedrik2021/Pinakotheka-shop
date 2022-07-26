@@ -1,0 +1,44 @@
+.filters-view {
+
+    @include r($mobile-sm) {
+        display: none;
+    }
+
+    &__btn {
+        padding-right: 3px;
+
+        svg {
+            fill: $gray;
+            transition: fill 0.5s;
+        }
+
+        &:hover {
+
+            svg {
+                fill: $gray-100;
+            }
+        }
+
+        &:focus {
+            outline: transparent;
+            box-shadow: 3px 3px 5px 0px rgba(0, 0, 0, 0.5);
+        }
+
+        &.active {
+            pointer-events: none;
+            outline: transparent;
+
+            &:focus {
+                box-shadow: none;
+            }
+
+            svg {
+                fill: $black;
+            }
+        }
+
+        &:not(:last-child) {
+            margin-right: 10px;
+        }
+    }
+}

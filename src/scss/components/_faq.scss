@@ -1,0 +1,115 @@
+.faq {
+    padding-bottom: 100px;
+
+    @include r($mobile-xl) {
+        padding-bottom: 40px;
+    }
+
+    &__title {
+        margin-bottom: 40px;
+
+        @include r($mobile-md) {
+            margin-bottom: 30px;
+        }
+    }
+
+    &__inner {
+        display: flex;
+
+        @include r($mobile-lg) {
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+
+    &__inner-right,
+    &__inner-left {
+        max-width: 830px;
+        width: 100%;
+    }
+
+    &__inner-left {
+        margin-right: 20px;
+
+        @include r($mobile-lg) {
+            margin-right: 0;
+        }
+    }
+
+    &__questions {
+        background-color: $gray-300;
+        max-width: 828px;
+        border-radius: 10px;
+
+        @include r($mobile-lg) {
+            margin-bottom: 20px;
+        }
+
+        &:not(:last-child) {
+            margin-bottom: 20px;
+        }
+    }
+
+    &__btn {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        font-weight: 700;
+        max-width: 100%;
+        width: 100%;
+        text-align: left;
+        border-radius: 10px;
+        padding: 15px 55px 15px 30px;
+        position: relative;
+        transition: color 0.5s, background-color 0.5s;
+
+        @include r($mobile-sm) {
+            padding: 15px 30px 15px 15px;
+        }
+
+        &:hover {
+            color: $red;
+            background-color: $gray-400;
+        }
+
+        &::after {
+            position: absolute;
+            content: "";
+            width: 22px;
+            height: 22px;
+            right: 30px;
+            background-image: url(../../assets/images/content/arrows_down-red.svg);
+            background-repeat: no-repeat;
+            transition: transform 0.7s;
+
+            @include r($mobile-sm) {
+                right: 10px;
+            }
+        }
+
+        &.active {
+            color: $red;
+
+            &::after {
+                transform: rotate(-180deg);
+            }
+        }
+    }
+
+    .list-items {
+        display: none;
+        list-style: inherit;
+        padding: 10px 40px 30px 50px;
+
+        &__item {
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 1.8;
+            color: $gray-100;
+
+            &:not(:last-child) {
+                margin-bottom: 10px;
+            }
+        }
+    }
+}

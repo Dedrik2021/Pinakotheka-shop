@@ -1,0 +1,38 @@
+.terms-cooperation,
+.for-authors {
+    padding-bottom: 70px;
+
+    @include r($mobile-xl) {
+        padding-bottom: 50px;
+    }
+
+    &__title {
+        padding-bottom: 40px;
+
+        @include r($mobile-xl) {
+            padding-bottom: 30px;
+        }
+    }
+
+    div {
+
+        p {
+            font-weight: 300;
+            font-size: 16px;
+            line-height: 1.9;
+        }
+    }
+}
+
+.terms-cooperation {
+
+    div {
+        margin-bottom: 30px;
+    }
+
+    &__btn {
+        display: inline-block;
+        padding: 15px 60px 16px;
+    }
+
+}

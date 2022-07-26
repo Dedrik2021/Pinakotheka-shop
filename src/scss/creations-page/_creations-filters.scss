@@ -1,0 +1,233 @@
+.creations {
+
+    &__close-btn {
+        top: 10px;
+        right: 10px;
+        background-color: transparent;
+        display: none;
+
+        @include r($mobile-lg) {
+            display: block;
+        }
+
+        span::before,
+        span::after,
+        span {
+            width: 25px;
+            right: 5px;
+            background-color: $black;
+        }
+
+        &:hover {
+            background-color: transparent;
+        }
+    }
+
+    &__filters {
+        width: 100%;
+        padding: 25px 0 210px 0;
+        transition: left 0.4s;
+
+        @include r($mobile-lg) {
+            position: fixed;
+            z-index: 23;
+            top: 0px;
+            left: -120%;
+            height: 100vh;
+            max-width: 45%;
+            margin-right: 0;
+            padding: 80px 25px 100px;
+            background-color: $white;
+            overflow: auto;
+            box-shadow: 3px 5px 10px -2px rgba(0, 0, 0, 0.5);
+        }
+
+        @include r($mobile-sm) {
+            max-width: 100%;
+            padding: 80px 25px 50px;
+        }
+
+        &.active {
+            left: 0;
+        }
+    }
+
+    &__filters-title,
+    &__filters-box,
+    &__btn,
+    &__wrapper {
+        display: flex;
+    }
+
+    &__filters-title {
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+
+        span {
+            font-size: 24px;
+            font-weight: 700;
+            color: $gray-200;
+            max-width: 80%;
+            word-wrap: break-word;
+            @include line-clamp(2);
+        }
+
+        #clicks {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 30px;
+            width: 30px;
+            border-radius: 50%;
+            font-size: 20px;
+            font-family: $journalism;
+            color: $white;
+            border-radius: 50%;
+            background-color: $red;
+        }
+    }
+
+    &__filters-box {
+        padding: 0px 0 20px;
+        display: none;
+        transition: height 0.5s, padding 0.4s, ease-in-out;
+    }
+
+    &__btn {
+        justify-content: space-between;
+        width: 100%;
+        color: $gray-200;
+        font-weight: 700;
+        letter-spacing: 0.02rem;
+        padding: 13px 9px;
+        border-bottom: 1px solid transparent;
+        transition: border-bottom-color 0.4s, margin-bottom 0.7s, padding 0.7s;
+
+        span {
+            height: 7px;
+            width: 13px;
+            background-image: url(../../assets/images/content/angle-down.svg);
+            background-repeat: no-repeat;
+            background-position: center;
+            position: relative;
+            top: 5px;
+            transition: transform 0.7s;
+        }
+
+        &:hover {
+            border-bottom-color: $red;
+        }
+
+        &.active {
+            margin-bottom: 10px;
+            padding-top: 25px;
+
+            span {
+                transform: rotate(-180deg);
+            }
+        }
+
+        &:focus {
+            outline: transparent;
+            border-bottom-color: $black;
+        }
+    }
+
+    &__wrapper {
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+        align-items: flex-start;
+        position: relative;
+        border-radius: 3px;
+        background-color: $white;
+        padding: 5px;
+        transition: background-color 0.4s;
+
+        &:hover {
+            background-color: $gray-400;
+        }
+    }
+
+    &__label {
+        width: 100%;
+        font-size: 14px;
+        font-weight: 300;
+        line-height: 1.6;
+        letter-spacing: 0.02rem;
+        border-bottom: 1px solid transparent;
+        color: $gray-200;
+        cursor: pointer;
+        transition: font-weight 0.5s;
+        word-wrap: break-word;
+        position: relative;
+        z-index: 10;
+        padding-left: 35px;
+        @include line-clamp(1);
+        transition: font-weight 0.5s, color 0.5s;
+
+        &.active {
+            color: $red;
+            font-weight: 500;
+
+            & ~ .checkbox-custom {
+                background-color: $red;
+
+                span {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+
+    &__input-checkbox {
+        top: 12px;
+        left: 7px;
+    }
+
+    &__checkbox {
+        top: 8px;
+    }
+
+    &__link {
+        font-weight: 500;
+        font-size: 14px;
+        color: $gray;
+        display: inline-block;
+        border-bottom: 1px solid transparent;
+        margin-top: 15px;
+        padding-bottom: 2px;
+        transition: border-bottom-color 0.4s, color 0.4s;
+
+        &:focus,
+        &:hover {
+            outline: transparent;
+            border-bottom-color: $black;
+        }
+
+        &:hover {
+            color: $black;
+        }
+    }
+
+    &__filters-btn {
+        display: block;
+        margin: 0 auto;
+        font-size: 16px;
+        font-weight: 700;
+        color: $gray;
+        margin-top: 50px;
+        border-bottom: 2px solid transparent;
+        transition: border-bottom-color 0.4s, color 0.4s;
+
+        &:focus,
+        &:hover {
+            outline: transparent;
+            border-bottom-color: $red;
+        }
+
+        &:hover {
+            color: $black;
+        }
+    }
+}

@@ -1,0 +1,58 @@
+.guarantees {
+    padding-bottom: 30px;
+    height: calc(100vh - 245px);
+
+    @include r($mobile-lg) {
+        height: 100%;
+    }
+
+    &__title {
+        margin-bottom: 50px;
+
+        @include r($mobile-sm) {
+            margin-bottom: 30px;
+        }
+    }
+
+    &__list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        justify-items: center;
+    }
+
+    &__item {
+        max-width: 140px;
+        width: 100%;
+        margin-bottom: 30px;
+
+        p {
+            font-weight: 700;
+            font-size: 16px;
+            color: $gray-100;
+            text-align: center;
+        }
+    }
+
+    &__img {
+        font-family: $journalism;
+        font-size: 72px;
+        color: $red;
+        width: 140px;
+        height: 140px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-repeat: no-repeat;
+        background-image: url(../../assets/images/content/guarantees__img.svg);
+        margin-bottom: 15px;
+    }
+
+    &__num {
+        font-family: $journalism;
+        font-size: 72px;
+        color: $red;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}

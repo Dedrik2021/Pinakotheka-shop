@@ -1,0 +1,246 @@
+.contacts {
+    height: calc(100vh - 245px);
+    display: flex;
+
+    @include r($screen-xl) {
+        flex-wrap: wrap;
+        justify-content: center;
+        height: 100%;
+        padding-bottom: 40px;
+    }
+
+    @include r($mobile-sm) {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    &__inner {
+        max-width: 385px;
+        width: 100%;
+        margin-right: 70px;
+
+        @include r($screen-xxl) {
+            margin-right: 40px;
+        }
+
+        @include r($mobile-lg) {
+            order: -1;
+            max-width: 53%;
+            margin-right: 20px;
+        }
+
+        @include r($mobile-sm) {
+            max-width: 100%;
+            margin: 0 0 30px;
+        }
+    }
+
+    &__title {
+        margin-bottom: 40px;
+
+        @include r($mobile-md) {
+            margin-bottom: 30px;
+        }
+
+        .contacts__help {
+            display: block;
+            font-family: $gilroy;
+            font-weight: 300;
+            font-size: 18px;
+        }
+    }
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 30px;
+
+        @include r($mobile-md) {
+            margin-bottom: 15px;
+        }
+    }
+
+    &__link {
+        width: fit-content;
+        font-weight: 300;
+        line-height: 1.5;
+        padding-left: 30px;
+        border-bottom: 1px solid transparent;
+        position: relative;
+        transition: border-bottom-color 0.4s, color 0.4s;
+
+        @include r($mobile-md) {
+            color: $red;
+            border-bottom-color: $black;
+        }
+
+        &:hover {
+            color: $red;
+            border-bottom-color: $black;
+        }
+
+        &::before {
+            position: absolute;
+            content: "";
+            width: 20px;
+            height: 20px;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background-repeat: no-repeat;
+        }
+
+        &--address::before {
+            background-image: url(../../assets/images/content/map.svg);
+        }
+
+        &--phone::before {
+            background-image: url(../../assets/images/content/phone.svg);
+        }
+
+        &--email::before {
+            background-image: url(../../assets/images/content/email.svg);
+        }
+
+        &:not(:last-child) {
+            margin-bottom: 10px;
+        }
+    }
+
+    &__requisites,
+    &__social {
+        font-weight: 700;
+        font-size: 24px;
+        display: block;
+        margin-bottom: 20px;
+
+        @include r($mobile-md) {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+    }
+
+    div {
+
+        p {
+            font-weight: 300;
+            line-height: 1.7;
+        }
+    }
+
+    &__map {
+        margin-right: 100px;
+        max-width: 685px;
+        width: 100%;
+        height: 58vh;
+        border-radius: 20px;
+
+        @include r($screen-xxl) {
+            margin-right: 40px;
+        }
+
+        @include r($screen-xl) {
+            max-width: 49%;
+            margin: 0 0 40px;
+        }
+
+        @include r($mobile-lg) {
+            margin: 0;
+            max-width: 100%;
+        }
+    }
+
+    &__content {
+        max-width: 405px;
+        width: 100%;
+
+        @include r($screen-xl) {
+            max-width: 50%;
+        }
+
+        @include r($mobile-lg) {
+            order: -1;
+            max-width: 42%;
+            margin-bottom: 40px;
+        }
+
+        @include r($mobile-sm) {
+            max-width: 100%;
+        }
+    }
+
+    .social {
+        margin-bottom: 50px;
+
+        @include r($mobile-lg) {
+            margin-bottom: 30px;
+        }
+
+        &__link {
+            border-color: transparent;
+            padding: 19px 20px;
+            transition: background-color 0.7s;
+
+            &:hover {
+                background-color: $red;
+            }
+
+            &--google {
+                background-color: $yellow;
+                background-size: 55%;
+            }
+
+            &--facebook {
+                background-color: $blue;
+                background-size: 25%;
+            }
+
+            &--twitter {
+                background-color: $blue-100;
+                background-size: 40%;
+            }
+
+            &--instagram {
+                background-color: $red-100;
+                background-size: 45%;
+            }
+
+            svg {
+                display: none;
+            }
+        }
+    }
+}
+
+.contacts-form {
+    display: flex;
+    flex-direction: column;
+
+    &__textarea,
+    &__input {
+        border: 1px solid $gray;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 300;
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+
+    &__textarea {
+        height: 220px;
+        resize: none;
+        overflow: auto;
+    }
+
+    &__btn {
+        background-color: $black;
+        color: $white;
+        text-align: center;
+        border-radius: 10px;
+        padding: 15px;
+
+        &:active {
+            background-color: $red-200;
+        }
+    }
+}
