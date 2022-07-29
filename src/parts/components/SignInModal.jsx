@@ -2,8 +2,10 @@ import { getAuth, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { memo, useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { update, ref } from 'firebase/database';
 
 import Social from './Social';
+import { realDb } from '../../firebase/firebaseConfig';
 import { setSwitchModal } from '../../redux/slices/authorsInfosSlice';
 
 const SignInModal = memo(({ closeModal }) => {
@@ -48,15 +50,17 @@ const SignInModal = memo(({ closeModal }) => {
 			});
 	};
 
-	// const tryingCount = () => {
-	// 	// e.preventDefault()
-	// 	setTrying(trying + 1)
-	// }
-
-	// console.log(trying);
-
-	// const logOut = () => {
-	// 	signOut(auth)
+	// const updateData = () => {
+	// 	const docToUpdates = ref(realDb, 'userData');
+	// 	update(docToUpdates, {
+	// 		email: emailInput,
+	// 	})
+	// 		.then(() => {
+	// 			alert('Data updated in database');
+	// 		})
+	// 		.catch((err) => {
+	// 			alert(err.message);
+	// 		});
 	// }
 
 	return (

@@ -450,14 +450,12 @@
                     visibility: visible;
                 }
 
-                &__title {
-                    // text-align: center;
-                }
-
                 &__name {
                     padding-top: 5px;
                     color: #CE0020;
                     font-size: 20px;
+                    word-wrap: break-word;
+                    @include line-clamp(1)
                 }
             }
 
@@ -485,7 +483,6 @@
                 }
 
                 &.active {
-                    pointer-events: none;
                     border-bottom-color: $red;
                 }
             }

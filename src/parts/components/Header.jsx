@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { collection, getDocs, query, onSnapshot } from 'firebase/firestore/lite';
+// import { collection, getDocs, query, onSnapshot } from 'firebase/firestore/lite';
 import { onAuthStateChanged, getAuth, signOut } from 'firebase/auth';
 import { ref, onValue } from 'firebase/database';
 
@@ -11,6 +11,7 @@ import Modal from './Modal';
 import { setUserDropdown } from '../../redux/slices/authorsInfosSlice';
 import { realDb } from '../../firebase/firebaseConfig';
 import UserAuthSkeleton from '../../skeletons/userAuthSkeleton';
+import { setUserData, setUserEmail } from '../../redux/slices/userSlice';
 
 const Header = () => {
 	const linksBtns = [
@@ -38,15 +39,18 @@ const Header = () => {
 
 	const dispatch = useDispatch();
 	const switchBtn = useSelector((state) => state.filters.switchLanguageBtn);
+	const data = useSelector(state => state.user.userData)
+	// const userEmail = useSelector(state => state.user.userEmail)
 
 	const [scroll, setScroll] = useState(false);
-	const [data, setData] = useState([]);
 	const [modal, setModal] = useState(false);
 	const [dropdown, setDropdown] = useState(false);
 	const [search, setSearch] = useState(false);
 	const [burgerBtn, setBurgerBtn] = useState(false);
 	const [inputValue, setInputValue] = useState('');
 	const [loading, setLoading] = useState(true);
+
+	// const [getData, setGetData] = useState('')
 
 	const inputRefs = useRef();
 	const formRefs = useRef();
@@ -77,14 +81,13 @@ const Header = () => {
 				onValue(ref(realDb, 'users'), (snapshot) => {
 					setLoading(true);
 					if (snapshot.exists()) {
-						setData(Object.values(snapshot.val()));
+						dispatch(setUserData(Object.values(snapshot.val())));
 					}
 					setLoading(false);
 				});
 			} else {
 				setLoading(true);
-				setData([]);
-				// navigate('/')
+				dispatch(setUserData([]));
 				setLoading(false);
 			}
 		});
@@ -114,14 +117,18 @@ const Header = () => {
 	const logOut = () => {
 		if (window.confirm('Sie sind sicher, dass Sie gehen wollen ?')) signOut(auth);
 		dispatch(setUserDropdown(false));
+		navigate('/')
 	};
 
 	const changeAuth = () => {
-		const findUser = data.find((item) => item.email === user.email);
-
-		const userContent = loading ? <UserAuthSkeleton /> : <UserContent logOut={logOut} findUser={findUser} userDropdownRefs={userDropdownRefs} />;
-		const modalContent = loading ? <UserAuthSkeleton /> : <ShowModal modal={modal} setModal={setModal} />;
-		return user ? userContent : modalContent;
+		if (user != null) {
+			const findUser = data.find((item) => item.email === user.email);
+			const userContent = loading ? <UserAuthSkeleton /> : <UserContent logOut={logOut} findUser={findUser} userDropdownRefs={userDropdownRefs} />;
+			return user ? userContent : null;
+		} else {
+			const modalContent = loading ? <UserAuthSkeleton /> : <ShowModal modal={modal} setModal={setModal} />;
+			return modalContent;
+		}
 	};
 
 	return (
@@ -250,10 +257,13 @@ const UserContent = memo((props) => {
 	const userDropdown = useSelector((state) => state.authorsInfos.userDropdown);
 	const dispatch = useDispatch();
 
+	const auth = getAuth();
+	const user = auth.currentUser;
+
 	const userLinks = [
-		{ id: 0, title: 'Persönliches Büro', path: '/PersonlichesBuro' },
-		{ id: 1, title: 'Die Ihnen gefallen', path: '/DieIhnenGefallen' },
-		{ id: 2, title: 'Korb', path: '/Korb' },
+		{ id: 0, title: 'Persönliches Büro', user: user, path: '/PersonlichesBuro' },
+		{ id: 1, title: 'Die Ihnen gefallen', user: user, path: '/DieIhnenGefallen' },
+		{ id: 2, title: 'Korb', user: user, path: '/Korb' },
 	];
 
 	useEffect(() => {
@@ -309,7 +319,7 @@ const UserContent = memo((props) => {
 									ref={(el) => (linkRefs.current[id] = el)}
 									className={`user__link ${activeLink ? 'active' : ''}`} 
 									to={path} 
-									
+									state={findUser}
 									onClick={() => (dispatch(setUserDropdown(!userDropdown)), focusOnLink(id))}
 									>
 									{title}

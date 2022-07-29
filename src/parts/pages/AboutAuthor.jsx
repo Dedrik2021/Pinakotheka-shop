@@ -38,7 +38,7 @@ const AboutAuthor = () => {
 
 	useEffect(() => {
 		window.scrollTo(0, 0);
-		dispatch(fetchAuthorInfo({authorId: id}));
+		dispatch(fetchAuthorInfo({ authorId: id }));
 	}, [id]);
 
 	const authorsBio =
@@ -82,16 +82,16 @@ const AboutAuthor = () => {
 			case 2:
 				return reviews;
 			case 3:
-				return <ChatRealTime/>
+				return <ChatRealTime />;
 			default:
 				return authorsBio;
 		}
 	};
 
 	return (
-		<div className="about-author">
-			<div className="container">
-				<BreadCrumbs />
+		<div className="container">
+			<BreadCrumbs />
+			<div className="about-author">
 				<div className="about-author__inner">
 					{openModal && <ReviewModal closeModal={setOpenModal} />}
 					<div className="about-author__aside">

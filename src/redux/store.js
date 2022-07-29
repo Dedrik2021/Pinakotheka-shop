@@ -17,6 +17,7 @@ import authorsInfos from './slices/authorsInfosSlice'
 import breadCrumbs from './slices/breadCrumbsSlice'
 import newsItems from './slices/newsSlice'
 import filters from './slices/filtersSlice'
+import user from './slices/userSlice'
 
 const stringMiddleware = () => (next) => (action) => {
     if (typeof action === 'string') {
@@ -32,7 +33,8 @@ export const store = configureStore({
         authorsInfos, 
         breadCrumbs, 
         newsItems,
-        filters
+        filters,
+        user
     },
     middleware: getDefaultMiddleware => getDefaultMiddleware().concat(stringMiddleware),
     devTools: process.env.NODE_ENV !== 'production'

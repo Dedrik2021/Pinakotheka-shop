@@ -1,7 +1,7 @@
 import { getAuth, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
 import { useState, memo, useRef } from 'react';
 import { v4 as uuiv4 } from 'uuid';
-import { set, ref } from 'firebase/database';
+import { set, ref, update } from 'firebase/database';
 
 import { realDb } from '../../firebase/firebaseConfig';
 import Social from './Social';
@@ -23,6 +23,7 @@ const RegisterModal = memo(({ closeModal }) => {
 
 			createUserWithEmailAndPassword(auth, emailInput, passwordInput)
 				.then(addData)
+				// .then(updateData)
 				.then(() => {
 					setAuthorInput('');
 					setClientInput('');
@@ -53,15 +54,30 @@ const RegisterModal = memo(({ closeModal }) => {
 			author: authorInput,
 			client: clientInput,
 			dateOfRegister: new Date().toLocaleString(),
+			faceBook: '',
+			instagram: '',
+			photo: '',
+			addressStreet: '',
+			city: '',
+			country: ''
 		})
 			.catch((err) => {
 				console.log(err.message);
 			});
 	};
 
-	// const logOut = () => {
-	// 	signOut(auth);
-	// };
+	// const updateData = () => {
+	// 	const docToUpdates = ref(realDb, 'userData');
+	// 	update(docToUpdates, {
+	// 		email: emailInput,
+	// 	})
+	// 		.then(() => {
+	// 			alert('Data updated in database');
+	// 		})
+	// 		.catch((err) => {
+	// 			alert(err.message);
+	// 		});
+	// }
 
 	return (
 		<>

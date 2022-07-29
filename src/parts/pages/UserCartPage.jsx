@@ -1,7 +1,13 @@
 import React from "react";
 
 const UserCart = () => {
-	return <h1>User Cart</h1>;
+	return (
+		<section>
+			<div className="container">
+				<div>Cart</div>
+			</div>
+		</section>
+	)
 };
 
 export default UserCart;

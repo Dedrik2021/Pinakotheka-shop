@@ -11,7 +11,7 @@ const ForgottenPassword = () => {
 
     useEffect(() => {
 		dispatch(setBreadCrumbs(''));
-		const pathName = window.location.pathname.substring(1, 22);
+		const pathName = window.location.pathname.substring(1, 20);
 		const name = pathName.split('/');
 		dispatch(setBreadCrumbs(name));
 	}, []);
