@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { ref, onValue } from 'firebase/database';
+// import { getAuth, onAuthStateChanged } from 'firebase/auth';
+// import { ref, onValue } from 'firebase/database';
 import { useLocation } from 'react-router-dom';
 
 import BreadCrumbs from '../components/BreadCrumbs';
 import { setBreadCrumbs } from '../../redux/slices/breadCrumbsSlice';
 import { setUserInfoBtn } from '../../redux/slices/userSlice';
-import img from '../../assets/images/content/unknow-photo.png';
-import { realDb } from '../../firebase/firebaseConfig';
+// import img from '../../assets/images/content/unknow-photo.png';
+// import { realDb } from '../../firebase/firebaseConfig';
 import UserInfo from '../components/UserInfo';
+import EditUserInfo from '../components/EditUserInfo';
+import { getAuth } from 'firebase/auth';
 
 // import { fetchUserData } from '../../redux/slices/userSlice';
 // import { setFoundUser } from '../../redux/slices/userSlice';
@@ -22,18 +24,12 @@ const UserAccount = () => {
 		{ id: 3, title: 'Chat' },
 	];
 
-	const location = useLocation();
-	const user = location.state;
-
-	// const [foundUser, setFoundUser] = useState();
-	// const [userDataEmail, setUserDataEmail] = useState();
-
-	// const [loading, setLoading] = useState(true);
-
-	// const auth = getAuth();
-	// const user = auth.currentUser;
+	const [editBtn, setEditBtn] = useState(false)
+	const auth = getAuth()
+	const userId = auth.currentUser
 	const dispatch = useDispatch();
-	const { userInfoBtn, userData } = useSelector((state) => state.user);
+	const data = useSelector(state => state.user.userData)
+	const userInfoBtn = useSelector((state) => state.user.userInfoBtn);
 
 	useEffect(() => {
 		dispatch(setBreadCrumbs(''));
@@ -41,35 +37,23 @@ const UserAccount = () => {
 		const name = pathName.split('/');
 		dispatch(setBreadCrumbs(name));
 	}, []);
-
-	const getUserEmail = async () => {
-		const userEmail = await location.state;
-		return userEmail;
-	};
-
-	const getUser = (userEmail) => {
-		const findUser = userData.find((item) => item.email === userEmail);
-		console.log(findUser);
-	};
-
-	console.log(userData);
-
-	useState(() => {
-		getUserEmail().then(getUser);
-	}, []);
-
+	
 	const showContent = () => {
-		switch (userInfoBtn) {
-			case 0:
-				return <UserInfo user={user}/>
-			case 1:
-				return;
-			case 2:
-				return;
-			case 3:
-				return;
-			default:
-				return <UserInfo user={user}/>
+		if (userId != null) {
+			const user = data.find((item) => item.emailId === userId.email)
+			switch (userInfoBtn) {
+				case 0:
+					return editBtn ? <EditUserInfo setEditBtn={setEditBtn} userInfo={user}/> :
+						<UserInfo user={user} setEditBtn={setEditBtn}/>
+				case 1:
+					return;
+				case 2:
+					return;
+				case 3:
+					return;
+				default:
+					return <UserInfo user={user}/>
+			}
 		}
 	};
 

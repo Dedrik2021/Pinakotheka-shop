@@ -12,6 +12,7 @@ const UserCart = lazy(() => import ('./UserCartPage'));
 const UserAccount = lazy(() => import ('./UserAccountPage'));
 const UserLikes = lazy(() => import ('./UserLikesPage'));
 const ForgottenPassword = lazy(() => import ('./ForgottenPasswordPage'));
+// const EditUserInfo = lazy(() => import ('./EditUserInfoPage'));
 
 export {
     Home,
@@ -25,5 +26,6 @@ export {
     UserAccount,
     UserCart,
     UserLikes,
-    ForgottenPassword
+    ForgottenPassword,
+    // EditUserInfo
 }

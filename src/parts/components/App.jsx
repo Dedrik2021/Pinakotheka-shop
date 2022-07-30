@@ -14,7 +14,8 @@ import {
 	UserAccount,
 	UserCart,
 	UserLikes,
-	ForgottenPassword
+	ForgottenPassword,
+	// EditUserInfo
 } from '../pages/indexPage';
 
 import '../../scss/style.scss';
@@ -53,6 +54,7 @@ const En = () => {
 				<Route path="/DieIhnenGefallen" element={<UserLikes />} />
 				<Route path="/PasswortVergessen" element={<ForgottenPassword />} />
 				<Route path="/Nachrichten/Nachricht/:id" element={<SingleNews />} />
+				{/* <Route path="/BenutzerinfoBearbeiten" element={<EditUserInfo />} /> */}
 				<Route path="*" element={<Error404 />} />
 			</Route>
 		</Routes>
@@ -72,6 +74,7 @@ const De = () => {
 				<Route path="/PersonlichesBuro" element={<UserAccount />} />
 				<Route path="/DieIhnenGefallen" element={<UserLikes />} />
 				<Route path="/PasswortVergessen" element={<ForgottenPassword />} />
+				{/* <Route path="/BenutzerinfoBearbeiten" element={<EditUserInfo />} /> */}
 				<Route path="/Nachrichten/Nachricht/:id" element={<SingleNews />} />
 				<Route path="*" element={<Error404 />} />
 			</Route>

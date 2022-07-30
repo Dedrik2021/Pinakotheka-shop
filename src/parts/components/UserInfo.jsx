@@ -1,8 +1,18 @@
-import React from 'react';
+import React, { memo } from 'react';
+import { Link } from 'react-router-dom';
+// import { useLocation } from 'react-router-dom';
 
 import img from '../../assets/images/content/unknow-photo.png';
 
-const UserInfo = ({user}) => {
+const UserInfo = memo(({user, setEditBtn }) => {
+
+	const onEditBtn = () => {
+		setEditBtn(true)
+		window.scroll(0, 0)
+	}
+
+	console.log(user);
+
 	return (
 		<div className="user-account__info">
 			<div className="user-account__content">
@@ -21,7 +31,7 @@ const UserInfo = ({user}) => {
 						Phone: <span>{user.tel}</span>
 					</span>
 					<span className="user-info__item">
-						Network: <span>{user.netWork}</span>
+						Network: <span>{user.faceBook}</span>
 					</span>
 					<span className="user-info__item">
 						Instagram: <span>{user.instagram}</span>
@@ -33,15 +43,15 @@ const UserInfo = ({user}) => {
 						City: <span>{user.city}</span>
 					</span>
 					<span className="user-info__item">
-						Address: <span>{user.address}</span>
+						Address: <span>{user.addressStreet}</span>
 					</span>
 				</div>
 			</div>
-			<button className="user-account__btn-edit btn btn--universal " type="button">
+			<button type='button' className="user-account__btn-edit btn btn--universal " onClick={onEditBtn}
+            >
 				Profil bearbeiten
 			</button>
 		</div>
 	);
-};
-
+});
 export default UserInfo;

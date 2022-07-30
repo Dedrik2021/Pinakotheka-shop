@@ -13,6 +13,7 @@ import { realDb } from '../../firebase/firebaseConfig';
 import UserAuthSkeleton from '../../skeletons/userAuthSkeleton';
 import { setUserData, setUserEmail } from '../../redux/slices/userSlice';
 
+
 const Header = () => {
 	const linksBtns = [
 		{ id: 0, title: 'Kreationen', src: '' },
@@ -41,6 +42,8 @@ const Header = () => {
 	const switchBtn = useSelector((state) => state.filters.switchLanguageBtn);
 	const data = useSelector(state => state.user.userData)
 	// const userEmail = useSelector(state => state.user.userEmail)
+
+
 
 	const [scroll, setScroll] = useState(false);
 	const [modal, setModal] = useState(false);
@@ -122,7 +125,7 @@ const Header = () => {
 
 	const changeAuth = () => {
 		if (user != null) {
-			const findUser = data.find((item) => item.email === user.email);
+			const findUser = data.find((item) => item.emailId === user.email);
 			const userContent = loading ? <UserAuthSkeleton /> : <UserContent logOut={logOut} findUser={findUser} userDropdownRefs={userDropdownRefs} />;
 			return user ? userContent : null;
 		} else {
@@ -261,9 +264,9 @@ const UserContent = memo((props) => {
 	const user = auth.currentUser;
 
 	const userLinks = [
-		{ id: 0, title: 'Persönliches Büro', user: user, path: '/PersonlichesBuro' },
-		{ id: 1, title: 'Die Ihnen gefallen', user: user, path: '/DieIhnenGefallen' },
-		{ id: 2, title: 'Korb', user: user, path: '/Korb' },
+		{ id: 0, title: 'Persönliches Büro', path: '/PersonlichesBuro' },
+		{ id: 1, title: 'Die Ihnen gefallen', path: '/DieIhnenGefallen' },
+		{ id: 2, title: 'Korb', path: '/Korb' },
 	];
 
 	useEffect(() => {
@@ -283,11 +286,51 @@ const UserContent = memo((props) => {
 		switch (date) {
 			case 6: 
 				return 'Guten Morgen'
+			case 7: 
+				return 'Guten Morgen'
+			case 8: 
+				return 'Guten Morgen'
+			case 9: 
+				return 'Guten Morgen'
+			case 10: 
+				return 'Guten Morgen'
+			case 11: 
+				return 'Guten Morgen'
 			case 12: 
+				return 'Guten Tag'
+			case 13: 
+				return 'Guten Tag'
+			case 14: 
+				return 'Guten Tag'
+			case 15: 
+				return 'Guten Tag'
+			case 16: 
+				return 'Guten Tag'
+			case 17: 
 				return 'Guten Tag'
 			case 18:
 				return 'Guten Abend'
+			case 19:
+				return 'Guten Abend'
+			case 20:
+				return 'Guten Abend'
+			case 21:
+				return 'Guten Abend'
+			case 22:
+				return 'Guten Abend'
+			case 23:
+				return 'Guten Abend'
 			case 0:
+				return 'Gute Nacht'
+			case 1:
+				return 'Gute Nacht'
+			case 2:
+				return 'Gute Nacht'
+			case 3:
+				return 'Gute Nacht'
+			case 4:
+				return 'Gute Nacht'
+			case 5:
 				return 'Gute Nacht'
 			default:
 				return 'Guten Tag'
@@ -319,7 +362,6 @@ const UserContent = memo((props) => {
 									ref={(el) => (linkRefs.current[id] = el)}
 									className={`user__link ${activeLink ? 'active' : ''}`} 
 									to={path} 
-									state={findUser}
 									onClick={() => (dispatch(setUserDropdown(!userDropdown)), focusOnLink(id))}
 									>
 									{title}
