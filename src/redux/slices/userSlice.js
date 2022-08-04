@@ -29,10 +29,7 @@ const auth = getAuth()
 const initialState = {
     userInfoBtn: 0,
     foundUser: {},
-    userData: [],
-    userEmail: ''
-    // users: [],
-    // usersStatus: 'loading'
+    userData: []
 }
 
 const userSlice = createSlice({
@@ -47,9 +44,6 @@ const userSlice = createSlice({
         },
         setUserData(state, action) {
             state.userData = action.payload
-        },
-        setUserEmail(state, action) {
-            state.userEmail = action.payload
         }
     },
     // extraReducers: {
@@ -69,7 +63,7 @@ const userSlice = createSlice({
 })
 
 export const {
-    setUserInfoBtn, setFoundUser, setUserData, setUserEmail
+    setUserInfoBtn, setFoundUser, setUserData
 } = userSlice.actions
 
 export default userSlice.reducer

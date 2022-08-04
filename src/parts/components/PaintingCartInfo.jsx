@@ -1,5 +1,8 @@
 import { memo } from 'react';
+
 import Block from './Block';
+import LikeIcon from '../../assets/images/sprite/like-icon.svg'
+import MessageIcon from '../../assets/images/sprite/message-icon.svg'
 
 const PaintingCartInfo = memo((props) => {
 	const { img, title, lot, price, like } = props;
@@ -30,14 +33,14 @@ const PaintingCartInfo = memo((props) => {
 				<div className="details-card__message">
 					<button className="details-card__message-btn details-card__message-btn--like btn" type="button">
 						<span className="sr-only">like</span>
-						<svg width="20" height="20">
-							<use href="images/sprite.svg#like-icon"></use>
+						<svg width="18" height="18">
+							<use href={`${LikeIcon}#like`}></use>
 						</svg>
 						<span>{like}</span>
 					</button>
 					<a className="details-card__message-btn details-card__message-btn--message btn" href="#">
-						<svg width="20" height="20">
-							<use href="images/sprite.svg#message-icon"></use>
+						<svg width="18" height="18">
+							<use href={`${MessageIcon}#message`}></use>
 						</svg>
 						<span>Schreiben dem Autor</span>
 					</a>

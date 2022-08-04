@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: column;
     border-radius: 10px;
-    height: 100%;
+    height: 100px;
     transition: box-shadow 0.4s;
     position: relative;
     background-color: $white;
@@ -78,7 +78,8 @@
     &__box {
         display: flex;
         flex-direction: column;
-        height: 100%;
+        justify-content: space-between;
+        // height: 100%;
     }
 
     &__link {

@@ -208,7 +208,10 @@
         padding: 5px 20px;
         transition: background-color 0.4s, color 0.4s, border-color 0.4s;
         word-wrap: break-word;
-        max-width: 70%;
+
+        &--message {
+            width: 70%;
+        }
 
         @include r($mobile-md) {
             background-color: $green;

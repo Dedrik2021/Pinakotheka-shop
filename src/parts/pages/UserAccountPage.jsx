@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { getAuth } from 'firebase/auth';
 // import { getAuth, onAuthStateChanged } from 'firebase/auth';
 // import { ref, onValue } from 'firebase/database';
+import { uploadBytesResumable, getDownloadURL, ref } from 'firebase/storage';
 import { useLocation } from 'react-router-dom';
+import { doc, updateDoc, addDoc, collection } from 'firebase/firestore/lite';
 
 import BreadCrumbs from '../components/BreadCrumbs';
 import { setBreadCrumbs } from '../../redux/slices/breadCrumbsSlice';
@@ -11,7 +14,7 @@ import { setUserInfoBtn } from '../../redux/slices/userSlice';
 // import { realDb } from '../../firebase/firebaseConfig';
 import UserInfo from '../components/UserInfo';
 import EditUserInfo from '../components/EditUserInfo';
-import { getAuth } from 'firebase/auth';
+import { storage } from '../../firebase/firebaseConfig';
 
 // import { fetchUserData } from '../../redux/slices/userSlice';
 // import { setFoundUser } from '../../redux/slices/userSlice';
@@ -24,12 +27,18 @@ const UserAccount = () => {
 		{ id: 3, title: 'Chat' },
 	];
 
-	const [editBtn, setEditBtn] = useState(false)
-	const auth = getAuth()
-	const userId = auth.currentUser
+	const [dataStorage, setDataStorage] = useState({});
+	const [loading, setLoading] = useState(false);
+	const [userImg, setUserImg] = useState();
+
+	const [editBtn, setEditBtn] = useState(false);
+	const auth = getAuth();
+	const userId = auth.currentUser;
 	const dispatch = useDispatch();
-	const data = useSelector(state => state.user.userData)
-	const userInfoBtn = useSelector((state) => state.user.userInfoBtn);
+	const data = useSelector((state) => state.user.userData);
+	const {userInfoBtn, } = useSelector((state) => state.user);
+
+	const user = data.find((item) => item.emailId === userId.email);
 
 	useEffect(() => {
 		dispatch(setBreadCrumbs(''));
@@ -37,14 +46,48 @@ const UserAccount = () => {
 		const name = pathName.split('/');
 		dispatch(setBreadCrumbs(name));
 	}, []);
-	
+
+	const onStorage = () => {
+		const storageRef = ref(storage, `images/${user.name}/${dataStorage.name}`);
+		const uploadTask = uploadBytesResumable(storageRef, dataStorage);
+		uploadTask.on(
+			'state_changed',
+			(snapshot) => {
+				setLoading(true)
+				const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+				console.log('Upload is ' + progress + '% done');
+			},
+			(error) => {
+				console.log(error.message);
+			},
+			() => {
+				getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+					console.log('File available at', downloadURL);
+					setUserImg(downloadURL);
+					if (downloadURL) {
+						setLoading(false)
+					}
+				});
+			},
+		);
+	};
+
 	const showContent = () => {
 		if (userId != null) {
-			const user = data.find((item) => item.emailId === userId.email)
 			switch (userInfoBtn) {
 				case 0:
-					return editBtn ? <EditUserInfo setEditBtn={setEditBtn} userInfo={user}/> :
-						<UserInfo user={user} setEditBtn={setEditBtn}/>
+					return editBtn ? (
+						<EditUserInfo
+							onStorage={onStorage}
+							setDataStorage={setDataStorage}
+							setEditBtn={setEditBtn}
+							userInfo={user}
+							userImg={userImg}
+							loading={loading}
+						/>
+					) : (
+						<UserInfo loading={loading} user={user} setEditBtn={setEditBtn} />
+					);
 				case 1:
 					return;
 				case 2:
@@ -52,7 +95,7 @@ const UserAccount = () => {
 				case 3:
 					return;
 				default:
-					return <UserInfo user={user}/>
+					return <UserInfo user={user} />;
 			}
 		}
 	};
@@ -79,9 +122,7 @@ const UserAccount = () => {
 							})}
 						</ul>
 					</div>
-					<div className='user-account__info'>
-						{showContent()}
-					</div>	
+					<div className="user-account__info">{showContent()}</div>
 				</div>
 			</div>
 		</div>

@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-// import { collection, getDocs, query, onSnapshot } from 'firebase/firestore/lite';
+import { collection, getDocs, query, onSnapshot } from 'firebase/firestore/lite';
 import { onAuthStateChanged, getAuth, signOut } from 'firebase/auth';
 import { ref, onValue } from 'firebase/database';
 
@@ -9,10 +9,13 @@ import logo from '../../assets/images/content/logo.svg';
 import { setSwitchLanguageBtn } from '../../redux/slices/filtersSlice';
 import Modal from './Modal';
 import { setUserDropdown } from '../../redux/slices/authorsInfosSlice';
-import { realDb } from '../../firebase/firebaseConfig';
+import { database, realDb } from '../../firebase/firebaseConfig';
 import UserAuthSkeleton from '../../skeletons/userAuthSkeleton';
 import { setUserData, setUserEmail } from '../../redux/slices/userSlice';
-
+import img from '../../assets/images/content/unknow-photo.png';
+import SearchIcon from '../../assets/images/sprite/search-icon.svg';
+import CleanInputIcon from '../../assets/images/sprite/clean-input-icon.svg';
+import UserIcon from '../../assets/images/sprite/user-icon.svg';
 
 const Header = () => {
 	const linksBtns = [
@@ -40,10 +43,8 @@ const Header = () => {
 
 	const dispatch = useDispatch();
 	const switchBtn = useSelector((state) => state.filters.switchLanguageBtn);
-	const data = useSelector(state => state.user.userData)
+	const data = useSelector((state) => state.user.userData);
 	// const userEmail = useSelector(state => state.user.userEmail)
-
-
 
 	const [scroll, setScroll] = useState(false);
 	const [modal, setModal] = useState(false);
@@ -59,7 +60,7 @@ const Header = () => {
 	const formRefs = useRef();
 	const dropdownRefs = useRef();
 	const userDropdownRefs = useRef();
-	const navigate = useNavigate()
+	const navigate = useNavigate();
 
 	const auth = getAuth();
 	const user = auth.currentUser;
@@ -88,6 +89,13 @@ const Header = () => {
 					}
 					setLoading(false);
 				});
+
+				// getDocs(collection(database, 'users')).then((response) => {
+				// 	const usersData = response.docs.map((item) => {
+				// 		return item.data();
+				// 	})
+				// 	dispatch(setUserData(usersData))
+				// });
 			} else {
 				setLoading(true);
 				dispatch(setUserData([]));
@@ -95,6 +103,8 @@ const Header = () => {
 			}
 		});
 	}, []);
+
+	console.log(data);
 
 	useEffect(() => {
 		const checkScroll = () => {
@@ -120,13 +130,18 @@ const Header = () => {
 	const logOut = () => {
 		if (window.confirm('Sie sind sicher, dass Sie gehen wollen ?')) signOut(auth);
 		dispatch(setUserDropdown(false));
-		navigate('/')
+		navigate('/');
 	};
 
 	const changeAuth = () => {
 		if (user != null) {
 			const findUser = data.find((item) => item.emailId === user.email);
-			const userContent = loading ? <UserAuthSkeleton /> : <UserContent logOut={logOut} findUser={findUser} userDropdownRefs={userDropdownRefs} />;
+			
+			const userContent = loading ? (
+				<UserAuthSkeleton />
+			) : (
+				<UserContent logOut={logOut} findUser={findUser} userDropdownRefs={userDropdownRefs} />
+			);
 			return user ? userContent : null;
 		} else {
 			const modalContent = loading ? <UserAuthSkeleton /> : <ShowModal modal={modal} setModal={setModal} />;
@@ -155,7 +170,7 @@ const Header = () => {
 							onClick={(e) => onSearchOpen(e)}
 							ref={formRefs}
 							onFocus={() => setSearch(true)}
-							onBlur={() => setSearch(false)}
+							onBlur={() => (setSearch(false), setInputValue(''))}
 						>
 							<label className="menu__label" htmlFor="nav-search">
 								<span className="sr-only">Suche</span>
@@ -171,30 +186,18 @@ const Header = () => {
 								id="nav-search"
 								required
 							/>
-							{inputValue && (
-								<button className="menu__form--btn btn" onClick={() => setInputValue('')}>
-									<span className="sr-only">Eingabefeld löschen</span>
-									<svg
-										version="1.1"
-										width="24"
-										height="24"
-										viewBox="0 0 24 24"
-										xmlns="http://www.w3.org/2000/svg"
-									>
-										<g id="info" />
-										<g id="icons">
-											<path
-												d="M14.8,12l3.6-3.6c0.8-0.8,0.8-2,0-2.8c-0.8-0.8-2-0.8-2.8,0L12,9.2L8.4,5.6c-0.8-0.8-2-0.8-2.8,0   c-0.8,0.8-0.8,2,0,2.8L9.2,12l-3.6,3.6c-0.8,0.8-0.8,2,0,2.8C6,18.8,6.5,19,7,19s1-0.2,1.4-0.6l3.6-3.6l3.6,3.6   C16,18.8,16.5,19,17,19s1-0.2,1.4-0.6c0.8-0.8,0.8-2,0-2.8L14.8,12z"
-												id="exit"
-											/>
-										</g>
+							<button className="menu__form--btn btn" onClick={() => setInputValue('')}>
+								<span className="sr-only">Eingabefeld löschen</span>
+								{inputValue && (
+									<svg width="20" height="20">
+										<use href={`${CleanInputIcon}#clean-input`}></use>
 									</svg>
-								</button>
-							)}
+								)}
+							</button>
 							<button className="menu__btn btn" type="submit">
 								<span className="sr-only">Suche drücken</span>
 								<svg width="16" height="16">
-									<use href="assets/images/sprite/search-icon.svg"></use>
+									<use href={`${SearchIcon}#search-icon`}></use>
 								</svg>
 							</button>
 						</form>
@@ -255,8 +258,8 @@ const Header = () => {
 
 const UserContent = memo((props) => {
 	const { logOut, findUser, userDropdownRefs } = props;
-	const linkRefs = useRef([])
-	const [activeLink, setActiveLink] = useState(false)
+	const linkRefs = useRef([]);
+	const [activeLink, setActiveLink] = useState(false);
 	const userDropdown = useSelector((state) => state.authorsInfos.userDropdown);
 	const dispatch = useDispatch();
 
@@ -281,61 +284,61 @@ const UserContent = memo((props) => {
 	};
 
 	const getDate = () => {
-		const date = new Date().getHours()
+		const date = new Date().getHours();
 
 		switch (date) {
-			case 6: 
-				return 'Guten Morgen'
-			case 7: 
-				return 'Guten Morgen'
-			case 8: 
-				return 'Guten Morgen'
-			case 9: 
-				return 'Guten Morgen'
-			case 10: 
-				return 'Guten Morgen'
-			case 11: 
-				return 'Guten Morgen'
-			case 12: 
-				return 'Guten Tag'
-			case 13: 
-				return 'Guten Tag'
-			case 14: 
-				return 'Guten Tag'
-			case 15: 
-				return 'Guten Tag'
-			case 16: 
-				return 'Guten Tag'
-			case 17: 
-				return 'Guten Tag'
+			case 6:
+				return 'Guten Morgen';
+			case 7:
+				return 'Guten Morgen';
+			case 8:
+				return 'Guten Morgen';
+			case 9:
+				return 'Guten Morgen';
+			case 10:
+				return 'Guten Morgen';
+			case 11:
+				return 'Guten Morgen';
+			case 12:
+				return 'Guten Tag';
+			case 13:
+				return 'Guten Tag';
+			case 14:
+				return 'Guten Tag';
+			case 15:
+				return 'Guten Tag';
+			case 16:
+				return 'Guten Tag';
+			case 17:
+				return 'Guten Tag';
 			case 18:
-				return 'Guten Abend'
+				return 'Guten Abend';
 			case 19:
-				return 'Guten Abend'
+				return 'Guten Abend';
 			case 20:
-				return 'Guten Abend'
+				return 'Guten Abend';
 			case 21:
-				return 'Guten Abend'
+				return 'Guten Abend';
 			case 22:
-				return 'Guten Abend'
+				return 'Guten Abend';
 			case 23:
-				return 'Guten Abend'
+				return 'Guten Abend';
 			case 0:
-				return 'Gute Nacht'
+				return 'Gute Nacht';
 			case 1:
-				return 'Gute Nacht'
+				return 'Gute Nacht';
 			case 2:
-				return 'Gute Nacht'
+				return 'Gute Nacht';
 			case 3:
-				return 'Gute Nacht'
+				return 'Gute Nacht';
 			case 4:
-				return 'Gute Nacht'
+				return 'Gute Nacht';
 			case 5:
-				return 'Gute Nacht'
+				return 'Gute Nacht';
 			default:
-				return 'Guten Tag'
+				return 'Guten Tag';
 		}
-	}
+	};
 
 	const focusOnLink = (id) => {
 		linkRefs.current.forEach((item) => item.classList.remove('active'));
@@ -345,34 +348,39 @@ const UserContent = memo((props) => {
 
 	return (
 		<div className="user" ref={userDropdownRefs}>
+			<img className="user__img" src={findUser.image === '' ? img : findUser.image} alt={findUser.name} />
 			<button
 				className={`user__btn btn btn--red ${userDropdown ? 'active' : ''}`}
 				type="button"
 				onClick={() => dispatch(setUserDropdown(!userDropdown))}
 			>
 				Profile
+				<svg width="18" height="18">
+					<use href={`${UserIcon}#user`}></use>
+				</svg>
 			</button>
 			<div className={`user-dropdown ${userDropdown ? 'active' : ''}`}>
-				<div className='user-dropdown__title'>{getDate()}!<span className='user-dropdown__name'>{findUser.name}</span></div>
-				<ul className='user__list' >
+				<div className="user-dropdown__title">
+					{getDate()}!<span className="user-dropdown__name">{findUser.name}</span>
+				</div>
+				<ul className="user__list">
 					{userLinks.map(({ id, title, path }) => {
 						return (
 							<li className="user__item" key={id}>
-								<Link 
+								<Link
 									ref={(el) => (linkRefs.current[id] = el)}
-									className={`user__link ${activeLink ? 'active' : ''}`} 
-									to={path} 
+									className={`user__link ${activeLink ? 'active' : ''}`}
+									to={path}
+									state={{ from: 'Personliches Buro' }}
 									onClick={() => (dispatch(setUserDropdown(!userDropdown)), focusOnLink(id))}
-									>
+								>
 									{title}
 								</Link>
 							</li>
 						);
 					})}
 				</ul>
-				<button 
-					className="user__btn user__btn--logout btn btn--red" type="button" onClick={logOut}
-					>
+				<button className="user__btn user__btn--logout btn btn--red" type="button" onClick={logOut}>
 					Log out
 				</button>
 			</div>

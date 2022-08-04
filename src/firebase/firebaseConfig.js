@@ -2,6 +2,7 @@ import { initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
 import { getFirestore } from 'firebase/firestore/lite';
 import {getDatabase} from 'firebase/database'
+import {getStorage} from 'firebase/storage'
 
 const firebaseConfig  = {
 	apiKey: 'AIzaSyDdQxVIBYDWcJ5la1nJjhTMMqADyuSOsmk',
@@ -18,6 +19,7 @@ export const app = initializeApp(firebaseConfig);
 const analyticsNews = getAnalytics(app);
 export const database = getFirestore(app);
 export const realDb = getDatabase()
+export const storage = getStorage(app)
 
 // {
 // 	"rules": {

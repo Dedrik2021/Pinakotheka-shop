@@ -2,19 +2,17 @@ import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { memo } from 'react';
 
-import {
-	changeSinglePainting,
-} from '../../redux/slices/authorsInfosSlice';
+import { changeSinglePainting } from '../../redux/slices/authorsInfosSlice';
 import { setAuthorInfoBtn } from '../../redux/slices/filtersSlice';
+import FavoriteIcon from '../../assets/images/sprite/favorit-icon.svg';
+import ShareIcon from '../../assets/images/sprite/share-icon.svg';
 
 const PaintingCard = memo((props) => {
 	const { works } = props;
 
 	const content = works.map((item) => <Painting key={item.id} item={item} props={props} />);
 
-	return (
-		<>{content}</>
-	)
+	return <>{content}</>;
 });
 
 const Painting = memo(({ item, props }) => {
@@ -25,7 +23,7 @@ const Painting = memo(({ item, props }) => {
 			painting: item.id,
 		};
 		dispatch(setAuthorInfoBtn(0));
-		dispatch(changeSinglePainting({findPainting}));
+		dispatch(changeSinglePainting({ findPainting }));
 	};
 
 	return (
@@ -71,8 +69,8 @@ const Painting = memo(({ item, props }) => {
 						</a>
 						<a className="painting-card__btn painting-card__btn--share btn btn--red-hover" href="#">
 							<span className="sr-only">share</span>
-							<svg width="16" height="16">
-								<use href="images/sprite.svg#share-icon"></use>
+							<svg width="18" height="18">
+								<use href={`${ShareIcon}#share`}></use>
 							</svg>
 						</a>
 						<button
@@ -80,8 +78,8 @@ const Painting = memo(({ item, props }) => {
 							type="button"
 						>
 							<span className="sr-only">added to favorite pick</span>
-							<svg width="20" height="17">
-								<use href="images/sprite.svg#favorit-icon"></use>
+							<svg width="22" height="18">
+								<use href={`${FavoriteIcon}#favourite`}></use>
 							</svg>
 						</button>
 					</div>

@@ -1,10 +1,11 @@
-import { getAuth, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { useState, memo, useRef } from 'react';
 import { v4 as uuiv4 } from 'uuid';
-import { set, ref, update } from 'firebase/database';
+import { set, ref } from 'firebase/database';
+import { addDoc, collection } from 'firebase/firestore';
 import { useDispatch } from 'react-redux';
 
-import { realDb } from '../../firebase/firebaseConfig';
+import { realDb, database } from '../../firebase/firebaseConfig';
 import Social from './Social';
 import { setSwitchModal } from '../../redux/slices/authorsInfosSlice';
 
@@ -16,16 +17,14 @@ const RegisterModal = memo(({ closeModal }) => {
 	const [emailInput, setEmailInput] = useState('');
 	const [passwordInput, setPasswordInput] = useState('');
 	const [doublePasswordInput, setDoublePasswordInput] = useState('');
-	const passwordReff = useRef()
+	const passwordReff = useRef();
 	const auth = getAuth();
-	// const user = auth.currentUser
-	const dispatch = useDispatch()
+	const dispatch = useDispatch();
 
 	const onRegister = (e) => {
 		e.preventDefault();
 		const ID = uuiv4();
 		if (passwordInput == doublePasswordInput) {
-
 			createUserWithEmailAndPassword(auth, emailInput, passwordInput)
 				.then(addData(ID))
 				.then(() => {
@@ -44,12 +43,11 @@ const RegisterModal = memo(({ closeModal }) => {
 				});
 		} else {
 			alert('Passwörter prüfen!');
-			passwordReff.current.focus()
+			passwordReff.current.focus();
 		}
 	};
 
 	const addData = (ID) => {
-		// const ID = uuiv4();
 		set(ref(realDb, `users/ ${ID}`), {
 			emailId: emailInput,
 			id: ID,
@@ -62,7 +60,7 @@ const RegisterModal = memo(({ closeModal }) => {
 			dateOfRegister: new Date().toLocaleString(),
 			faceBook: '',
 			instagram: '',
-			photo: '',
+			image: '',
 			addressStreet: '',
 			city: '',
 			country: ''
@@ -71,19 +69,6 @@ const RegisterModal = memo(({ closeModal }) => {
 				console.log(err.message);
 			});
 	};
-
-	// const updateData = () => {
-	// 	const docToUpdates = ref(realDb, 'userData');
-	// 	update(docToUpdates, {
-	// 		email: emailInput,
-	// 	})
-	// 		.then(() => {
-	// 			alert('Data updated in database');
-	// 		})
-	// 		.catch((err) => {
-	// 			alert(err.message);
-	// 		});
-	// }
 
 	return (
 		<>

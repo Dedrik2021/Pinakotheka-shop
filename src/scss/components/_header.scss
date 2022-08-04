@@ -175,31 +175,51 @@
         &:hover {
             background-color: $red;
 
-            &>.menu__btn {
+            // &>.menu__btn {
+            //     &:hover {
+            //         background-color: $red-200;
+            //     }
+            //     svg {
+            //         fill: $white;
+            //     }
+            // }
 
+            // &>.menu__search {
+            //     background-color: $red;
+            // }
+
+        }
+
+        &.active {
+            max-width: 100%;
+            background-color: #CE0020;
+
+            &>.menu__btn {
+                padding: 11px 14px 10px;
+                &:hover {
+                    background-color: $red-200;
+                }
                 svg {
                     fill: $white;
                 }
             }
 
-            // &>.menu__search {
-            //     background-color: $red;
+            // &>.menu__form--btn {
+            //     display: block;
             // }
-            
         }
-
-        &.active {
-            max-width: 100%;
-			background-color: #CE0020;
-        }
-
+        
         &--btn {
             position: absolute;
-            right: 55px;
-            top: 50%;
-            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            right: 58px;
+            top: 12px;
         }
+
     }
+
+    
 
     &__search {
         max-width: 93%;
@@ -239,7 +259,7 @@
             visibility: visible;
             background-color: $white;
 
-            & > .menu__form {
+            &>.menu__form {
                 max-width: 100%;
             }
 
@@ -256,23 +276,19 @@
         padding: 12px 15px 11px;
         right: 2px;
         transform: translateY(-50%);
+        transition: padding 0.3s, background-color 0.3s;
 
         svg {
-            fill: $black;
-            // position: relative;
-            transition: fill 0.4s;
+            fill: $white;
+            transition: fill 0.3s;
 
             @include r($mobile-xl) {
                 fill: $white;
             }
         }
 
-        &:hover,
-        &.active {
-
-            svg {
-                fill: $white;
-            }
+        &:focus {
+            background-color: $red-200  ;
         }
     }
 
@@ -311,12 +327,13 @@
         }
 
         &--dropdown {
-            
+
             &.active {
                 span {
                     border-color: $red;
                 }
-                & > .menu-dropdown {
+
+                &>.menu-dropdown {
                     opacity: 1;
                     visibility: visible;
                     top: 35px;
@@ -429,7 +446,14 @@
             margin-right: 0;
             max-width: 330px;
             z-index: 1000;
-    
+
+            &__img {
+                position: absolute;
+                object-fit: cover;
+                padding: 45px 45px;
+                left: -120px;
+            }
+
             &-dropdown {
                 position: absolute;
                 display: flex;
@@ -464,7 +488,7 @@
             }
 
             &__item {
-        
+
                 &:not(:last-child) {
                     margin-bottom: 15px;
                 }
@@ -488,12 +512,22 @@
             }
 
             &__btn {
-                padding: 10px 100px;
+                padding: 10px 80px;
                 border-radius: 10px;
+                position: relative;
+                z-index: 1;
                 transition: background-color 0.3s ease-in-out;
 
                 &.active {
                     background-color: $black;
+                }
+
+                svg {
+                    fill: $white;
+                    position: absolute;
+                    right: 20%;
+                    top: 50%;
+                    transform: translateY(-50%);
                 }
 
                 &--logout {
@@ -504,7 +538,7 @@
     }
 
     &__user-box {
-    
+
         &.active {
 
             &::after {
