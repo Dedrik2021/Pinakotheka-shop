@@ -65,15 +65,28 @@ const Header = () => {
 	const auth = getAuth();
 	const user = auth.currentUser;
 
+	if (formRefs.current === 'blur') {
+		setSearch(false)
+	}
+
 	useEffect(() => {
 		document.body.addEventListener('click', closeDropdown);
 		return () => document.removeEventListener('click', closeDropdown);
 	}, []);
 
+	useEffect(() => {
+		document.body.addEventListener('click', closeSearch);
+		return () => document.removeEventListener('click', closeSearch);
+	}, []);
+
 	const closeDropdown = (e) => {
 		if (!e.path.includes(dropdownRefs.current)) {
 			setDropdown(false);
-		} else if (!e.path.includes(formRefs.current)) {
+		}
+	};
+
+	const closeSearch = (e) => {
+		if (!e.path.includes(formRefs.current)) {
 			setSearch(false);
 			setInputValue('');
 		}
@@ -89,13 +102,6 @@ const Header = () => {
 					}
 					setLoading(false);
 				});
-
-				// getDocs(collection(database, 'users')).then((response) => {
-				// 	const usersData = response.docs.map((item) => {
-				// 		return item.data();
-				// 	})
-				// 	dispatch(setUserData(usersData))
-				// });
 			} else {
 				setLoading(true);
 				dispatch(setUserData([]));
@@ -103,8 +109,6 @@ const Header = () => {
 			}
 		});
 	}, []);
-
-	console.log(data);
 
 	useEffect(() => {
 		const checkScroll = () => {
@@ -136,7 +140,7 @@ const Header = () => {
 	const changeAuth = () => {
 		if (user != null) {
 			const findUser = data.find((item) => item.emailId === user.email);
-			
+
 			const userContent = loading ? (
 				<UserAuthSkeleton />
 			) : (
@@ -170,7 +174,6 @@ const Header = () => {
 							onClick={(e) => onSearchOpen(e)}
 							ref={formRefs}
 							onFocus={() => setSearch(true)}
-							onBlur={() => (setSearch(false), setInputValue(''))}
 						>
 							<label className="menu__label" htmlFor="nav-search">
 								<span className="sr-only">Suche</span>
@@ -186,14 +189,14 @@ const Header = () => {
 								id="nav-search"
 								required
 							/>
-							<button className="menu__form--btn btn" onClick={() => setInputValue('')}>
-								<span className="sr-only">Eingabefeld löschen</span>
-								{inputValue && (
+							{inputValue && (
+								<button className="menu__form--btn btn" type="button" onClick={() => setInputValue('')}>
+									<span className="sr-only">Eingabefeld löschen</span>
 									<svg width="20" height="20">
 										<use href={`${CleanInputIcon}#clean-input`}></use>
 									</svg>
-								)}
-							</button>
+								</button>
+							)}
 							<button className="menu__btn btn" type="submit">
 								<span className="sr-only">Suche drücken</span>
 								<svg width="16" height="16">

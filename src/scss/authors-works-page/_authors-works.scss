@@ -30,18 +30,11 @@
     }
 
     &__content {
-        // max-width: 1370px;
-        // width: 100%;
-        // display: flex;
-        // justify-content: space-between;
-        padding-top: 30px;
         margin-bottom: 100px;
         padding-top: 60px;
 
         div:last-child {
             flex-direction: column;
-            // justify-content: space-between;
-            // margin-bottom: 0;
 
             blockquote {
                 display: flex;
@@ -165,6 +158,7 @@
     &__inner {
         display: flex;
         justify-content: space-between;
+        // padding-top: 60px;
         // max-width: 1370px;
         // width: 100%;
     }

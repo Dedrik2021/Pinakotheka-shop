@@ -204,9 +204,9 @@
                 }
             }
 
-            // &>.menu__form--btn {
-            //     display: block;
-            // }
+            &>.menu__form--btn {
+                display: block;
+            }
         }
         
         &--btn {
@@ -215,6 +215,8 @@
             height: 20px;
             right: 58px;
             top: 12px;
+            background-color: $white;
+            display: none;
         }
 
     }

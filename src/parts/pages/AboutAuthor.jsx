@@ -13,7 +13,7 @@ import GallerySkeleton from '../../skeletons/gallerySkeleton';
 import Reviews from '../components/Reviews';
 import ReviewsSkeleton from '../../skeletons/reviewsSkeleton';
 import ReviewModal from '../components/ReviewModal';
-import ChatRealTime from '../components/ChatRealTime';
+import AuthorsChat from '../components/AuthorsChat';
 
 const AboutAuthor = () => {
 	const [openModal, setOpenModal] = useState(false);
@@ -82,7 +82,7 @@ const AboutAuthor = () => {
 			case 2:
 				return reviews;
 			case 3:
-				return <ChatRealTime />;
+				return <AuthorsChat />;
 			default:
 				return authorsBio;
 		}

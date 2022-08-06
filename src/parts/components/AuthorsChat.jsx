@@ -1,37 +1,38 @@
 import React, { memo } from 'react';
+import {Helmet} from 'react-helmet'
 
 let chat = {
 	maxWidth: '1675px',
 	width: '100%',
-	marginBottom: '50px',
+	marginBottom: '100px',
+	paddingTop: '60px'
 };
 
 let ulChat = {
 	// maxWidth: '200px',
 	// width: '100%',
-	marginBottom: '20px'
+	marginBottom: '20px',
 };
 
 let chatGuest = {
 	maxWidth: '600px',
-	width: '100%'
-
-}
+	width: '100%',
+};
 
 let divP = {
 	maxWidth: '200px',
-	width: '100%'
-}
+	width: '100%',
+};
 
 let chatUser = {
 	marginLeft: 'auto',
-	maxWidth: '600px'
-}
+	maxWidth: '600px',
+};
 
 let article = {
 	display: 'flex',
-	width: '100%'
-}
+	width: '100%',
+};
 
 let form = {
 	width: '100%',
@@ -58,14 +59,19 @@ let btn = {
 let img = {
 	objectFit: 'cover',
 	borderRadius: '50%',
-	marginRight: '30px'
+	marginRight: '30px',
 };
 
-const ChatRealTime = memo(({}) => {
+const AuthorsChat = memo(({}) => {
 	console.log();
 	return (
-		<div className="chat" style={chat}>
-			{/* <div className="chat__block" style={chatBlock}> */}
+		<>
+			<Helmet>
+				<meta name="description" content="Chat" />
+				<title>Chat</title>
+			</Helmet>
+			<div className="chat" style={chat}>
+				{/* <div className="chat__block" style={chatBlock}> */}
 				<ul className="chat__list" style={chatGuest}>
 					<li className="chat__item" style={ulChat}>
 						<article className="" style={article}>
@@ -172,14 +178,15 @@ const ChatRealTime = memo(({}) => {
 						</article>
 					</li>
 				</ul>
-			{/* </div> */}
-			<form action="" style={form}>
-				<textarea style={textArr} name="" id="" cols="30" rows="10" />
-				<button style={btn} className="universal--btn btn btn--red" type="submit">
-					Senden
-				</button>
-			</form>
-		</div>
+				{/* </div> */}
+				<form action="" style={form}>
+					<textarea style={textArr} name="" id="" cols="30" rows="10" />
+					<button style={btn} className="universal--btn btn btn--red" type="submit">
+						Senden
+					</button>
+				</form>
+			</div>
+		</>
 	);
 });
-export default ChatRealTime;
+export default AuthorsChat;

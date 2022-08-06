@@ -13,6 +13,9 @@ import { setUserInfoBtn } from '../../redux/slices/userSlice';
 // import img from '../../assets/images/content/unknow-photo.png';
 // import { realDb } from '../../firebase/firebaseConfig';
 import UserInfo from '../components/UserInfo';
+import UserNotificationSettings from '../components/UserNotificationSettings';
+import UserChatArchive from '../components/UserChatArchive';
+import UserChat from '../components/UserChat';
 import EditUserInfo from '../components/EditUserInfo';
 import { storage } from '../../firebase/firebaseConfig';
 
@@ -23,7 +26,7 @@ const UserAccount = () => {
 	const contentBtn = [
 		{ id: 0, title: 'Persönliche Informationen' },
 		{ id: 1, title: 'Benachrichtigungseinstellungen' },
-		{ id: 2, title: 'Korrespondenzarchiv' },
+		{ id: 2, title: 'Chat Archiv' },
 		{ id: 3, title: 'Chat' },
 	];
 
@@ -89,11 +92,11 @@ const UserAccount = () => {
 						<UserInfo loading={loading} user={user} setEditBtn={setEditBtn} />
 					);
 				case 1:
-					return;
+					return <UserNotificationSettings/>
 				case 2:
-					return;
+					return <UserChatArchive/>
 				case 3:
-					return;
+					return <UserChat/>
 				default:
 					return <UserInfo user={user} />;
 			}

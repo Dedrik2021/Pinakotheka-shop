@@ -1,10 +1,12 @@
-import React, { memo } from 'react';
+import React, { memo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 // import { useLocation } from 'react-router-dom';
 
 import img from '../../assets/images/content/unknow-photo.png';
 import Spinner from '../../spinner/Spinner';
-import EditIcon from '../../assets/images/sprite/edit-icon.svg'
+import EditIcon from '../../assets/images/sprite/edit-icon.svg';
+import UserInfoSkeleton from '../../skeletons/userInfoSkeleton';
 
 const UserInfo = memo(({ user, setEditBtn, loading }) => {
 	const onEditBtn = () => {
@@ -12,64 +14,74 @@ const UserInfo = memo(({ user, setEditBtn, loading }) => {
 		window.scroll(0, 0);
 	};
 
-	return (
-		<div className="user-account__info">
-			<div className="user-account__content">
-				<div className="user-account__img-wrapper">
-					{
-						(loading ? (
-							<Spinner />
-						) : (
-							<>
-								<img
-									className="user-account__img"
-									src={user.image === '' ? img : user.image}
-									alt={user.name}
-								/>
-								<img
-									className="user-account__img user-account__img--blur"
-									src={user.image === '' ? img : user.image}
-									alt={user.name}
-								/>
-							</>
-						))
-					}
-				</div>
+	useEffect(() => {
+		window.scroll(0, 0)
+	}, [])
 
-				<div className="user-info">
-					<span className="user-info__item">
-						Name: <span>{user.name != '' ? user.name : '#### #####'}</span>
-					</span>
-					<span className="user-info__item">
-						Phone: <span>{user.tel != '' ? user.tel : '+#(###) ### ### ###'}</span>
-					</span>
-					<span className="user-info__item">
-						Instagram: <span>{user.instagram != '' ? user.instagram : '#######.###'}</span>
-					</span>
-					<span className="user-info__item">
-						City: <span>{user.city != '' ? user.city : '########'}</span>
-					</span>
-					<span className="user-info__item">
-						Email: <span>{user.email != '' ? user.email : '#######@####.###'}</span>
-					</span>
-					<span className="user-info__item">
-						Network: <span>{user.faceBook != '' ? user.faceBook : '#######.###'}</span>
-					</span>
-					<span className="user-info__item">
-						Country: <span>{user.country != '' ? user.country : '########'}</span>
-					</span>
-					<span className="user-info__item">
-						Address: <span>{user.addressStreet != '' ? user.addressStreet : '##### ##### #####'}</span>
-					</span>
+	return (
+		<>
+			<Helmet>
+				<meta name="description" content="Benutzerinformationen" />
+				<title>Benutzerinformationen</title>
+			</Helmet>
+			{user ? (
+				<div className="user-account__info user-account__info--wrapper">
+					<div className="user-account__content">
+						<div className="user-account__img-wrapper">
+							<img
+								className="user-account__img"
+								src={user.image === '' ? img : user.image}
+								alt={user.name}
+							/>
+							<img
+								className="user-account__img user-account__img--blur"
+								src={user.image === '' ? img : user.image}
+								alt={user.name}
+							/>
+						</div>
+
+						<div className="user-info">
+							<span className="user-info__item">
+								Name: <span>{user.name != '' ? user.name : '#### #####'}</span>
+							</span>
+							<span className="user-info__item">
+								Phone: <span>{user.tel != '' ? user.tel : '+#(###) ### ### ###'}</span>
+							</span>
+							<span className="user-info__item">
+								Instagram: <span>{user.instagram != '' ? user.instagram : '#######.###'}</span>
+							</span>
+							<span className="user-info__item">
+								City: <span>{user.city != '' ? user.city : '########'}</span>
+							</span>
+							<span className="user-info__item">
+								Email: <span>{user.email != '' ? user.email : '#######@####.###'}</span>
+							</span>
+							<span className="user-info__item">
+								Network: <span>{user.faceBook != '' ? user.faceBook : '#######.###'}</span>
+							</span>
+							<span className="user-info__item">
+								Country: <span>{user.country != '' ? user.country : '########'}</span>
+							</span>
+							<span className="user-info__item">
+								Address:{' '}
+								<span>{user.addressStreet != '' ? user.addressStreet : '##### ##### #####'}</span>
+							</span>
+						</div>
+					</div>
+
+					<button type="button" className="user-account__btn-edit btn btn--universal " onClick={onEditBtn}>
+						Profil bearbeiten
+						<svg width="15" height="15">
+							<use href={`${EditIcon}#edit`}></use>
+						</svg>
+					</button>
 				</div>
-			</div>
-			<button type="button" className="user-account__btn-edit btn btn--universal " onClick={onEditBtn}>
-				Profil bearbeiten
-				<svg width="15" height="15">
-					<use href={`${EditIcon}#edit`}></use>
-				</svg>
-			</button>
-		</div>
+			) : (
+				<>
+					<UserInfoSkeleton />
+				</>
+			)}
+		</>
 	);
 });
 export default UserInfo;

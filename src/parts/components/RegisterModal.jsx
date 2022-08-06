@@ -2,10 +2,9 @@ import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { useState, memo, useRef } from 'react';
 import { v4 as uuiv4 } from 'uuid';
 import { set, ref } from 'firebase/database';
-import { addDoc, collection } from 'firebase/firestore';
 import { useDispatch } from 'react-redux';
 
-import { realDb, database } from '../../firebase/firebaseConfig';
+import { realDb } from '../../firebase/firebaseConfig';
 import Social from './Social';
 import { setSwitchModal } from '../../redux/slices/authorsInfosSlice';
 
@@ -200,10 +199,6 @@ const RegisterModal = memo(({ closeModal }) => {
 					</div>
 				</div>
 			</form>
-			{/* <button type="button" onClick={logOut}>
-				Log out
-			</button> */}
-			{/* <button type='button' onClick={deleteData} >Delete data</button> */}
 			<span className="modal__enter">Mit sozialen Netzwerken anmelden</span>
 			<Social />
 		</>
