@@ -32,14 +32,7 @@ const RegisterModal = memo(({ closeModal }) => {
 	const authors = useSelector(state => state.authorsInfos.authors)
 	const collectionRefClients = collection(database, 'users')
 	const collectionRefAuthors = collection(database, 'authors')
-
-	console.log(authors);
-
-	// useEffect(() => {
-	// 	dispatch(fetchAuthorsData())
-	// 	dispa
-	// },[])
-
+	
 	const onRegister = (e) => {
 		e.preventDefault();
 		if (passwordInput == doublePasswordInput && checkedAuthor === true || checkedClient === true) {
@@ -82,7 +75,7 @@ const RegisterModal = memo(({ closeModal }) => {
 		const ID = uuiv4();
 		addDoc(collectionRefClients, {
 			emailId: emailInput,
-			id: ID,
+			id: users.length + 1,
 			name: nameInput,
 			email: emailInput,
 			tel: Number(telInput),
@@ -106,7 +99,7 @@ const RegisterModal = memo(({ closeModal }) => {
 		const ID = uuiv4();
 		addDoc(collectionRefAuthors, {
 			emailId: emailInput,
-			id: users.length + 1,
+			id: authors.length + 1,
 			name: nameInput,
 			email: emailInput,
 			tel: Number(telInput),
@@ -309,7 +302,7 @@ const RegisterModal = memo(({ closeModal }) => {
 							id="agreement"
 							required
 						/>
-						<div className="auto-park__checkbox checkbox-custom">
+						<div className="auto-park__checkbox checkbox-custom" tabIndex={0}>
 							<span></span>
 						</div>
 						<label className="modal-form__label" htmlFor="agreement">
