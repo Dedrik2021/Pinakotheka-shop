@@ -7,10 +7,10 @@ export const fetchNewsItems = createAsyncThunk('newsItems/fetchNewsStatus', asyn
 	// const data = await response.json();
 	// return data;
 	const collectionRef = collection(database, 'news')
-	const collectionQuery = query(collectionRef, orderBy('id', 'asc'));
+	const collectionQuery = query(collectionRef, orderBy('id', 'desc'));
 	const data = await getDocs(collectionQuery);
 	const newsData = data.docs.map((item) => {
-		return item.data();
+		return {...item.data(), ID: item.id};
 	});
 	return newsData
 });

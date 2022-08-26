@@ -1,11 +1,14 @@
 import { memo } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { setSinglePainting } from '../../redux/slices/authorsInfosSlice';
 
 const GalleryList = memo(({ authorsWorks, id }) => {
 	const dispatch = useDispatch();
+	const switchLanguageBtn = useSelector((state) => state.filters.switchLanguageBtn);
+	const switchBtn = switchLanguageBtn[0] === 0
+
 	return (
 		<ul className="gallery__list cards-list">
 			{authorsWorks.works.map(({ img, title, price }, i) => {
@@ -31,7 +34,9 @@ const GalleryList = memo(({ authorsWorks, id }) => {
 									<span className="painting-card__price">Price:</span>
 									<span className="painting-card__price">{price} €</span>
 								</div>
-								<button className="painting-card__btn btn btn--universal btn--red-hover">Kaufen</button>
+								<button className="painting-card__btn btn btn--universal btn--red-hover">
+									{switchBtn ? 'Kaufen' : 'Buy'}
+								</button>
 							</div>
 						</article>
 					</li>

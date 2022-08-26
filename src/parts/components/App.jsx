@@ -2,11 +2,11 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Suspense } from 'react';
 import { useSelector } from 'react-redux';
 
-import { 
-	Home, 
-	SinglePainting, 
-	Error404, 
-	MainLayout, 
+import {
+	Home,
+	SinglePainting,
+	Error404,
+	MainLayout,
 	AboutAuthor,
 	News,
 	SingleNews,
@@ -15,70 +15,41 @@ import {
 	UserCart,
 	UserLikes,
 	ForgottenPassword,
-	// EditUserInfo
+	CreateNews,
+	EditNews,
+	ReviewUserInfo
 } from '../pages/indexPage';
 
 import '../../scss/style.scss';
 
 const App = () => {
-	const switchBtn = useSelector((state) => state.filters.switchLanguageBtn);
-	const switchContent = () => {
-		switch(switchBtn) {
-			case 0:
-				return <De/>
-			case 1:
-				return <En/>
-			default:
-				return <De/>
-		}
-	}
+	const switchLanguageBtn = useSelector((state) => state.filters.switchLanguageBtn);
+	const switchBtn = switchLanguageBtn[0] === 0
 
 	return (
+		
 		<Router>
-			<Suspense>{switchContent()}</Suspense>
+			<Suspense>
+				<Routes>
+					<Route path="/" element={<MainLayout />}>
+						<Route path="" element={<Home />} />
+						<Route path={switchBtn ? '/Autoren' : '/Authors'} element={<Authors />} />
+						<Route path={`${switchBtn ? '/Autor/' : '/Author/'}:id`} element={<AboutAuthor />} />
+						<Route path="/Autor/Einzelmalerei/:id" element={<SinglePainting />} />
+						<Route path={switchBtn ? '/Nachrichten' : '/News'} element={<News />} />
+						<Route path={switchBtn ? '/Korb' : '/Cart'} element={<UserCart />} />
+						<Route path={switchBtn ? '/PersonlichesBuro' : '/PersonalOffice'} element={<UserAccount />} />
+						<Route path={switchBtn ? 'DieIhnenGefallen' : '/WhatYouLike'} element={<UserLikes />} />
+						<Route path={switchBtn ? '/PasswortVergessen' : 'ForgotYourPassword'} element={<ForgottenPassword />} />
+						<Route path={`${switchBtn ? '/Nachrichten/Nachricht/' : '/News/Newses/'}:id`} element={<SingleNews />} />
+						<Route path={`${switchBtn ? '/Nachrichten/NachrichtenErstellen' : '/News/CreateNews'}`} element={<CreateNews />} />
+						<Route path={`${switchBtn ? '/Nachrichten/NeuigkeitenBearbeiten/' : '/News/EditNews/'}:id`} element={<EditNews />} />
+						<Route path={`${switchBtn ? '/BenutzerinformationenUberprufen/' : '/ReviewUserInformation/'}:id`} element={<ReviewUserInfo />} />
+						<Route path="*" element={<Error404 />} />
+					</Route>
+				</Routes>
+			</Suspense>
 		</Router>
-	);
-};
-
-const En = () => {
-	return (
-		<Routes>
-			<Route path="/" element={<MainLayout />}>
-				<Route path="" element={<Home />} />
-				<Route path="/Autor/:id" element={<AboutAuthor />} />
-				<Route path="/Autoren" element={<Authors />} />
-				<Route path="/Autor/Einzelmalerei/:id" element={<SinglePainting />} />
-				<Route path="/Nachrichten" element={<News />} />
-				<Route path="/Korb" element={<UserCart />} />
-				<Route path="/PersonlichesBuro" element={<UserAccount />} />
-				<Route path="/DieIhnenGefallen" element={<UserLikes />} />
-				<Route path="/PasswortVergessen" element={<ForgottenPassword />} />
-				<Route path="/Nachrichten/Nachricht/:id" element={<SingleNews />} />
-				{/* <Route path="/BenutzerinfoBearbeiten" element={<EditUserInfo />} /> */}
-				<Route path="*" element={<Error404 />} />
-			</Route>
-		</Routes>
-	);
-};
-
-const De = () => {
-	return (
-		<Routes>
-			<Route path="/" element={<MainLayout />}>
-				<Route path="" element={<Home />} />
-				<Route path="/Autoren" element={<Authors />} />
-				<Route path="/Autor/:id" element={<AboutAuthor />} />
-				<Route path="/Autor/Einzelmalerei/:id" element={<SinglePainting />} />
-				<Route path="/Nachrichten" element={<News />} />
-				<Route path="/Korb" element={<UserCart />} />
-				<Route path="/PersonlichesBuro" element={<UserAccount />} />
-				<Route path="/DieIhnenGefallen" element={<UserLikes />} />
-				<Route path="/PasswortVergessen" element={<ForgottenPassword />} />
-				{/* <Route path="/BenutzerinfoBearbeiten" element={<EditUserInfo />} /> */}
-				<Route path="/Nachrichten/Nachricht/:id" element={<SingleNews />} />
-				<Route path="*" element={<Error404 />} />
-			</Route>
-		</Routes>
 	);
 };
 

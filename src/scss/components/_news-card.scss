@@ -97,12 +97,26 @@
         }
     }
 
+    &__author-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    &__author {
+
+        span {
+            color: $red;
+        }
+    }
+
     &__date {
         font-weight: 400;
         font-size: 14px;
         color: $gray;
-        margin-bottom: 20px;
         letter-spacing: 0;
+        margin-bottom: 0;
 
         @include r($screen-xxl) {
             margin-bottom: 20px;

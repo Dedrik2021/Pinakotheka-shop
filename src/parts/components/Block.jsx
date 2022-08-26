@@ -1,21 +1,25 @@
 import { memo } from 'react';
+import { useSelector } from 'react-redux';
 
 const Block = memo(({ items, blockInfo }) => {
+	const switchLanguageBtn = useSelector((state) => state.filters.switchLanguageBtn);
+	const switchBtn = switchLanguageBtn[0] === 0
+
 	const blockItems = [
-		{ title: 'Autor' }, 
-		{ title: 'Stil' }, 
-		{ title: 'Segeltuch' }
+		{ title: switchBtn ? 'Autor' : 'Author' }, 
+		{ title: switchBtn ? 'Stil' : 'Style' }, 
+		{ title: switchBtn ? 'Segeltuch' : 'Sailcloth' }
 	];
 
 	const block = [
-		{ title: 'Standort' },
-		{ title: 'Verkäufer' },
-		{ title: 'Beschaffenheit' },
-		{ title: 'Material' },
-		{ title: 'Methode der Erstellung' },
-		{ title: 'Bewerteter Wert' },
-		{ title: 'Jahre der Schöpfung' },
-		{ title: 'Datum hinzugefügt' },
+		{ title: switchBtn ? 'Standort' : 'Location' },
+		{ title: switchBtn ? 'Verkäufer' : 'Seller' },
+		{ title: switchBtn ? 'Beschaffenheit' : 'Texture' },
+		{ title: switchBtn ? 'Material' : 'Material' },
+		{ title: switchBtn ? 'Methode der Erstellung' : 'Method of creation' },
+		{ title: switchBtn ? 'Bewerteter Wert' : 'Assessed value' },
+		{ title: switchBtn ? 'Jahre der Schöpfung' : 'Years of creation' },
+		{ title: switchBtn ? 'Datum hinzugefügt' : 'Date added' },
 	];
 
 	const getBlockItems = (items, blockInfo) => {

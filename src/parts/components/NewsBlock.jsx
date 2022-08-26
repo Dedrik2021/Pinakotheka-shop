@@ -7,6 +7,7 @@ import {
     orderBy,
     query
 } from 'firebase/firestore/lite'
+import { useSelector } from 'react-redux';
 
 import NewsBlockSkeleton from '../../skeletons/newsBlockSkeleton';
 import Pagination from './Pagination';
@@ -15,12 +16,11 @@ import { database } from '../../firebase/firebaseConfig';
 
 const NewsBlock = () => {
 	const [news, setNews] = useState([]);
-    const [pageCount, setPageCount] = useState(0)
-    const [dataSelected, setDataSelected] = useState(1)
     const [loading, setLoading] = useState(true)
-
-    const [data, setData] = useState([])
     const collectionRef = collection(database, 'news')
+    const modal = useSelector(state => state.authorsInfos.modal)
+    const switchLanguageBtn = useSelector((state) => state.filters.switchLanguageBtn);
+	const switchBtn = switchLanguageBtn[0] === 0
 
     useEffect(() => {
         getData()
@@ -28,7 +28,7 @@ const NewsBlock = () => {
     
     const getData = async () => {
         setLoading(true)
-        const collectionQuery = query(collectionRef, orderBy('id', 'asc'), limit(4))
+        const collectionQuery = query(collectionRef, orderBy('id', 'desc'), limit(4))
         const dataNews = await getDocs(collectionQuery)
         const newsData = dataNews.docs.map(item => {
             return item.data()
@@ -66,12 +66,12 @@ const NewsBlock = () => {
         <NewsCard news={news}/>
 
 	return (
-		<div className="news-block">
+		<div className={`news-block ${modal ? 'active' : ''}`}>
 			<div className="container">
 				<div className="news-block__box">
-					<span className="news-block__title title">Nachrichten</span>
-					<Link className="news-block__link" to={'/Nachrichten'}>
-						Alle Nachrichten
+					<span className="news-block__title title">{switchBtn ? 'Nachrichten' : 'News'}</span>
+					<Link className="news-block__link" to={switchBtn ? '/Nachrichten' : '/News'} >
+						{switchBtn ? 'Alle Nachrichten' : 'All News'}
 					</Link>
 				</div>
                 {content}

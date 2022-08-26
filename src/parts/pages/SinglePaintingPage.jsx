@@ -14,11 +14,13 @@ import {
 	fetchSinglePainting,
 } from '../../redux/slices/authorsInfosSlice';
 
-const SinglePainting = () => {
+const SinglePaintingPage = () => {
 	const {id} = useParams()
 	const dispatch = useDispatch();
 	const [filterBtn, setFilterBtn] = useState(0);
 	const { authorInfo, singlePainting } = useSelector((state) => state.authorsInfos);
+	const switchLanguageBtn = useSelector((state) => state.filters.switchLanguageBtn);
+	const switchBtn = switchLanguageBtn[0] === 0
 
 	useEffect(() => {
 		dispatch(setBreadCrumbs(''));
@@ -62,8 +64,10 @@ const SinglePainting = () => {
 	return (
 		<>
 			<Helmet>
-				<meta name="description" content="Details das Bildes" />
-				<title>Details das Bildes</title>
+				<meta name="description" content={switchBtn ? 'Details das Bildes' : 'Details the picture'} />
+				<title>
+					{switchBtn ? 'Details das Bildes' : 'Details the picture'}
+				</title>
 			</Helmet>
 			<div className="creations-details">
 				<div className="container">
@@ -72,7 +76,9 @@ const SinglePainting = () => {
 					{elements}
 
 					<section className="others-creation">
-						<h2 className="others-creation__title title">andere Werke das Autors</h2>
+						<h2 className="others-creation__title title">
+							{switchBtn ? 'andere Werke das Autors' : 'other works by the author'}
+						</h2>
 						<ul className="others-creation__list cards-list">
 							<li className="others-creation__item">
 								{/* @@include('./parts/components/_painting-card.html', {
@@ -91,7 +97,9 @@ const SinglePainting = () => {
 				</div>
 				<section className="similar-paintings">
 					<div className="container">
-						<h2 className="similar-paintings__title title">Gemälde mit ähnlichen Themen</h2>
+						<h2 className="similar-paintings__title title">
+							{switchBtn ? 'Gemälde mit ähnlichen Themen' : 'Paintings with similar themes'}
+						</h2>
 						<ul className="similar-paintings__list cards-list">
 							<li className="similar-paintings__item">
 								{/* @@include('./parts/components/_painting-card.html', {
@@ -110,7 +118,9 @@ const SinglePainting = () => {
 				</section>
 				<section className="recent-watched">
 					<div className="container">
-						<h2 className="recent-watched__title title">vor kurzem hast du zugeschaut</h2>
+						<h2 className="recent-watched__title title">
+							{switchBtn ? 'vor kurzem hast du zugeschaut' : 'recently you watched'}
+						</h2>
 						<ul className="recent-watched__list cards-list">
 							<li className="recent-watched__item">
 								{/* @@include('./parts/components/_painting-card.html', {
@@ -132,4 +142,4 @@ const SinglePainting = () => {
 	);
 };
 
-export default SinglePainting;
+export default SinglePaintingPage;

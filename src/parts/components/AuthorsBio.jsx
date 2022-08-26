@@ -1,12 +1,15 @@
 import { memo } from 'react';
 import Helmet from 'react-helmet';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 // import AuthorsWorksSkeleton from '../../skeletons/autorsBioSkeleton';
 
-const AuthorsBio = memo(({ authorInfo, setAuthorInfoBtn, setOpenModal }) => {
+const AuthorsBio = memo((props) => {
+	const {authorInfo, setAuthorInfoBtn, setModal, authorsMessages} = props
 	// const authorInfo = useSelector(state => state.authorsInfos.authorInfo)
+	const switchLanguageBtn = useSelector((state) => state.filters.switchLanguageBtn);
+	const switchBtn = switchLanguageBtn[0] === 0
 
 	// if (!authorInfo) {
 	// 	return (
@@ -22,11 +25,15 @@ const AuthorsBio = memo(({ authorInfo, setAuthorInfoBtn, setOpenModal }) => {
 	return (
 		<>
 			<Helmet>
-				<meta name="description" content="Biographie das Autors" />
-				<title>Biographie das Autors</title>
+				<meta name="description" content={switchBtn ? 'Biographie das Autors' : 'Biography of the author'}/>
+				<title>
+					{switchBtn ? 'Biographie das Autors' : 'Biography of the author'}
+				</title>
 			</Helmet>
 			<section className="authors-works">
-				<h1 className="sr-only">Biographie das Autors</h1>
+				<h1 className="sr-only">
+					{switchBtn ? 'Biographie das Autors' : 'Biography of the author'}
+				</h1>
 				<div className="authors-works__content">
 					<div className="authors-works__inner">
 						<div className="authors-works__img-wrapper">
@@ -41,9 +48,9 @@ const AuthorsBio = memo(({ authorInfo, setAuthorInfoBtn, setOpenModal }) => {
 							<button 
 								type="button" 
 								className="authors-works__btn btn btn--universal btn--red"
-								onClick={() => setOpenModal(true)}
+								onClick={() => dispatch(setModal(true))}
 								>
-								Feedback hinterlassen
+								{switchBtn ? 'Feedback hinterlassen' : 'Leave feedback'}
 							</button>
 						</div>
 						<div className="authors-works__box">
@@ -54,8 +61,10 @@ const AuthorsBio = memo(({ authorInfo, setAuthorInfoBtn, setOpenModal }) => {
 									className="authors-works__btn btn btn--red btn--universal"
 									onClick={() => dispatch(setAuthorInfoBtn(2))}
 								>
-									<span>Bewertungen :</span>
-									<span>{authorInfo.feedBack.length}</span>
+									<span>
+										{switchBtn ? 'Bewertungen' : 'Review'}:
+									</span>
+									<span>{authorsMessages.length}</span>
 								</button>
 							</span>
 							<span className="authors-works__span">
@@ -64,7 +73,9 @@ const AuthorsBio = memo(({ authorInfo, setAuthorInfoBtn, setOpenModal }) => {
 									className=" authors-works__btn btn btn--red btn--universal"
 									onClick={() => dispatch(setAuthorInfoBtn(1))}
 									>
-									<span>Gesamtarbeiten :</span>
+									<span>
+										{switchBtn ? 'Gesamtarbeiten' : 'Overall works'}:
+									</span>
 									<span>{authorInfo.works.length}</span>
 								</button>
 							</span>
@@ -95,7 +106,9 @@ const AuthorsBio = memo(({ authorInfo, setAuthorInfoBtn, setOpenModal }) => {
 							<p>{`"${authorInfo.quote}"`}</p>
 							<cite>{authorInfo.name}</cite>
 						</blockquote>
-						<h2 className="title">Biographie</h2>
+						<h2 className="title">
+							{switchBtn ? 'Biographie' : 'Biography'}
+						</h2>
 						{authorInfo.info.map((item, i) => {
 							return <p key={i}>{item.bio}</p>;
 						})}

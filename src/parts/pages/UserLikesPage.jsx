@@ -1,13 +1,14 @@
 import React, {useEffect} from 'react';
 import { Helmet } from 'react-helmet';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import BreadCrumbs from '../components/BreadCrumbs';
 import { setBreadCrumbs } from '../../redux/slices/breadCrumbsSlice';
 
 const UserLikesPage = () => {
 	const dispatch = useDispatch()
-
+	const switchLanguageBtn = useSelector((state) => state.filters.switchLanguageBtn);
+	const switchBtn = switchLanguageBtn[0] === 0
 
 	useEffect(() => {
 		dispatch(setBreadCrumbs(''));
@@ -19,8 +20,8 @@ const UserLikesPage = () => {
 	return (
 		<>
 			<Helmet>
-				<meta name="description" content="Die Ihnen gefallen" />
-				<title>Die Ihnen gefallen</title>
+				<meta name="description" content={switchBtn ? 'Die Ihnen gefallen' : 'What you like'} />
+				<title>{switchBtn ? 'Die Ihnen gefallen' : 'What you like'}</title>
 			</Helmet>
 			<div className="container">
 				<BreadCrumbs/>

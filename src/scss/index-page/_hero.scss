@@ -1,4 +1,9 @@
 .hero {
+    transition: filter 0.2s;
+
+    &.active {
+        filter: blur(10px);
+    }
     
     @include r($mobile-xl) {
         padding-bottom: 50px;

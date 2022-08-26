@@ -16,6 +16,8 @@ const AuthorsPage = () => {
 	const [loading, setLoading] = useState(true);
 	const dispatch = useDispatch();
 	const authorsCount = useSelector((state) => state.authorsInfos.paintings);
+	const switchLanguageBtn = useSelector((state) => state.filters.switchLanguageBtn);
+	const switchBtn = switchLanguageBtn[0] === 0
 
 	useEffect(() => {
 		dispatch(setBreadCrumbs(''));
@@ -74,17 +76,17 @@ const AuthorsPage = () => {
 	return (
 		<>
 			<Helmet>
-				<meta name="description" content="Autoren" />
-				<title>Autoren</title>
+				<meta name="description" content={switchBtn ? 'Autoren' : 'Authors'} />
+				<title>{switchBtn ? 'Autoren' : 'Authors'}</title>
 			</Helmet>
 
 			<section className="authors">
 				<div className="container">
 					<BreadCrumbs />
 					<div className="authors__top">
-						<h1 className="authors__title title">Autoren</h1>
+						<h1 className="authors__title title">{switchBtn ? 'Autoren' : 'Authors'}</h1>
 						<div className="authors__box">
-							<span className="authors__found">{authorsCount.length} Autoren gefunden</span>
+							<span className="authors__found">{authorsCount.length} {switchBtn ? 'Autoren gefunden' : 'Authors found'}</span>
 							<div className="authors__wrapper">
 								<div className="authors-search">
 									<label className="authors-search__label" htmlFor="search-authors">
@@ -97,7 +99,7 @@ const AuthorsPage = () => {
 										type="text"
 										name="[authors]search"
 										id="search-authors"
-										placeholder="Suche nach Nachnamen"
+										placeholder={switchBtn ? 'Suche nach Nachnamen' : 'Search for last name'}
 									/>
 								</div>
 

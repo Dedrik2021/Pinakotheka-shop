@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ref, update } from 'firebase/database';
 import { Helmet } from 'react-helmet';
+import { useSelector } from 'react-redux';
 
 import { realDb } from '../../firebase/firebaseConfig';
 import img from '../../assets/images/content/unknow-photo.png';
 import Spinner from '../../spinner/Spinner';
-import { useSelector } from 'react-redux';
+import CleanInputIcon from '../../assets/images/sprite/clean-input-icon.svg';
+import Keyboard from '../../assets/images/sprite/keyboard-icon.svg';
 
 const EditUserInfo = (props) => {
 	const { setEditBtn, userInfo, setDataStorage, onStorage, loading, userImg } = props;
@@ -20,22 +22,36 @@ const EditUserInfo = (props) => {
 	const [instaInput, setInstaInput] = useState('');
 	const [imageInput, setImageInput] = useState('');
 
-	const changeImg = userImg === undefined ? userInfo.image : userImg;
-	const emptyImg = userImg === undefined ? img : userImg;
+	const switchLanguageBtn = useSelector((state) => state.filters.switchLanguageBtn);
+	const switchBtn = switchLanguageBtn[0] === 0;
+
+	const changeImg = userImg === '' ? userInfo.image : userImg;
+	const emptyImg = userImg === '' ? img : userImg;
+
+	useEffect(() => {
+		setNameInput(userInfo.name);
+		setEmailInput(userInfo.email);
+		setCountryInput(userInfo.country);
+		setTelInput(userInfo.tel);
+		setNetworkInput(userInfo.faceBook);
+		setCityInput(userInfo.city);
+		setInstaInput(userInfo.instagram);
+		setAddressInput(userInfo.addressStreet);
+	}, []);
 
 	const updateData = (e) => {
 		e.preventDefault();
-		const docToUpdates = ref(realDb, `users/ ${userInfo.id}`);
+		const docToUpdates = ref(realDb, `usersIdentify/ ${userInfo.user}/ ${userInfo.id}`);
 		update(docToUpdates, {
-			name: nameInput === '' ? userInfo.name : nameInput,
-			email: emailInput === '' ? userInfo.email : emailInput,
-			tel: telInput === '' ? userInfo.tel : Number(telInput),
-			faceBook: networkInput === '' ? userInfo.faceBook : networkInput,
-			instagram: instaInput === '' ? userInfo.instagram : instaInput,
+			name: nameInput,
+			email: emailInput,
+			tel: Number(telInput),
+			faceBook: networkInput,
+			instagram: instaInput,
 			image: imageInput === '' ? userInfo.image : userImg,
-			addressStreet: addressInput === '' ? userInfo.addressStreet : addressInput,
-			city: cityInput === '' ? userInfo.city : cityInput,
-			country: countryInput === '' ? userInfo.country : countryInput,
+			addressStreet: addressInput,
+			city: cityInput,
+			country: countryInput,
 		})
 			.then(setEditBtn(false))
 			.catch((err) => {
@@ -71,8 +87,8 @@ const EditUserInfo = (props) => {
 	return (
 		<>
 			<Helmet>
-				<meta name="description" content="Bearbeiten von Informationen" />
-				<title>Bearbeiten von Informationen</title>
+				<meta name="description" content={switchBtn ? 'Bearbeiten von Informationen' : 'Editing information'} />
+				<title>{switchBtn ? 'Bearbeiten von Informationen' : 'Editing information'}</title>
 			</Helmet>
 
 			<div className="user-edit">
@@ -86,7 +102,6 @@ const EditUserInfo = (props) => {
 										className="user-edit__input user-edit__input--img"
 										type="file"
 										id="user-photo"
-										placeholder={userInfo.image}
 										onChange={(e) => (
 											setImageInput(e.target.value), setDataStorage(e.target.files[0])
 										)}
@@ -104,6 +119,27 @@ const EditUserInfo = (props) => {
 						</div>
 						<ul className="user-edit__list">
 							<li className="user-edit__item">
+								<span className='user-edit__star'>*</span>
+								<button
+									className="create-news__clean-btn btn"
+									type="button"
+									onClick={() => setNameInput('')}
+								>
+									{nameInput ? (
+										<>
+											<span className="sr-only">
+												{switchBtn ? 'Eingabefeld löschen' : 'Delete input field'}
+											</span>
+											<svg width="20" height="20">
+												<use href={`${CleanInputIcon}#clean-input`}></use>
+											</svg>
+										</>
+									) : (
+										<svg className="keyboard" width="20" height="20">
+											<use href={`${Keyboard}#keyboard`}></use>
+										</svg>
+									)}
+								</button>
 								<label className="user-edit__label" htmlFor="user-name">
 									Name
 								</label>
@@ -111,12 +147,33 @@ const EditUserInfo = (props) => {
 									className="user-edit__input"
 									type="text"
 									id="user-name"
+									required
 									value={nameInput}
-									placeholder={userInfo.name}
 									onChange={(e) => setNameInput(e.target.value)}
 								/>
 							</li>
 							<li className="user-edit__item">
+							<span className='user-edit__star'>*</span>
+							<button
+									className="create-news__clean-btn btn"
+									type="button"
+									onClick={() => setEmailInput('')}
+								>
+									{emailInput ? (
+										<>
+											<span className="sr-only">
+												{switchBtn ? 'Eingabefeld löschen' : 'Delete input field'}
+											</span>
+											<svg width="20" height="20">
+												<use href={`${CleanInputIcon}#clean-input`}></use>
+											</svg>
+										</>
+									) : (
+										<svg className="keyboard" width="20" height="20">
+											<use href={`${Keyboard}#keyboard`}></use>
+										</svg>
+									)}
+								</button>
 								<label className="user-edit__label" htmlFor="user-email">
 									Email
 								</label>
@@ -124,12 +181,33 @@ const EditUserInfo = (props) => {
 									className="user-edit__input"
 									type="email"
 									id="user-email"
+									required
 									value={emailInput}
-									placeholder={userInfo.email}
 									onChange={(e) => setEmailInput(e.target.value)}
 								/>
 							</li>
 							<li className="user-edit__item">
+							<span className='user-edit__star'>*</span>
+							<button
+									className="create-news__clean-btn btn"
+									type="button"
+									onClick={() => setTelInput('')}
+								>
+									{telInput ? (
+										<>
+											<span className="sr-only">
+												{switchBtn ? 'Eingabefeld löschen' : 'Delete input field'}
+											</span>
+											<svg width="20" height="20">
+												<use href={`${CleanInputIcon}#clean-input`}></use>
+											</svg>
+										</>
+									) : (
+										<svg className="keyboard" width="20" height="20">
+											<use href={`${Keyboard}#keyboard`}></use>
+										</svg>
+									)}
+								</button>
 								<label className="user-edit__label" htmlFor="user-tel">
 									Phone
 								</label>
@@ -137,12 +215,32 @@ const EditUserInfo = (props) => {
 									className="user-edit__input"
 									type="tel"
 									id="user-tel"
+									required
 									value={telInput}
-									placeholder={userInfo.tel}
 									onChange={(e) => setTelInput(e.target.value)}
 								/>
 							</li>
 							<li className="user-edit__item">
+							<button
+									className="create-news__clean-btn btn"
+									type="button"
+									onClick={() => setNetworkInput('')}
+								>
+									{networkInput ? (
+										<>
+											<span className="sr-only">
+												{switchBtn ? 'Eingabefeld löschen' : 'Delete input field'}
+											</span>
+											<svg width="20" height="20">
+												<use href={`${CleanInputIcon}#clean-input`}></use>
+											</svg>
+										</>
+									) : (
+										<svg className="keyboard" width="20" height="20">
+											<use href={`${Keyboard}#keyboard`}></use>
+										</svg>
+									)}
+								</button>
 								<label className="user-edit__label" htmlFor="user-network">
 									Network
 								</label>
@@ -151,11 +249,30 @@ const EditUserInfo = (props) => {
 									type="text"
 									id="user-network"
 									value={networkInput}
-									placeholder={userInfo.faceBook}
 									onChange={(e) => setNetworkInput(e.target.value)}
 								/>
 							</li>
 							<li className="user-edit__item">
+							<button
+									className="create-news__clean-btn btn"
+									type="button"
+									onClick={() => setInstaInput('')}
+								>
+									{instaInput ? (
+										<>
+											<span className="sr-only">
+												{switchBtn ? 'Eingabefeld löschen' : 'Delete input field'}
+											</span>
+											<svg width="20" height="20">
+												<use href={`${CleanInputIcon}#clean-input`}></use>
+											</svg>
+										</>
+									) : (
+										<svg className="keyboard" width="20" height="20">
+											<use href={`${Keyboard}#keyboard`}></use>
+										</svg>
+									)}
+								</button>
 								<label className="user-edit__label" htmlFor="user-insta">
 									Instagram
 								</label>
@@ -164,11 +281,30 @@ const EditUserInfo = (props) => {
 									type="text"
 									id="user-insta"
 									value={instaInput}
-									placeholder={userInfo.instagram}
 									onChange={(e) => setInstaInput(e.target.value)}
 								/>
 							</li>
 							<li className="user-edit__item">
+							<button
+									className="create-news__clean-btn btn"
+									type="button"
+									onClick={() => setCountryInput('')}
+								>
+									{countryInput ? (
+										<>
+											<span className="sr-only">
+												{switchBtn ? 'Eingabefeld löschen' : 'Delete input field'}
+											</span>
+											<svg width="20" height="20">
+												<use href={`${CleanInputIcon}#clean-input`}></use>
+											</svg>
+										</>
+									) : (
+										<svg className="keyboard" width="20" height="20">
+											<use href={`${Keyboard}#keyboard`}></use>
+										</svg>
+									)}
+								</button>
 								<label className="user-edit__label" htmlFor="user-country">
 									Country
 								</label>
@@ -177,11 +313,30 @@ const EditUserInfo = (props) => {
 									type="text"
 									id="user-country"
 									value={countryInput}
-									placeholder={userInfo.country}
 									onChange={(e) => setCountryInput(e.target.value)}
 								/>
 							</li>
 							<li className="user-edit__item">
+							<button
+									className="create-news__clean-btn btn"
+									type="button"
+									onClick={() => setCityInput('')}
+								>
+									{cityInput ? (
+										<>
+											<span className="sr-only">
+												{switchBtn ? 'Eingabefeld löschen' : 'Delete input field'}
+											</span>
+											<svg width="20" height="20">
+												<use href={`${CleanInputIcon}#clean-input`}></use>
+											</svg>
+										</>
+									) : (
+										<svg className="keyboard" width="20" height="20">
+											<use href={`${Keyboard}#keyboard`}></use>
+										</svg>
+									)}
+								</button>
 								<label className="user-edit__label" htmlFor="user-city">
 									City
 								</label>
@@ -190,11 +345,30 @@ const EditUserInfo = (props) => {
 									type="text"
 									id="user-city"
 									value={cityInput}
-									placeholder={userInfo.city}
 									onChange={(e) => setCityInput(e.target.value)}
 								/>
 							</li>
 							<li className="user-edit__item">
+							<button
+									className="create-news__clean-btn btn"
+									type="button"
+									onClick={() => setAddressInput('')}
+								>
+									{addressInput ? (
+										<>
+											<span className="sr-only">
+												{switchBtn ? 'Eingabefeld löschen' : 'Delete input field'}
+											</span>
+											<svg width="20" height="20">
+												<use href={`${CleanInputIcon}#clean-input`}></use>
+											</svg>
+										</>
+									) : (
+										<svg className="keyboard" width="20" height="20">
+											<use href={`${Keyboard}#keyboard`}></use>
+										</svg>
+									)}
+								</button>
 								<label className="user-edit__label" htmlFor="user-address">
 									Address
 								</label>
@@ -203,11 +377,14 @@ const EditUserInfo = (props) => {
 									type="text"
 									id="user-address"
 									value={addressInput}
-									placeholder={userInfo.addressStreet}
 									onChange={(e) => setAddressInput(e.target.value)}
 								/>
 							</li>
 						</ul>
+						<span className='user-edit__star user-edit__star--warning'>
+							*
+							<span>It is necessary to fill in the data field !</span>
+						</span>
 					</div>
 					<div className="user-edit__box-btn">
 						<button

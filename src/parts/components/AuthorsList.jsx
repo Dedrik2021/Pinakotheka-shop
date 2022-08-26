@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { setAuthorInfoBtn } from '../../redux/slices/filtersSlice';
 
@@ -10,6 +10,8 @@ const AuthorsList = memo((props) => {
         onPainting
     } = props
     const dispatch = useDispatch()
+	const switchLanguageBtn = useSelector((state) => state.filters.switchLanguageBtn);
+	const switchBtn = switchLanguageBtn[0] === 0
     
 	return (
 		<ul className="authors__list">
@@ -21,7 +23,7 @@ const AuthorsList = memo((props) => {
 						<article className="author-card">
 							<Link
 								className="author-card__img-link"
-								to={`/Autor/${id}`}
+								to={`${switchBtn ? '/Autor' : '/Author'}/${id}`}
 								onClick={() => dispatch(setAuthorInfoBtn(0))}
 							>
 								<img src={img} alt={name} width="122" height="125" />
@@ -30,7 +32,7 @@ const AuthorsList = memo((props) => {
 							<div className="author-card__box">
 								<Link
 									className="author-card__link"
-									to={`/Autor/${id}`}
+									to={`${switchBtn ? '/Autor' : '/Author'}/${id}`}
 									onClick={() => dispatch(setAuthorInfoBtn(0))}
 								>
 									<h2 className="author-card__user">{name}</h2>
@@ -43,14 +45,14 @@ const AuthorsList = memo((props) => {
 									<Link
 										className="author-card__portfolio author-card__portfolio--reviews"
 										onClick={() => dispatch(setAuthorInfoBtn(2))}
-										to={`/Autor/${id}`}
+										to={`${switchBtn ? '/Autor' : '/Author'}/${id}`}
 									>
 										<span>{feedBack.length}</span>
 									</Link>
 									<Link
 										className="author-card__portfolio"
 										onClick={() => dispatch(setAuthorInfoBtn(1))}
-										to={`/Autor/${id}`}
+										to={`${switchBtn ? '/Autor' : '/Author'}/${id}`}
 									>
 										<span>{works.length}</span>
 									</Link>
@@ -73,7 +75,7 @@ const AuthorsList = memo((props) => {
 										<Link
 											className="author-painting__link"
 											onClick={() => dispatch(setAuthorInfoBtn(1))}
-											to={`/Autor/${id}`}
+											to={`${switchBtn ? '/Autor' : '/Author'}/${id}`}
 										>
 											Alle Werke ansehen
 										</Link>

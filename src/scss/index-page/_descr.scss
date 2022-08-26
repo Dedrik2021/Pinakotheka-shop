@@ -4,6 +4,11 @@
     background-size: cover;
     padding: 0 0 35px 95px;
     margin-bottom: 175px;
+    transition: filter 0.2s;
+
+    &.active {
+        filter: blur(10px);
+    }
 
     @include r($screen-xl) {
         margin-bottom: 70px;

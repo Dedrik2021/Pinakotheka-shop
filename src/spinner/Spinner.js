@@ -1,7 +1,7 @@
-import img from '../assets/images/content/preloader.gif';
+import img from '../assets/images/content/loading-png.gif';
 
 const Spinner = () => {
-	return <img src={img} style={{width: '100%', height: '100%', objectFit: 'contain', position: 'relative', padding: '50px 50px'}} alt="Spinner" />;
+	return <img src={img} style={{width: '100%', height: '100%', objectFit: 'contain', position: 'relative', padding: '130px 130px'}} alt="Spinner" />;
 };
 
 export default Spinner;

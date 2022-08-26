@@ -143,6 +143,10 @@
         display: flex;
     }
 
+    &__message {
+        justify-content: space-between;
+    }
+
     &__message,
     &__wrapper {
         margin-bottom: 25px;

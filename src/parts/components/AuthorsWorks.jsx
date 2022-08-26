@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Helmet from 'react-helmet';
 
 import { changeSinglePainting } from '../../redux/slices/authorsInfosSlice';
@@ -8,6 +8,8 @@ import { changeSinglePainting } from '../../redux/slices/authorsInfosSlice';
 const AuthorsWorks = memo(({ authorsWorks }) => {
 	const { id } = useParams();
 	const dispatch = useDispatch();
+	const switchLanguageBtn = useSelector((state) => state.filters.switchLanguageBtn);
+	const switchBtn = switchLanguageBtn[0] === 0
 	
 	const onPainting = (id) => {
 		const findPainting = {
@@ -19,11 +21,15 @@ const AuthorsWorks = memo(({ authorsWorks }) => {
 	return (
 		<>
 			<Helmet>
-				<meta name="description" content="Werke das Autors" />
-				<title>Werke das Autors</title>
+				<meta name="description" content={switchBtn ? 'Werke das Autors' : 'Works of the author'} />
+				<title>
+					{switchBtn ? 'Werke das Autors' : 'Works of the author'}
+				</title>
 			</Helmet>
 			<section className="authors-works">
-				<h1 className="sr-only">Autoren Produkte</h1>
+				<h1 className="sr-only">
+					{switchBtn ? 'Autoren Produkte' : 'Author Products'}
+				</h1>
 				<div className="authors-works__content">
 					<ul className="gallery__list cards-list">
 						{authorsWorks.works.map((item) => {
@@ -50,7 +56,7 @@ const AuthorsWorks = memo(({ authorsWorks }) => {
 												<span className="painting-card__price">{item.price} €</span>
 											</div>
 											<button className="painting-card__btn btn btn--universal btn--red-hover">
-												Kaufen
+												{switchBtn ? 'Kaufen' : 'Buy'}
 											</button>
 										</div>
 									</article>

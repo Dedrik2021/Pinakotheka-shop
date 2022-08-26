@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import { useSelector } from 'react-redux';
 
 import Block from './Block';
 import LikeIcon from '../../assets/images/sprite/like-icon.svg'
@@ -6,6 +7,8 @@ import MessageIcon from '../../assets/images/sprite/message-icon.svg'
 
 const PaintingCartInfo = memo((props) => {
 	const { img, title, lot, price, like } = props;
+	const switchLanguageBtn = useSelector((state) => state.filters.switchLanguageBtn);
+	const switchBtn = switchLanguageBtn[0] === 0
 
 	return (
 		<article className="details-card">
@@ -27,8 +30,12 @@ const PaintingCartInfo = memo((props) => {
 				</span>
 				<h3 className="details-card__title">{title}</h3>
 				<div className="details-card__wrapper">
-					<span className="details-card__statistics details-card__statistics--shared">12 315 geteilt</span>
-					<span className="details-card__statistics details-card__statistics--viewing">2 315 ansehen</span>
+					<span className="details-card__statistics details-card__statistics--shared">
+						12 315 {switchBtn ? 'geteilt' : 'share'}
+					</span>
+					<span className="details-card__statistics details-card__statistics--viewing">
+						2 315 {switchBtn ? 'ansehen' : 'view'}
+					</span>
 				</div>
 				<div className="details-card__message">
 					<button className="details-card__message-btn details-card__message-btn--like btn" type="button">
@@ -38,11 +45,14 @@ const PaintingCartInfo = memo((props) => {
 						</svg>
 						<span>{like}</span>
 					</button>
-					<a className="details-card__message-btn details-card__message-btn--message btn" href="#">
+					<a className="details-card__message-btn details-card__message-btn--message btn" href="#"
+					style={{justifyContent: 'center'}}>
 						<svg width="18" height="18">
 							<use href={`${MessageIcon}#message`}></use>
 						</svg>
-						<span>Schreiben dem Autor</span>
+						<span>
+							{switchBtn ? 'Schreiben dem Autor' : 'Write to the author'}
+						</span>
 					</a>
 				</div>
 
@@ -54,9 +64,10 @@ const PaintingCartInfo = memo((props) => {
 						{price}
 					</span>
 					<div className="details-card__question">
-						Wie kauft man?
+						{switchBtn ? 'Wie kauft man?' : 'How to buy?'}
 						<p className="details-card__question-text">
-							Gehen Sie zum Online-Shop, wählen Sie ein Produkt aus und kaufen Sie!
+							{switchBtn ? 'Gehen Sie zum Online-Shop, wählen Sie ein Produkt aus und kaufen Sie!' : 
+							'Go to the online store, select a product and buy!'}
 						</p>
 					</div>
 				</div>
@@ -65,10 +76,10 @@ const PaintingCartInfo = memo((props) => {
 						className="details-card__btns-btn details-card__btns-btn--buy btn btn--red-hover btn--universal"
 						href="#"
 					>
-						Kaufen
+						{switchBtn ? 'Kaufen' : 'Buy'}
 					</a>
 					<a className="details-card__btns-btn btn btn--universal btn--red-hover" href="#">
-						Schlagen Sie einen Preis vor
+						{switchBtn ? 'Schlagen Sie einen Preis vor' : 'Suggest a price'}
 					</a>
 				</div>
 			</div>

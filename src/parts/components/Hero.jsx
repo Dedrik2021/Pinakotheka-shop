@@ -32,6 +32,9 @@ const Hero = () => {
 	const [sliderInfo, setSliderInfo] = useState();
 	const dispatch = useDispatch();
 	const paintingsInfo = useSelector((state) => state.authorsInfos.paintings);
+	const modal = useSelector((state) => state.authorsInfos.modal);
+	const switchLanguageBtn = useSelector((state) => state.filters.switchLanguageBtn);
+	const switchBtn = switchLanguageBtn[0] === 0
 
 	useEffect(() => {
 		dispatch(fetchAuthorsItems());
@@ -84,12 +87,14 @@ const Hero = () => {
 	};
 
 	return (
-		<section className="hero">
-			<h2 className="sr-only">Unsere Autoren</h2>
+		<section className={`hero ${modal ? 'active' : ''}`}>
+			<h2 className="sr-only">
+				{switchBtn ? 'Unsere Autoren' : 'Our authors'}
+			</h2>
 			<div className="container">
 				<span className="hero__circle"></span>
 				<div className="hero__scroll">
-					<span></span>Herunterrollen
+					<span></span>{switchBtn ? 'Herunterrollen' : 'Roll down'}
 				</div>
 			</div>
 			<div className="hero__sliders">
@@ -131,7 +136,7 @@ const Hero = () => {
 										<span>{works[0].lot}</span>
 									</span>
 									<div className="pick-card__wrapper">
-										<span>Autor:</span>
+										<span>{switchBtn ? 'Autor' : 'Author'}:</span>
 										<a className="pick-card__author" href="#" rel="author">
 											{works[0].cardInfo[0].info}
 										</a>
@@ -146,7 +151,7 @@ const Hero = () => {
 											to={`/Autor/Einzelmalerei/${id}`}
 											onClick={() => onPainting(works[0].id)}
 										>
-											Mehr Details
+											{switchBtn ? 'Mehr Details' : 'More details'}
 										</Link>
 										<span className="pick-card__price">
 											<span>€</span>

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { memo } from 'react';
 
 import { changeSinglePainting } from '../../redux/slices/authorsInfosSlice';
@@ -17,6 +17,8 @@ const PaintingCard = memo((props) => {
 
 const Painting = memo(({ item, props }) => {
 	const dispatch = useDispatch();
+	const switchLanguageBtn = useSelector((state) => state.filters.switchLanguageBtn);
+	const switchBtn = switchLanguageBtn[0] === 0
 
 	const onAuthorInfo = () => {
 		const findPainting = {
@@ -47,7 +49,7 @@ const Painting = memo(({ item, props }) => {
 					<div className="painting-card__wrapper">
 						<Link
 							className="painting-card__author-link"
-							to={`/Autor/${props.id}`}
+							to={`${switchBtn ? '/Autor' : '/Author'}/${props.id}`}
 							onClick={() => onAuthorInfo()}
 						>
 							<span>{props.name}</span>
@@ -65,7 +67,7 @@ const Painting = memo(({ item, props }) => {
 
 					<div className="painting-card__buy">
 						<a className="painting-card__btn btn btn--universal btn--red-hover" href="#">
-							Kaufen
+							{switchBtn ? 'Kaufen' : 'Buy'}
 						</a>
 						<a className="painting-card__btn painting-card__btn--share btn btn--red-hover" href="#">
 							<span className="sr-only">share</span>

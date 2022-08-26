@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 import PaintingCard from '../components/PaintingCard';
 import GalleryFilters from '../components/GalleryFilters';
@@ -12,12 +13,16 @@ const Gallery = () => {
 	const [loading, setLoading] = useState(true);
 	const [filter, setFilter] = useState(0);
 
+	const modal = useSelector(state => state.authorsInfos.modal)
+	const switchLanguageBtn = useSelector((state) => state.filters.switchLanguageBtn);
+	const switchBtn = switchLanguageBtn[0] === 0
+
 	const filtersBtn = [
-		{ id: 0, title: 'Willkürlich' },
-		{ id: 1, title: 'Neue Dinge' },
-		{ id: 2, title: 'Empfohlen' },
-		{ id: 3, title: 'Beliebt' },
-		{ id: 4, title: 'Rabatte' },
+		{ id: 0, title: switchBtn ? 'Aller' : 'All' },
+		{ id: 1, title: switchBtn ? 'Neue Dinge' : 'New things' },
+		{ id: 2, title: switchBtn ? 'Empfohlen' : 'Recommend' },
+		{ id: 3, title: switchBtn ? 'Beliebt' : 'Popular' },
+		{ id: 4, title: switchBtn ? 'Rabatte' : 'Discount' },
 	];
 
 	useEffect(() => {
@@ -56,8 +61,10 @@ const Gallery = () => {
 	// const errorMessage = statusPaintings === 'error' ? <h1>ERROR</h1> : null;
 
 	return (
-		<section className="gallery">
-			<h2 className="sr-only">Autoren Produkte</h2>
+		<section className={`gallery ${modal ? 'active' : ''}`}>
+			<h2 className="sr-only">
+				{switchBtn ? 'Autoren Produkte' : 'Author Products'}
+			</h2>
 			<div className="container">
 				<div className="gallery__content">
 					<ul className="gallery-filters">

@@ -1,9 +1,14 @@
+import { useSelector } from "react-redux";
+
 const PaintingCardBtns = ({filterBtn, setFilterBtn}) => {
+	const switchLanguageBtn = useSelector((state) => state.filters.switchLanguageBtn);
+	const switchBtn = switchLanguageBtn[0] === 0
+
 	const tabsBtns = [
-		{ id: 0, title: 'Beschreibung' },
-		{ id: 1, title: 'Charakteristisch' },
-		{ id: 2, title: 'Lieferung' },
-		{ id: 3, title: 'Garantien' },
+		{ id: 0, title: switchBtn ? 'Beschreibung' : 'Description' },
+		{ id: 1, title: switchBtn ? 'Charakteristisch' : 'Characteristic' },
+		{ id: 2, title: switchBtn ? 'Lieferung' : 'Delivery' },
+		{ id: 3, title: switchBtn ? 'Garantien' : 'Guarantees' },
 	];
 	return (
 		<ul className="tabs-btns">

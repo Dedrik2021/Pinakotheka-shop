@@ -9,6 +9,7 @@
     width: 100%;
     transition: padding 0.4s, box-shadow 0.4s;
 
+
     @include r($mobile-xl) {
         padding: 20px 0 10px;
     }
@@ -196,9 +197,11 @@
 
             &>.menu__btn {
                 padding: 11px 14px 10px;
+
                 &:hover {
                     background-color: $red-200;
                 }
+
                 svg {
                     fill: $white;
                 }
@@ -207,8 +210,12 @@
             &>.menu__form--btn {
                 display: block;
             }
+            &>.keyboard {
+                opacity: 1;
+                visibility: visible;
+            }
         }
-        
+
         &--btn {
             position: absolute;
             width: 20px;
@@ -217,8 +224,18 @@
             top: 12px;
             background-color: $white;
             display: none;
+            fill: rgba(0, 0, 0, 0.6);
         }
 
+        .keyboard {
+            position: absolute;
+            right: 60px;
+            pointer-events: none;
+            opacity: 0;
+            visibility: hidden;
+            fill: rgba(0, 0, 0, 0.6);
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
     }
 
     
@@ -290,7 +307,7 @@
         }
 
         &:focus {
-            background-color: $red-200  ;
+            background-color: $red-200;
         }
     }
 
@@ -454,6 +471,10 @@
                 object-fit: cover;
                 padding: 45px 45px;
                 left: -120px;
+                border-radius: 50%;
+                height: 150px;
+                width: 150px;
+                top: -52px;
             }
 
             &-dropdown {
@@ -476,8 +497,16 @@
                     visibility: visible;
                 }
 
+                &__title {
+                    margin-bottom: 20px;
+                    text-align: center;
+                    background-color: $gray-300;
+                    padding: 5px;
+                    border-radius: 10px;
+                }
+
                 &__name {
-                    padding-top: 5px;
+                    padding-top: 10px;
                     color: #CE0020;
                     font-size: 20px;
                     word-wrap: break-word;

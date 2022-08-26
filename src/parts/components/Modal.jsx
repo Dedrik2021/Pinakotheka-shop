@@ -9,10 +9,11 @@ import { setSwitchModal } from '../../redux/slices/authorsInfosSlice';
 const Modal = memo(({ closeModal }) => {
 	const dispatch = useDispatch()
 	const switchModal = useSelector(state => state.authorsInfos.switchModal)
+	const switchLanguageBtn = useSelector((state) => state.filters.switchLanguageBtn);
 
 	const switchBtn = [
-		{ id: 0, title: 'Eingang' },
-		{ id: 1, title: 'Anmeldung' },
+		{ id: 0, title: switchLanguageBtn[0] === 0 ? 'Eingang' : 'Entrance' },
+		{ id: 1, title: switchLanguageBtn[0] === 0 ? 'Anmeldung' : 'Registration' },
 	];
 
 	const switchContent = () => {
@@ -30,8 +31,10 @@ const Modal = memo(({ closeModal }) => {
 		<div className="modal" >
 			<div className="modal__box">
 				<img src={logo} alt="logo" width="150" height="45" />
-				<button className="modal__btn btn btn--close" onClick={() => closeModal(false)} type="button">
-					<span className="sr-only">Nah dran</span>
+				<button className="modal__btn btn btn--close" onClick={() => dispatch(closeModal(false))} type="button">
+					<span className="sr-only">
+						{switchLanguageBtn[0] === 0 ? 'Nah dran' : 'Close up'}
+					</span>
 					<span></span>
 				</button>
 			</div>

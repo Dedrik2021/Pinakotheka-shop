@@ -9,6 +9,8 @@ const BreadCrumbs = () => {
 	const {id} = useParams()
 	const dispatch = useDispatch();
 	const {breadCrumbsTitle} = useSelector((state) => state.breadCrumbs);
+	const switchLanguageBtn = useSelector((state) => state.filters.switchLanguageBtn);
+	const switchBtn = switchLanguageBtn[0] === 0
 
 	const getBreadCrumbs = (breadCrumbsTitle) => {
 		if (breadCrumbsTitle.length > 1) {
@@ -18,7 +20,7 @@ const BreadCrumbs = () => {
 						<Link
 							onClick={() => (dispatch(setBreadCrumbs(''), (dispatch(setAuthorInfoBtn(0)))))}
 							className="breadcrumbs__link"
-							to={`${breadCrumbsTitle[0] === 'Nachrichten' ? `/${breadCrumbsTitle[0]}` : `/${breadCrumbsTitle[0]}/${id}`}`}
+							to={`${breadCrumbsTitle[0] === switchBtn ? 'Nachrichten' : 'News' ? `/${breadCrumbsTitle[0]}` : `/${breadCrumbsTitle[0]}/${id}`}`}
 						>
 							{item}
 						</Link>
@@ -40,7 +42,7 @@ const BreadCrumbs = () => {
 		<ul className="breadcrumbs">
 			<li className="breadcrumbs__item">
 				<Link className="breadcrumbs__link" to={'/'}>
-					Heimat
+					{switchBtn ? 'Heimat' : 'Home'}
 				</Link>
 			</li>
 			{getBreadCrumbs(breadCrumbsTitle)}

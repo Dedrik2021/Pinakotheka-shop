@@ -1,31 +1,39 @@
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+
 import logo from '../../assets/images/content/logo-2.svg';
 import Social from './Social';
 
 const Footer = () => {
+	const modal = useSelector(state => state.authorsInfos.modal)
+	const switchLanguageBtn = useSelector((state) => state.filters.switchLanguageBtn);
+	const switchBtn = switchLanguageBtn[0] === 0
+
 	const linksBtns = [
-		{ id: 0, title: 'Kreationen', src: '' },
-		{ id: 1, title: 'Nachrichten', src: '' },
-		{ id: 2, title: 'Über das Projekt', src: '' },
+		{ id: 0, title: switchBtn ? 'Kreationen' : 'Creations', src: '' },
+		{ id: 1, title: switchBtn ? 'Nachrichten' : 'News', src: '' },
+		{ id: 2, title: switchBtn ? 'Über das Projekt' : 'About this project', src: '' },
 		{ id: 3, title: 'Error-404', src: '' },
 		{ id: 4, title: 'FAQ', src: '' },
-		{ id: 5, title: 'Nutzungsbedingungen', src: '' },
-		{ id: 6, title: 'Für Autoren', src: '' },
-		{ id: 7, title: 'Garantien', src: '' },
-		{ id: 8, title: 'Kontakte', src: '' },
+		{ id: 5, title: switchBtn ? 'Nutzungsbedingungen' : 'Terms and Conditions', src: '' },
+		{ id: 6, title: switchBtn ? 'Für Autoren' : 'For authors', src: '' },
+		{ id: 7, title: switchBtn ? 'Garantien' : 'Guarantees', src: '' },
+		{ id: 8, title: switchBtn ? 'Kontakte' : 'Contacts', src: '' },
 	];
 
 	return (
-		<footer className="footer">
+		<footer className={`footer ${modal ? 'active' : ''}`}>
 			<div className="container">
 				<div className="footer__content">
 					<div className="footer__box">
 						<Link className="logo footer__logo" to={'/'}>
 							<img src={logo} alt="logo" width="170" height="45" />
 						</Link>
-						<span className="footer__copy">2020 Alle Rechte vorbehalten</span>
+						<span className="footer__copy">
+							{switchBtn ? '2020 Alle Rechte vorbehalten' : '2020 All Rights reserved'}
+						</span>
 						<Link className="footer__box-link" to="#">
-							Datenschutz-Bestimmungen
+							{switchBtn ? 'Datenschutz-Bestimmungen' : 'Privacy Policy'}
 						</Link>
 					</div>
 					<ul className="footer__list">

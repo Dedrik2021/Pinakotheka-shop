@@ -187,6 +187,10 @@ main {
         opacity: 0;
         transition: opacity 0.4s;
     }
+
+    &:focus {
+        border: 2px solid $red;
+    }
 }
 
 .title {
