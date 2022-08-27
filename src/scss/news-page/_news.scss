@@ -50,6 +50,13 @@
                 
                 &:hover {
                     color: $red;
+
+                    .news-card__author {
+                        color: $black;
+                        span {
+                            color: $black;
+                        }
+                    }
             
                     .news-card__img-wrapper {
                         box-shadow: 3px 3px 8px 1px rgba(0, 0, 0, 0.5);
@@ -506,7 +513,7 @@
                     display: flex;
                     height: auto;
                     flex-direction: column;
-                    padding: 20px 0;
+                    padding: 20px 10px;
 
                     @include r($screen-xl) {
                         padding: 20px 15px;
