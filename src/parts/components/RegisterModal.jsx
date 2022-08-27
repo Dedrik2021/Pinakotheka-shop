@@ -297,7 +297,7 @@ const RegisterModal = memo(({ closeModal }) => {
 							id="agreement"
 							required
 						/>
-						<div className="auto-park__checkbox checkbox-custom">
+						<div className="auto-park__checkbox checkbox-custom" tabIndex={0}>
 							<span></span>
 						</div>
 						<label className="modal-form__label" htmlFor="agreement">
