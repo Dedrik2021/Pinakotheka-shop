@@ -12,8 +12,16 @@ import Modal from './Modal';
 import { setUserDropdown, setModal, fetchAuthorsData } from '../../redux/slices/authorsInfosSlice';
 import { database, realDb } from '../../firebase/firebaseConfig';
 import UserAuthSkeleton from '../../skeletons/userAuthSkeleton';
-import { setUserData, setClientUsers, setAuthorUsers, setUsers, setDataUsers, setUserChanged, fetchUsersData } from '../../redux/slices/userSlice';
-import img from '../../assets/images/content/unknow-photo.png'
+import {
+	setUserData,
+	setClientUsers,
+	setAuthorUsers,
+	setUsers,
+	setDataUsers,
+	setUserChanged,
+	fetchUsersData,
+} from '../../redux/slices/userSlice';
+import img from '../../assets/images/content/unknow-photo.png';
 import SearchIcon from '../../assets/images/sprite/search-icon.svg';
 import CleanInputIcon from '../../assets/images/sprite/clean-input-icon.svg';
 import Keyboard from '../../assets/images/sprite/keyboard-icon.svg';
@@ -24,20 +32,11 @@ const Header = () => {
 	const dispatch = useDispatch();
 	const switchBtn = useSelector((state) => state.filters.switchLanguageBtn);
 	const data = useSelector((state) => state.user.userData);
-	const {
-		clientUsers, 
-		authorUsers, 
-		users, 
-		dataUsers, 
-		usersFirestore,
-		usersStatus
-
-	} = useSelector(state => state.user)
-	const modal = useSelector((state) => state.authorsInfos.modal);
+	const { clientUsers, authorUsers, users, dataUsers, usersFirestore, usersStatus } = useSelector(
+		(state) => state.user,
+	);
+	const { modal, authors, authorsStatus } = useSelector((state) => state.authorsInfos);
 	// const userEmail = useSelector(state => state.user.userEmail)
-
-	console.log(authorUsers);
-	console.log(clientUsers);
 
 	const [scroll, setScroll] = useState(false);
 	// const [modal, setModal] = useState(false);
@@ -46,8 +45,8 @@ const Header = () => {
 	const [burgerBtn, setBurgerBtn] = useState(false);
 	const [inputValue, setInputValue] = useState('');
 	// const [loading, setLoading] = useState(true);
-	const [usersArray, setUsersArray] = useState([])
-	const [getUsers, setGetUsers] = useState([])
+	const [usersArray, setUsersArray] = useState([]);
+	const [getUsers, setGetUsers] = useState([]);
 
 	// const [languages, setLanguages] = useState([]);
 	// const [outputPath, setOutputPath] = useState('')
@@ -101,67 +100,65 @@ const Header = () => {
 	// 		});
 	// };
 
-	
-
 	// console.log(outputPath);
 	// console.log(window.location.pathname);
 	// console.log(language);
 
 	const linksBtns = [
-		{ 
-			id: 0, 
-			title: switchBtn == 0 ? 'Kreationen' : 'Creations', 
-			src: '#' 
+		{
+			id: 0,
+			title: switchBtn == 0 ? 'Kreationen' : 'Creations',
+			src: '#',
 		},
-		{ 
-			id: 1, 
-			title: switchBtn == 0 ? 'Nachrichten' : 'News', 
-			src: switchBtn == 0 ? '/Nachrichten' : '/News' 
+		{
+			id: 1,
+			title: switchBtn == 0 ? 'Nachrichten' : 'News',
+			src: switchBtn == 0 ? '/Nachrichten' : '/News',
 		},
-		{ 
-			id: 2, 
-			title: switchBtn == 0 ? 'Über das Projekt' : 'About this project', 
-			src: '#' 
+		{
+			id: 2,
+			title: switchBtn == 0 ? 'Über das Projekt' : 'About this project',
+			src: '#',
 		},
-		{ 
-			id: 3, 
-			title: 'Error-404', 
-			src: '/Error-404' 
+		{
+			id: 3,
+			title: 'Error-404',
+			src: '/Error-404',
 		},
-		{ 
-			id: 4, 
-			title: 'FAQ', 
-			src: '#' 
+		{
+			id: 4,
+			title: 'FAQ',
+			src: '#',
 		},
-		{ 
-			id: 5, 
-			title: switchBtn == 0 ? 'Nutzungsbedingungen' : 'Terms and Conditions', 
-			src: '#' 
+		{
+			id: 5,
+			title: switchBtn == 0 ? 'Nutzungsbedingungen' : 'Terms and Conditions',
+			src: '#',
 		},
-		{ 
-			id: 6, 
-			title: switchBtn == 0 ? 'Für Autoren' : 'For authors', 
-			src: '#' 
+		{
+			id: 6,
+			title: switchBtn == 0 ? 'Für Autoren' : 'For authors',
+			src: '#',
 		},
-		{ 
-			id: 7, 
-			title: switchBtn == 0 ? 'Garantien' : 'Guarantees', 
-			src: '#' 
+		{
+			id: 7,
+			title: switchBtn == 0 ? 'Garantien' : 'Guarantees',
+			src: '#',
 		},
-		{ 
-			id: 8, 
-			title: switchBtn == 0 ? 'Kontakte' : 'Contacts', 
-			src: '#' 
+		{
+			id: 8,
+			title: switchBtn == 0 ? 'Kontakte' : 'Contacts',
+			src: '#',
 		},
-		{ 
-			id: 9, 
-			title: switchBtn == 0 ? 'Passwort vergessen' : 'Forgot your password', 
-			src: switchBtn == 0 ? '/PasswortVergessen' : '/ForgotYourPassword' 
+		{
+			id: 9,
+			title: switchBtn == 0 ? 'Passwort vergessen' : 'Forgot your password',
+			src: switchBtn == 0 ? '/PasswortVergessen' : '/ForgotYourPassword',
 		},
-		{ 
-			id: 10, 
-			title: switchBtn == 0 ? 'Nachrichten erstellen' : 'Create news', 
-			src: switchBtn == 0 ? '/Nachrichten/NachrichtenErstellen' : '/News/CreateNews' 
+		{
+			id: 10,
+			title: switchBtn == 0 ? 'Nachrichten erstellen' : 'Create news',
+			src: switchBtn == 0 ? '/Nachrichten/NachrichtenErstellen' : '/News/CreateNews',
 		},
 	];
 
@@ -221,7 +218,7 @@ const Header = () => {
 				// 	setLoading(true);
 				// 	if (snapshot.exists()) {
 				// 		dispatch(setUsers(Object.values(snapshot.val())))
-				// 	} 
+				// 	}
 				// 	setLoading(false);
 				// });
 
@@ -235,13 +232,14 @@ const Header = () => {
 				// });
 				// setLoading(false)
 				// dispatch(setUsers(usersFirestore))
-				dispatch(fetchUsersData())
+				dispatch(fetchUsersData());
+				dispatch(fetchAuthorsData());
 			} else {
 				// setLoading(true);
 				// dispatch(fetchAuthorsData([]));
 				// dispatch(setUsers([]))
 				// setLoading(false);
-				dispatch(fetchUsersData([]))
+				dispatch(fetchUsersData([]));
 			}
 		});
 		onValue(ref(realDb, 'switchLanguageBtn'), (snapshot) => {
@@ -249,7 +247,7 @@ const Header = () => {
 				dispatch(setSwitchLanguageBtn(Object.values(snapshot.val())));
 			}
 		});
-		dispatch(fetchAuthorsData())
+		dispatch(fetchAuthorsData());
 	}, []);
 
 	useEffect(() => {
@@ -261,12 +259,11 @@ const Header = () => {
 		// 		}
 		// 	}
 		// }
-		dispatch(setClientUsers(users.filter((el) => el.user === 'client')))
-		dispatch(setAuthorUsers(users.filter((el) => el.user === 'author')))
-		setGetUsers(users)
-		dispatch(setDataUsers(users))
-	},[users])
-
+		dispatch(setClientUsers(users.filter((el) => el.user === 'client')));
+		dispatch(setAuthorUsers(users.filter((el) => el.user === 'author')));
+		setGetUsers(users);
+		dispatch(setDataUsers(users));
+	}, [users, authors]);
 
 	useEffect(() => {
 		const checkScroll = () => {
@@ -292,11 +289,10 @@ const Header = () => {
 	const logOut = () => {
 		if (
 			window.confirm(
-				switchBtn == 0 ? 
-				'Sie sind sicher, dass Sie gehen wollen ?' : 
-				'You are sure that you want to log out?'
+				switchBtn == 0 ? 'Sie sind sicher, dass Sie gehen wollen ?' : 'You are sure that you want to log out?',
 			)
-		) signOut(auth);
+		)
+			signOut(auth);
 		dispatch(setUserDropdown(false));
 		dispatch(setModal(false));
 		navigate('/');
@@ -304,21 +300,35 @@ const Header = () => {
 
 	const changeAuth = () => {
 		if (user != null) {
+			const findAuthor = authors.find((item) => item.emailId === user.email);
 			const findUser = users.find((item) => item.emailId === user.email);
-			const userContent = usersStatus === 'loading' ? (
-				<UserAuthSkeleton />
-			) : (
-				<UserContent
-					logOut={logOut}
-					findUser={findUser}
-					userDropdownRefs={userDropdownRefs}
-					switchBtn={switchBtn}
-				/>
-			);
-			return user ? userContent : null;
+
+			if (usersStatus === 'loading' || authorsStatus === 'loading') {
+				return <UserAuthSkeleton />;
+			} else {
+				if (findUser !== undefined) {
+					return (
+						<UserContent
+							logOut={logOut}
+							findUser={findUser}
+							userDropdownRefs={userDropdownRefs}
+							switchBtn={switchBtn}
+						/>
+					);
+
+				} else if (findAuthor !== undefined) {
+					return (
+						<UserContent
+							logOut={logOut}
+							findUser={findAuthor}
+							userDropdownRefs={userDropdownRefs}
+							switchBtn={switchBtn}
+						/>
+					);
+				}
+			}
 		} else {
-			return <ShowModal modal={modal} setModal={setModal} /> ;
-			// return modalContent;
+			return <ShowModal modal={modal} setModal={setModal} />;
 		}
 	};
 
@@ -396,7 +406,7 @@ const Header = () => {
 								onBlur={() => setDropdown(false)}
 							>
 								<button
-								// onBlur={() => setDropdown(false)}
+									// onBlur={() => setDropdown(false)}
 									ref={dropdownRefs}
 									className={`menu__link ${dropdown ? 'active' : ''}`}
 									type="button"
@@ -405,10 +415,7 @@ const Header = () => {
 									{switchBtn == 0 ? 'Katalog' : 'Catalog'}
 								</button>
 								<span className="menu__border-bottom"></span>
-								<ul 
-									className="menu-dropdown"
-									
-									>
+								<ul className="menu-dropdown">
 									{linksBtns.map(({ id, title, src }) => (
 										<li className="menu-dropdown__item" key={id}>
 											<Link className="menu-dropdown__link" to={src}>
@@ -464,26 +471,26 @@ const UserContent = memo((props) => {
 	const userDropdown = useSelector((state) => state.authorsInfos.userDropdown);
 	const dispatch = useDispatch();
 	const langageBtn = useSelector((state) => state.filters.switchLanguageBtn);
-	const switchBtn = langageBtn[0] === 0
+	const switchBtn = langageBtn[0] === 0;
 
 	const auth = getAuth();
 	const user = auth.currentUser;
 
 	const userLinks = [
-		{ 
-			id: 0, 
-			title: switchBtn ? 'Persönliches Büro' : 'Personal Office', 
-			path: switchBtn ? '/PersonlichesBuro' : '/PersonalOffice' 
+		{
+			id: 0,
+			title: switchBtn ? 'Persönliches Büro' : 'Personal Office',
+			path: switchBtn ? '/PersonlichesBuro' : '/PersonalOffice',
 		},
 		{
-			id: 1, 
-			title: switchBtn ? 'Was dir gefällt' : 'What you like', 
-			path: switchBtn ? '/DieIhnenGefallen' : '/WhatYouLike' 
+			id: 1,
+			title: switchBtn ? 'Was dir gefällt' : 'What you like',
+			path: switchBtn ? '/DieIhnenGefallen' : '/WhatYouLike',
 		},
-		{ 
-			id: 2, 
-			title: switchBtn ? 'Korb' : 'Cart', 
-			path: switchBtn ? '/Korb' : '/Cart' 
+		{
+			id: 2,
+			title: switchBtn ? 'Korb' : 'Cart',
+			path: switchBtn ? '/Korb' : '/Cart',
 		},
 	];
 
@@ -577,10 +584,7 @@ const UserContent = memo((props) => {
 				</button>
 				<div className={`user-dropdown ${userDropdown ? 'active' : ''}`}>
 					<div className="user-dropdown__title">
-						{getDate()}!
-						<span className="user-dropdown__name">
-							{findUser.name}
-						</span>
+						{getDate()}!<span className="user-dropdown__name">{findUser.name}</span>
 					</div>
 					<ul className="user__list">
 						{userLinks.map(({ id, title, path }) => {
@@ -591,11 +595,11 @@ const UserContent = memo((props) => {
 										className={`user__link ${activeLink ? 'active' : ''}`}
 										to={path}
 										// state={{ changeUser: findUser }}
-										onClick={
-											() => (
-												dispatch(setUserDropdown(!userDropdown)), 
-												focusOnLink(id),
-												dispatch(setUserChanged(findUser)))}
+										onClick={() => (
+											dispatch(setUserDropdown(!userDropdown)),
+											focusOnLink(id),
+											dispatch(setUserChanged(findUser))
+										)}
 									>
 										{title}
 									</Link>

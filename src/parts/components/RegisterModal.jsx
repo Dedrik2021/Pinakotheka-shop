@@ -103,7 +103,7 @@ const RegisterModal = memo(({ closeModal }) => {
 			dateOfRegister: new Date().toLocaleString(),
 			faceBook: '',
 			insta: '',
-			img: '',
+			image: '',
 			city: '',
 			country: '',
 			chat: [],
