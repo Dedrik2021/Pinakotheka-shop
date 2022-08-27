@@ -4,9 +4,9 @@ import ContentLoader from 'react-content-loader';
 const AuthorsBioSkeleton = () => (
 	<ContentLoader
 		speed={2}
-		width={1260}
+		width={1275}
 		height={1080}
-		viewBox="0 0 1260 1080"
+		viewBox="0 0 1275 1080"
 		backgroundColor="#e3e3e3"
 		foregroundColor="#d6d1d1"
 	>
