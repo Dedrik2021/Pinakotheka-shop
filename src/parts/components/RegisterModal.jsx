@@ -118,52 +118,6 @@ const RegisterModal = memo(({ closeModal }) => {
 		});
 	};
 
-	// const addData = () => {
-	// 	const ID = uuiv4();
-	// 	set(ref(realDb, `users/ ${ID}`), {
-	// 		emailId: emailInput,
-	// 		id: ID,
-	// 		name: nameInput,
-	// 		email: emailInput,
-	// 		tel: Number(telInput),
-	// 		password: passwordInput,
-	// 		user: checkedAuthor ? authorInput : clientInput,
-	// 		dateOfRegister: new Date().toLocaleString(),
-	// 		faceBook: '',
-	// 		instagram: '',
-	// 		image: '',
-	// 		addressStreet: '',
-	// 		city: '',
-	// 		country: '',
-	// 	}).catch((err) => {
-	// 		console.log(err.message);
-	// 	});
-	// };
-
-	// const identify = checkedAuthor ? authorInput : clientInput;
-
-	// const addDataUserRealDB = () => {
-	// 	const ID = uuiv4();
-	// 	set(ref(realDb, `usersIdentify/ ${identify}/ ${ID}`), {
-	// 		emailId: emailInput,
-	// 		id: ID,
-	// 		name: nameInput,
-	// 		email: emailInput,
-	// 		tel: Number(telInput),
-	// 		password: passwordInput,
-	// 		user: checkedAuthor ? authorInput : clientInput,
-	// 		dateOfRegister: new Date().toLocaleString(),
-	// 		faceBook: '',
-	// 		instagram: '',
-	// 		image: '',
-	// 		addressStreet: '',
-	// 		city: '',
-	// 		country: '',
-	// 	}).catch((err) => {
-	// 		console.log(err.message);
-	// 	});
-	// };
-
 	return (
 		<>
 			<form className="modal-form" onSubmit={(e) => onRegister(e)}>
