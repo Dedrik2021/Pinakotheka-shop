@@ -7,8 +7,7 @@ import { addDoc, collection } from 'firebase/firestore/lite';
 
 import { realDb, database } from '../../firebase/firebaseConfig';
 import Social from './Social';
-import { setSwitchModal, fetchAuthorsData } from '../../redux/slices/authorsInfosSlice';
-import { fetchUsersData } from '../../redux/slices/userSlice';
+import { setSwitchModal } from '../../redux/slices/authorsInfosSlice';
 
 const RegisterModal = memo(({ closeModal }) => {
 	const [nameInput, setNameInput] = useState('');
@@ -32,13 +31,6 @@ const RegisterModal = memo(({ closeModal }) => {
 	const authors = useSelector(state => state.authorsInfos.authors)
 	const collectionRefClients = collection(database, 'users')
 	const collectionRefAuthors = collection(database, 'authors')
-
-	console.log(authors);
-
-	// useEffect(() => {
-	// 	dispatch(fetchAuthorsData())
-	// 	dispa
-	// },[])
 
 	const onRegister = (e) => {
 		e.preventDefault();
@@ -66,8 +58,6 @@ const RegisterModal = memo(({ closeModal }) => {
 			alert(switchLanguageBtn == 0 ? 'überprüfen Sie Ihr Passwort!' : 'Сheck your password!');
 			passwordReff.current.focus();
 		}
-
-		
 	};
 
 	const addData = () => {
@@ -79,10 +69,9 @@ const RegisterModal = memo(({ closeModal }) => {
 	}
 
 	const addClientData = () => {
-		const ID = uuiv4();
 		addDoc(collectionRefClients, {
 			emailId: emailInput,
-			id: ID,
+			id: users.length + 1,
 			name: nameInput,
 			email: emailInput,
 			tel: Number(telInput),
@@ -98,15 +87,14 @@ const RegisterModal = memo(({ closeModal }) => {
 			chat: [],
 		})
 		.catch((err) => {
-			console.log(err.message);
+			alert(err.message);
 		});
 	};
 
 	const addAuthorData = () => {
-		const ID = uuiv4();
 		addDoc(collectionRefAuthors, {
 			emailId: emailInput,
-			id: users.length + 1,
+			id: authors.length + 1,
 			name: nameInput,
 			email: emailInput,
 			tel: Number(telInput),
@@ -126,7 +114,7 @@ const RegisterModal = memo(({ closeModal }) => {
 			biography: []
 		})
 		.catch((err) => {
-			console.log(err.message);
+			alert(err.message);
 		});
 	};
 

@@ -34,7 +34,7 @@ const AboutAuthorPage = () => {
 	const data = useSelector((state) => state.user.dataUsers);
 	const auth = getAuth();
 	const userId = auth.currentUser;
-	const user = data.find((item) => item.emailId === userId.email);
+	const user = userId !== null ? data.find((item) => item.emailId === userId.email) : null
 	const collectionRealDb = ref(realDb, `usersMessages/ ${id}`);
 
 	const collectionRef = collection(database, 'authors')

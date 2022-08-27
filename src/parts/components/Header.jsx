@@ -233,16 +233,15 @@ const Header = () => {
 				// 	dispatch(setUsers(data))
 				// 	setLoading(false);
 				// });
-				dispatch(fetchUsersData())
-				dispatch(fetchAuthorsData())
 				// setLoading(false)
 				// dispatch(setUsers(usersFirestore))
+				dispatch(fetchUsersData())
 			} else {
 				// setLoading(true);
-				// dispatch(setUserData([]));
+				// dispatch(fetchAuthorsData([]));
 				// dispatch(setUsers([]))
-				dispatch(fetchUsersData([]))
 				// setLoading(false);
+				dispatch(fetchUsersData([]))
 			}
 		});
 		onValue(ref(realDb, 'switchLanguageBtn'), (snapshot) => {
@@ -250,6 +249,7 @@ const Header = () => {
 				dispatch(setSwitchLanguageBtn(Object.values(snapshot.val())));
 			}
 		});
+		dispatch(fetchAuthorsData())
 	}, []);
 
 	useEffect(() => {

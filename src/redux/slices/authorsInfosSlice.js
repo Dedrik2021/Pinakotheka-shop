@@ -123,19 +123,17 @@ const authorsInfosSlice = createSlice({
 			state.singlePainting = '';
 		},
 
-		extraReducers: {
-			[fetchAuthorsData.pending]: (state) => {
-				state.authorsStatus = 'loading';
-				state.authors = [];
-			},
-			[fetchAuthorsData.fulfilled]: (state, action) => {
-				state.authorsStatus = 'success';
-				state.authors = action.payload;
-			},
-			[fetchAuthorsData.rejected]: (state) => {
-				state.authorsStatus = 'error';
-				state.authors = [];
-			},
+		[fetchAuthorsData.pending]: (state) => {
+			state.authorsStatus = 'loading';
+			state.authors = [];
+		},
+		[fetchAuthorsData.fulfilled]: (state, action) => {
+			state.authorsStatus = 'success';
+			state.authors = action.payload;
+		},
+		[fetchAuthorsData.rejected]: (state) => {
+			state.authorsStatus = 'error';
+			state.authors = [];
 		},
 
 		// [changeModal.pending]: (state) => {
