@@ -27,6 +27,7 @@ import CleanInputIcon from '../../assets/images/sprite/clean-input-icon.svg';
 import Keyboard from '../../assets/images/sprite/keyboard-icon.svg';
 import UserIcon from '../../assets/images/sprite/user-icon.svg';
 import ShowModal from './ShowModal';
+import ReviewModal from './ReviewModal';
 
 const Header = () => {
 	const dispatch = useDispatch();
@@ -35,6 +36,7 @@ const Header = () => {
 	const { clientUsers, authorUsers, users, dataUsers, usersFirestore, usersStatus } = useSelector(
 		(state) => state.user,
 	);
+	
 	const { modal, authors, authorsStatus } = useSelector((state) => state.authorsInfos);
 	// const userEmail = useSelector(state => state.user.userEmail)
 
@@ -45,8 +47,8 @@ const Header = () => {
 	const [burgerBtn, setBurgerBtn] = useState(false);
 	const [inputValue, setInputValue] = useState('');
 	// const [loading, setLoading] = useState(true);
-	const [usersArray, setUsersArray] = useState([]);
-	const [getUsers, setGetUsers] = useState([]);
+	// const [usersArray, setUsersArray] = useState([]);
+	// const [getUsers, setGetUsers] = useState([]);
 
 	// const [languages, setLanguages] = useState([]);
 	// const [outputPath, setOutputPath] = useState('')
@@ -251,18 +253,8 @@ const Header = () => {
 	}, []);
 
 	useEffect(() => {
-		// let el = []
-		// for (const item of users) {
-		// 	for (const i in item) {
-		// 		if (Object.hasOwnProperty.call(item, i)) {
-		// 			el.push(item[i]);
-		// 		}
-		// 	}
-		// }
-		dispatch(setClientUsers(users.filter((el) => el.user === 'client')));
-		dispatch(setAuthorUsers(users.filter((el) => el.user === 'author')));
-		setGetUsers(users);
-		dispatch(setDataUsers(users));
+		dispatch(setClientUsers(user !== null ? users.find((el) => el.emailId === user.email) : null));
+		dispatch(setAuthorUsers(user !== null ? authors.find((el) => el.emailId === user.email) : null));
 	}, [users, authors]);
 
 	useEffect(() => {
@@ -299,28 +291,25 @@ const Header = () => {
 	};
 
 	const changeAuth = () => {
-		if (user != null) {
-			const findAuthor = authors.find((item) => item.emailId === user.email);
-			const findUser = users.find((item) => item.emailId === user.email);
-
+		if (user !== null) {
 			if (usersStatus === 'loading' || authorsStatus === 'loading') {
 				return <UserAuthSkeleton />;
 			} else {
-				if (findUser !== undefined) {
+				if (clientUsers !== undefined) {
 					return (
 						<UserContent
 							logOut={logOut}
-							findUser={findUser}
+							findUser={clientUsers}
 							userDropdownRefs={userDropdownRefs}
 							switchBtn={switchBtn}
 						/>
 					);
 
-				} else if (findAuthor !== undefined) {
+				} else if (authorUsers !== undefined) {
 					return (
 						<UserContent
 							logOut={logOut}
-							findUser={findAuthor}
+							findUser={authorUsers}
 							userDropdownRefs={userDropdownRefs}
 							switchBtn={switchBtn}
 						/>
@@ -328,9 +317,24 @@ const Header = () => {
 				}
 			}
 		} else {
-			return <ShowModal modal={modal} setModal={setModal} />;
+			return <ShowModal userAuth={user} modal={modal} setModal={setModal} user={clientUsers !== undefined ? clientUsers : authorUsers} clientUsers={clientUsers} authorUsers={authorUsers} />;
 		}
+		return <ShowModal modal={modal} setModal={setModal} user={clientUsers !== undefined ? clientUsers : authorUsers} clientUsers={clientUsers} authorUsers={authorUsers} />;
 	};
+
+	// const changeModal = () => {
+	// 	if (user !== null || dataAuthor !== null) {
+	// 		return <ReviewModal 
+	// 			closeModal={setModal} 
+	// 			user={user}
+	// 			authorInfo={authorInfo}
+	// 			authorID={dataAuthor}
+	// 			id={id}
+	// 			/>
+	// 	} else {
+	// 		return <Modal closeModal={setModal}/>
+	// 	}
+	// } 
 
 	const switchLanguage = (id) => {
 		// dispatch(setSwitchLanguageBtn(id))
@@ -494,6 +498,24 @@ const UserContent = memo((props) => {
 		},
 	];
 
+	const authorLinks = [
+		{
+			id: 0,
+			title: switchBtn ? 'Persönliches Büro' : 'Personal Office',
+			path: `${switchBtn ? '/Autor/' : '/Author/'}${findUser.id}`
+		},
+		{
+			id: 1,
+			title: switchBtn ? 'Was dir gefällt' : 'What you like',
+			path: switchBtn ? '/DieIhnenGefallen' : '/WhatYouLike',
+		},
+		{
+			id: 2,
+			title: switchBtn ? 'Korb' : 'Cart',
+			path: switchBtn ? '/Korb' : '/Cart',
+		},
+	];
+
 	useEffect(() => {
 		document.body.addEventListener('click', closeDropdown);
 		return () => document.removeEventListener('click', closeDropdown);
@@ -587,7 +609,26 @@ const UserContent = memo((props) => {
 						{getDate()}!<span className="user-dropdown__name">{findUser.name}</span>
 					</div>
 					<ul className="user__list">
-						{userLinks.map(({ id, title, path }) => {
+						{findUser.user === 'author' ? 
+						authorLinks.map(({ id, title, path }) => {
+							return (
+								<li className="user__item" key={id}>
+									<Link
+										ref={(el) => (linkRefs.current[id] = el)}
+										className={`user__link ${activeLink ? 'active' : ''}`}
+										to={path}
+										onClick={() => (
+											dispatch(setUserDropdown(!userDropdown)),
+											focusOnLink(id),
+											dispatch(setUserChanged(findUser))
+										)}
+									>
+										{title}
+									</Link>
+								</li>
+							);
+						}): 
+						userLinks.map(({ id, title, path }) => {
 							return (
 								<li className="user__item" key={id}>
 									<Link

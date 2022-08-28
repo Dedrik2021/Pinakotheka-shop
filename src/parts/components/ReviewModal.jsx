@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuiv4 } from 'uuid';
 import { collection} from 'firebase/firestore/lite';
 import { ref, set } from 'firebase/database';
+import { getAuth } from 'firebase/auth';
 
 import { database, realDb } from '../../firebase/firebaseConfig';
 import CleanInputIcon from '../../assets/images/sprite/clean-input-icon.svg';
@@ -11,9 +12,16 @@ import logo from '../../assets/images/content/logo.svg';
 import image from '../../assets/images/content/unknow-photo.png'
 import { setAuthorInfoBtn } from '../../redux/slices/filtersSlice';
 
-const ReviewModal = memo(({ closeModal, user, authorInfo, authorID, id }) => {
+const ReviewModal = memo(({ closeModal, id, userAuth, authorInfo, dataAuthor }) => {
 	const dispatch = useDispatch();
+	// const auth = getAuth()
+	// const userAuth = auth.currentUser
+	// console.log(user);
 	const collectionRef = collection(database, 'userMessage');
+	const users = useSelector((state) => state.user.users);
+	// const authors = useSelector((state) => state.authorsInfos.authors);
+	// const authorInfo = userAuth !== undefined ? authors.find(item => item.emailId === userAuth.email) : null
+	const user = userAuth !== null ? users.find(item => item.emailId === userAuth.email) : null
 	const switchLanguageBtn = useSelector((state) => state.filters.switchLanguageBtn);
 	const switchBtn = switchLanguageBtn[0] === 0
 	const [textInput, setTextInput] = useState('');
@@ -21,7 +29,7 @@ const ReviewModal = memo(({ closeModal, user, authorInfo, authorID, id }) => {
 	const onSubmit = (e) => {
 		e.preventDefault();
 		const idMessage = uuiv4();
-		set(ref(realDb, `usersMessages/ ${id}/ ${idMessage}`), {
+		set(ref(realDb, `usersMessages/ ${authorInfo.id}/ ${idMessage}`), {
 			ID: user.id,
 			id: idMessage,
 			message: textInput,
@@ -60,7 +68,7 @@ const ReviewModal = memo(({ closeModal, user, authorInfo, authorID, id }) => {
 					<span>
 						{switchBtn ? 'Nachricht an den Autor' : 'Message to the author' }:
 					</span>
-					<span className="submit-message-modal__author">{authorInfo.name}</span>
+					<span className="submit-message-modal__author">{authorInfo !== undefined ? authorInfo.name : null}</span>
 				</div>
 			</div>
             <div className='submit-message-modal__wrapper'>

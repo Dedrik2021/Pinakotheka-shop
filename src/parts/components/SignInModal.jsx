@@ -154,7 +154,7 @@ const SignInModal = memo(({ closeModal }) => {
 					</div>
 					<Link 
 						className="modal-form__link" 
-						to={'/PasswortVergessen'}
+						to={switchBtn ? '/PasswortVergessen' : 'ForgotYourPassword'}
 						onClick={() => dispatch(closeModal(false))}
 						>
 						{switchBtn ? 'Vergessen Passwort?' : 'Forgot your password?'}

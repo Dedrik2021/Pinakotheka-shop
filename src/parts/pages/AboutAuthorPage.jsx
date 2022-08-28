@@ -20,6 +20,7 @@ import AuthorsChat from '../components/AuthorsChat';
 import Modal from '../components/Modal';
 import { database, realDb } from '../../firebase/firebaseConfig';
 import Spinner from '../../spinner/Spinner';
+import ShowModal from '../components/ShowModal';
 
 const AboutAuthorPage = () => {
 	const [authorsData, setAuthorsData] = useState([]);
@@ -31,14 +32,15 @@ const AboutAuthorPage = () => {
 	const dispatch = useDispatch();
 	const authorInfoBtn = useSelector((state) => state.filters.authorInfoBtn);
 	const { authorInfo, statusAuthorInfo, modal } = useSelector((state) => state.authorsInfos);
-	const data = useSelector((state) => state.user.dataUsers);
+	const data = useSelector((state) => state.user.users);
+	const {authors, authorsStatus} = useSelector(state => state.authorsInfos)
 	const auth = getAuth();
 	const userId = auth.currentUser;
-	const user = userId !== null ? data.find((item) => item.emailId === userId.email) : null
+	const user = userId !== null ? data.find((item) => item.emailId == userId.email) : null
 	const collectionRealDb = ref(realDb, `usersMessages/ ${id}`);
 
 	const collectionRef = collection(database, 'authors')
-	const dataAuthor = authorsData.find(item => item.id == id)
+	const dataAuthor = userId !== null ? authors.find(item => item.emailId === userId.email) : null
 	const switchLanguageBtn = useSelector((state) => state.filters.switchLanguageBtn);
 
 	const switchBtn = switchLanguageBtn[0] === 0;
@@ -65,17 +67,17 @@ const AboutAuthorPage = () => {
 	// }, []);
 
 	useEffect(() => {
-		const getData = async () => {
-			setLoading(true)
-			await getDocs(collectionRef).then((response) => {
-				const dataAuthors = response.docs.map((item) => {
-					return {...item.data(), ID: item.id}
-				})
-				setAuthorsData(dataAuthors)
-			});
-			setLoading(false)
-		}
-		getData()
+		// const getData = async () => {
+		// 	setLoading(true)
+		// 	await getDocs(collectionRef).then((response) => {
+		// 		const dataAuthors = response.docs.map((item) => {
+		// 			return {...item.data(), ID: item.id}
+		// 		})
+		// 		setAuthorsData(dataAuthors)
+		// 	});
+		// 	setLoading(false)
+		// }
+		// getData()
 		
 		// onValue(collectionRealDb, (snapshot) => {
         //     if (snapshot.exists()) {
@@ -122,6 +124,7 @@ const AboutAuthorPage = () => {
 				setModal={setModal}
 				user={user}
 				authorsMessages={authorsMessages}
+				// changeModal={changeModal}
 			/>
 		);
 
@@ -135,20 +138,21 @@ const AboutAuthorPage = () => {
 		) : (
 			<AuthorsWorks authorsWorks={authorInfo} />
 		);
-
-	const changeModal = () => {
-		if (user != null) {
-			return <ReviewModal 
-				closeModal={setModal} 
-				user={user}
-				authorInfo={authorInfo}
-				authorID={dataAuthor}
-				id={id}
-				/>
-		} else {
-			return <Modal closeModal={setModal}/>
-		}
-	} 
+		
+	// const changeModal = () => {
+	// 	if (user !== null) {
+	// 		return <ReviewModal 
+	// 			closeModal={setModal} 
+	// 			user={user}
+	// 			authorInfo={authorInfo}
+	// 			// authorID={dataAuthor}
+	// 			// id={id}
+	// 			/>
+	// 	} else {
+	// 		return <Modal closeModal={setModal}/>
+	// 	}
+	// 	return <ShowModal closeModal={setModal} authorInfo={authorInfo} user={userId} />
+	// } 
 
 	const reviews = 
 			statusAuthorInfo === 'loading' ? (
@@ -158,7 +162,13 @@ const AboutAuthorPage = () => {
 					))}
 				</div>
 			) : (
-				<Reviews reviews={dataAuthor} changeModal={changeModal} id={id} authorsMessages={authorsMessages} />
+				<Reviews 
+					reviews={authorInfo} 
+					// changeModal={changeModal} 
+					id={id} 
+					authorsMessages={authorsMessages} 
+
+					/>
 			);
 
 	const showContent = () => {
@@ -182,7 +192,15 @@ const AboutAuthorPage = () => {
 			<div className={`about-author ${modal && user == null ? 'active' : ''}`}>
 				<div className={`about-author__inner`}>
 					<div className={`about-author__shadow ${modal ? 'active' : ''}`}>
-						{modal ? changeModal() : null}	
+						{/* {modal && <ShowModal closeModal={setModal} user={userId} authorInfo={authorInfo}/>}	 */}
+						{modal && (userId !== null || dataAuthor !== undefined) ? <ReviewModal 
+				closeModal={setModal} 
+				userAuth={userId}
+				user={user}
+				authorInfo={authorInfo}
+				// authorID={dataAuthor}
+				// id={id}
+				/>  : null}	
 					</div>
 					<div className="about-author__aside">
 						<ul className="authors-items__list">

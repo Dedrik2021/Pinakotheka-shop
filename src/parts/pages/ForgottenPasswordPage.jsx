@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import img from '../../assets/images/content/forgotten-password_img.png';
 import BreadCrumbs from '../components/BreadCrumbs';
@@ -8,6 +8,8 @@ import { setBreadCrumbs } from '../../redux/slices/breadCrumbsSlice';
 const ForgottenPassword = () => {
 
     const dispatch = useDispatch()
+	const switchLanguageBtn = useSelector((state) => state.filters.switchLanguageBtn);
+	const switchBtn = switchLanguageBtn[0] === 0
 
     useEffect(() => {
 		dispatch(setBreadCrumbs(''));
@@ -27,11 +29,11 @@ const ForgottenPassword = () => {
 				<div className="container">
 					<div className="forgotten-password__inner">
 						<div className="forgotten-password__box">
-							<h2 className="forgotten-password__title title">Hast du dein Passwort vergessen?</h2>
+							<h2 className="forgotten-password__title title">{switchBtn ? 'Hast du dein Passwort vergessen?' : 'Have you forgotten your password'}</h2>
 							<div>
 								<p>
-									Dann gib deine E-Mail-Adresse ein und wir senden Ihnen Informationen zur
-									Passwortwiederherstellung.
+									{switchBtn ? 'Dann gib deine E-Mail-Adresse ein und wir senden Ihnen Informationen zur Passwortwiederherstellung.' : 
+									'Then enter your email address and we will send you password recovery information.'}
 								</p>
 							</div>
 							<form className="forgotten-password__form">
