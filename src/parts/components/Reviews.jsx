@@ -3,6 +3,7 @@ import Helmet from 'react-helmet';
 import { ref, set, get, child, update, remove, push, onValue } from 'firebase/database';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
 import logo from '../../assets/images/content/logo.svg';
 import background from '../../assets/images/content/error-404.png';
@@ -11,14 +12,14 @@ import { database, realDb } from '../../firebase/firebaseConfig';
 import { setAuthorInfoBtn } from '../../redux/slices/filtersSlice';
 import { setUserChanged } from '../../redux/slices/userSlice';
 
-const Reviews = memo(({ reviews, changeModal, authorsMessages, id }) => {
+const Reviews = memo(({ reviews, changeModal, authorsMessages, id, authorInfo }) => {
 	const dispatch = useDispatch();
 	const switchLanguageBtn = useSelector((state) => state.filters.switchLanguageBtn);
 	const switchBtn = switchLanguageBtn[0] === 0;
 
 	const message = () => {
-		if (authorsMessages != '') {
-			return authorsMessages.map((item, i) => {
+		if (authorInfo !== null) {
+			return authorInfo.feedBack.map((item, i) => {
 
 				return (
 					<li className="reviews__item" key={i}>
@@ -34,9 +35,9 @@ const Reviews = memo(({ reviews, changeModal, authorsMessages, id }) => {
 							</Link>
 							<div className="user-message__wrapper">
 								<time>
-									{item.time}
+									{item.timeToSend}
 									<span className='user-message__slash' >/</span>
-									<span>{item.date}</span>
+									<span>{item.data}</span>
 								</time>
 								<div className="user-message__box">
 									<Link 

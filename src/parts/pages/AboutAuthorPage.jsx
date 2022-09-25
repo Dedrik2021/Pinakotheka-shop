@@ -23,32 +23,22 @@ import Spinner from '../../spinner/Spinner';
 import ShowModal from '../components/ShowModal';
 
 const AboutAuthorPage = () => {
-	const [authorsData, setAuthorsData] = useState([]);
-	// const [dataAuthor, setDataAuthor] = useState({})
-	const [authorsMessages, setAuthorsMessages] = useState([])
-	const [loading, setLoading] = useState(false)
-
 	const { id } = useParams();
 	const dispatch = useDispatch();
-	const authorInfoBtn = useSelector((state) => state.filters.authorInfoBtn);
-	const { authorInfo, statusAuthorInfo, modal } = useSelector((state) => state.authorsInfos);
-	const data = useSelector((state) => state.user.users);
-	const {authors, authorsStatus} = useSelector(state => state.authorsInfos)
 	const auth = getAuth();
+	const [authors, setAuthors] = useState([])
+	const collectionRef = collection(database, 'authors')
+	const authorInfoBtn = useSelector((state) => state.filters.authorInfoBtn);
+	const { modal } = useSelector((state) => state.authorsInfos);
+	const data = useSelector((state) => state.user.users);
+	const { authorsStatus} = useSelector(state => state.authorsInfos)
 	const userId = auth.currentUser;
 	const user = userId !== null ? data.find((item) => item.emailId == userId.email) : null
-	const collectionRealDb = ref(realDb, `usersMessages/ ${id}`);
 
-	const collectionRef = collection(database, 'authors')
 	const dataAuthor = userId !== null ? authors.find(item => item.emailId === userId.email) : null
 	const switchLanguageBtn = useSelector((state) => state.filters.switchLanguageBtn);
-
+	const authorInfo = authors.find(item => item.id == id)
 	const switchBtn = switchLanguageBtn[0] === 0;
-
-	// const path = window.location.pathname
-	// // path != `/Author/${id}` ? dispatch(setAuthorInfoBtn(0)) : null
-	// console.log(path === `/Author/${id}`);
-	// // const collectionRealDb = ref(realDb, dataAuthor.ID)
 
 	const aboutBtn = [
 		{ id: 0, title: switchBtn ? 'Indentität der Person' : 'Identity of the person' },
@@ -57,47 +47,14 @@ const AboutAuthorPage = () => {
 		{ id: 3, title: 'Chat' },
 	];
 
-	// useEffect(() => {
-	// 	onValue(collectionRealDb, (snapshot) => {
-	// 		if (snapshot.exists()) {
-	// 			setAuthorsMessages(Object.values(snapshot.val()));
-	// 		}
-	// 	});
-		
-	// }, []);
-
 	useEffect(() => {
-		// const getData = async () => {
-		// 	setLoading(true)
-		// 	await getDocs(collectionRef).then((response) => {
-		// 		const dataAuthors = response.docs.map((item) => {
-		// 			return {...item.data(), ID: item.id}
-		// 		})
-		// 		setAuthorsData(dataAuthors)
-		// 	});
-		// 	setLoading(false)
-		// }
-		// getData()
-		
-		// onValue(collectionRealDb, (snapshot) => {
-        //     if (snapshot.exists()) {
-        //         setAuthorsMessages(Object.values(snapshot.val()))
-        //     }
-        // })
-
-		const topUserPostsRef = query(ref(realDb, `usersMessages/ ${id}`), limitToFirst(10))
-		get(topUserPostsRef)
-		.then((snapshot) => {
-			let users = []
-			snapshot.forEach(childSnapshot => {
-				users.push(childSnapshot.val())
+		getDocs(collectionRef).then((response) => {
+			const data = response.docs.map((item) => {
+				return { ...item.data(), ID: item.id };
 			})
-			setAuthorsMessages(users)
-		})
-	}, [collectionRef]);
-
-	// console.log(id);
-	// console.log(dataAuthor);
+			setAuthors(data)
+		});
+	}, [authors])
 
 	useEffect(() => {
 		dispatch(setBreadCrumbs(''));
@@ -113,9 +70,8 @@ const AboutAuthorPage = () => {
 		dispatch(fetchAuthorInfo({ authorId: id }));
 	}, [id]);
 
-
 	const authorsBio =
-		statusAuthorInfo === 'loading' ? (
+		authorsStatus === 'loading' || authorsStatus === 'error' ? (
 			<AuthorsBioSkeleton />
 		) : (
 			<AuthorsBio
@@ -123,13 +79,11 @@ const AboutAuthorPage = () => {
 				setAuthorInfoBtn={setAuthorInfoBtn}
 				setModal={setModal}
 				user={user}
-				authorsMessages={authorsMessages}
-				// changeModal={changeModal}
 			/>
 		);
 
 	const authorsWorks =
-		statusAuthorInfo === 'loading' ? (
+		authorsStatus === 'loading' || authorsStatus === 'error' ? (
 			<div className="container" style={{ paddingTop: '60px' }}>
 				{[...new Array(12)].map((_, i) => (
 					<GallerySkeleton key={i} />
@@ -156,14 +110,14 @@ const AboutAuthorPage = () => {
 	// } 
 
 	const reviews = 
-			statusAuthorInfo === 'loading' ? (
+			authorsStatus === 'loading' || authorsStatus === 'error' ? (
 				<div className="authors-works__content">
 					{[...new Array(10)].map((_, i) => (
 						<ReviewsSkeleton key={i} />
 					))}
 				</div>
 			) : (
-				<Reviews reviews={dataAuthor} id={id} authorsMessages={authorsMessages} />
+				<Reviews reviews={dataAuthor} id={id} authorInfo={authorInfo} />
 			);
 
 	const showContent = () => {

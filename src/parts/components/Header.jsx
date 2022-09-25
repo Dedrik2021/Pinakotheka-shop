@@ -34,9 +34,8 @@ const Header = () => {
 	const switchBtn = useSelector((state) => state.filters.switchLanguageBtn);
 	const data = useSelector((state) => state.user.userData);
 	const { clientUsers, authorUsers, users, dataUsers, usersFirestore, usersStatus } = useSelector(
-		(state) => state.user,
+		(state) => state.user
 	);
-	
 	const { modal, authors, authorsStatus } = useSelector((state) => state.authorsInfos);
 	// const userEmail = useSelector(state => state.user.userEmail)
 
@@ -290,9 +289,14 @@ const Header = () => {
 		navigate('/');
 	};
 
+	console.log(user);
+
 	const changeAuth = () => {
 		if (user !== null) {
-			const findUser = users.find((item) => item.emailId === user.email);
+			const findUser = user && 
+				(users.find((item) => item.emailId === user.email) || 
+				authors.find(item => item.emailId === user.email))
+			
 			const userContent = usersStatus === 'loading' || 
 			usersStatus === 'error' ? (
 				<UserAuthSkeleton />
@@ -494,7 +498,7 @@ const UserContent = memo((props) => {
 		{
 			id: 0,
 			title: switchBtn ? 'Persönliches Büro' : 'Personal Office',
-			path: `${switchBtn ? '/Autor/' : '/Author/'}${findUser.id}`
+			path: `${switchBtn ? '/Autor/' : '/Author/'}${findUser ? findUser.id : null}`
 		},
 		{
 			id: 1,

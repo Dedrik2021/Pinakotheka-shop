@@ -19,7 +19,7 @@ const AuthorsBio = memo((props) => {
 	// 	);
 	// }
 	const dispatch = useDispatch()
-	const elTel = authorInfo.tel.substring(1);
+	const elTel = authorInfo ? authorInfo.tel.substring(1) : '';
 	const phone = elTel.replace(/\s+/g, '');
 
 	return (
@@ -38,11 +38,11 @@ const AuthorsBio = memo((props) => {
 					<div className="authors-works__inner">
 						<div className="authors-works__img-wrapper">
 							<div className="authors-works__img-box">
-								<img className="authors-works__img" src={authorInfo.img} alt={authorInfo.title} />
+								<img className="authors-works__img" src={authorInfo ? authorInfo.img : ''} alt={authorInfo ? authorInfo.img : ''} />
 								<img
 									className="authors-works__img authors-works__img--blur"
-									src={authorInfo.img}
-									alt={authorInfo.title}
+									src={authorInfo ? authorInfo.img : ''}
+									alt={authorInfo ? authorInfo.title : ''}
 								/>
 							</div>
 							<button 
@@ -54,7 +54,7 @@ const AuthorsBio = memo((props) => {
 							</button>
 						</div>
 						<div className="authors-works__box">
-							<span className="authors-works__name">{authorInfo.name}</span>
+							<span className="authors-works__name">{authorInfo ? authorInfo.name : ''}</span>
 							<span className="authors-works__span">
 								<button 
 									type="button" 
@@ -64,7 +64,7 @@ const AuthorsBio = memo((props) => {
 									<span>
 										{switchBtn ? 'Bewertungen' : 'Review'}:
 									</span>
-									<span>{authorsMessages.length}</span>
+									<span>{authorInfo ? authorInfo.feedBack.length : '--'}</span>
 								</button>
 							</span>
 							<span className="authors-works__span">
@@ -76,40 +76,40 @@ const AuthorsBio = memo((props) => {
 									<span>
 										{switchBtn ? 'Gesamtarbeiten' : 'Overall works'}:
 									</span>
-									<span>{authorInfo.works.length}</span>
+									<span>{authorInfo ? authorInfo.works.length : '--'}</span>
 								</button>
 							</span>
 							<span>
 								<a className="authors-works__link" href={`tel: ${phone}`}>
-									{authorInfo.tel}
+									{authorInfo ? authorInfo.tel : ''}
 								</a>
 							</span>
 							<span>
 								<a className="authors-works__link" target={'_blank'} href="www.facebook.com">
-									{authorInfo.facebook}
+									{authorInfo ? authorInfo.facebook : ''}
 								</a>
 							</span>
 							<span>
 								<a className="authors-works__link" target={'_blank'} href="www.instagram.com">
-									{authorInfo.insta}
+									{authorInfo ? authorInfo.insta : ''}
 								</a>
 							</span>
 							<span>
 								<a className="authors-works__link" href="mailTo: TommaAbts@gmail.com">
-									{authorInfo.mail}
+									{authorInfo ? authorInfo.mail : ''}
 								</a>
 							</span>
 						</div>
 					</div>
 					<div className="authors-works__wrapper">
 						<blockquote>
-							<p>{`"${authorInfo.quote}"`}</p>
-							<cite>{authorInfo.name}</cite>
+							<p>{`"${authorInfo ? authorInfo.quote : ''}"`}</p>
+							<cite>{authorInfo ? authorInfo.name : ''}</cite>
 						</blockquote>
 						<h2 className="title">
 							{switchBtn ? 'Biographie' : 'Biography'}
 						</h2>
-						{authorInfo.info.map((item, i) => {
+						{authorInfo && authorInfo.info.map((item, i) => {
 							return <p key={i}>{item.bio}</p>;
 						})}
 					</div>

@@ -27,6 +27,8 @@
 
     &__img-box {
         margin-bottom: 50px;
+        border-radius: 20px;
+        background-color: rgba(0, 0, 0, 0.5);
     }
 
     &__content {
@@ -212,7 +214,7 @@
 .authors-items {
 
     &__list {
-        max-width: 300px;
+        min-width: 300px;
         width: 100%;
     }
 
@@ -311,8 +313,8 @@
     }
 
     time {
-        position: relative;
-        top: -25px;
+        // position: relative;
+        // top: -25px;
         line-height: 10px;
         color: $red;
         display: flex;
@@ -333,7 +335,7 @@
         padding-top: 20px;
         p {
             word-break: break-all;
-            @include line-clamp(5)
+            @include line-clamp(3)
         }
     }
 }

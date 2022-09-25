@@ -18,7 +18,9 @@ const SinglePaintingPage = () => {
 	const {id} = useParams()
 	const dispatch = useDispatch();
 	const [filterBtn, setFilterBtn] = useState(0);
-	const { authorInfo, singlePainting } = useSelector((state) => state.authorsInfos);
+	const { singlePainting } = useSelector((state) => state.authorsInfos);
+	const {authors, authorsStatus} = useSelector(state => state.authorsInfos)
+	const authorInfo = authors.find(item => item.id == id)
 	const switchLanguageBtn = useSelector((state) => state.filters.switchLanguageBtn);
 	const switchBtn = switchLanguageBtn[0] === 0
 
@@ -35,7 +37,7 @@ const SinglePaintingPage = () => {
 		dispatch(fetchAuthorInfo({ authorId: id }));
 	}, []);
 
-	if (!authorInfo) {
+	if (authorsStatus === 'loading' || authorsStatus === 'error') {
 		return (
 			<div className="container">
 				<SinglePaintingSkeleton />

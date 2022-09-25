@@ -18094,10 +18094,6 @@
     }
   ],
   "singlePainting": {
-<<<<<<< HEAD
-    "painting": "14"
-=======
-    "painting": "1"
->>>>>>> 0161e4acfe389793aec9bb1899d4d8af3bf19707
+    "painting": 1
   }
 }
