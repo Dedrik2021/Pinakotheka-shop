@@ -136,19 +136,19 @@ const AboutAuthorPage = () => {
 			<AuthorsWorks authorsWorks={authorInfo} />
 		);
 
-	const changeModal = () => {
-		if (user != null) {
-			return <ReviewModal 
-				closeModal={setModal} 
-				user={user}
-				authorInfo={authorInfo}
-				authorID={dataAuthor}
-				id={id}
-				/>
-		} else {
-			return <Modal closeModal={setModal}/>
-		}
-	} 
+	// const changeModal = () => {
+	// 	if (user != null) {
+	// 		return <ReviewModal 
+	// 			closeModal={setModal} 
+	// 			user={user}
+	// 			authorInfo={authorInfo}
+	// 			authorID={dataAuthor}
+	// 			id={id}
+	// 			/>
+	// 	} else {
+	// 		return <Modal closeModal={setModal}/>
+	// 	}
+	// } 
 
 	const reviews = 
 			statusAuthorInfo === 'loading' ? (
@@ -158,7 +158,7 @@ const AboutAuthorPage = () => {
 					))}
 				</div>
 			) : (
-				<Reviews reviews={dataAuthor} changeModal={changeModal} id={id} authorsMessages={authorsMessages} />
+				<Reviews reviews={dataAuthor} id={id} authorsMessages={authorsMessages} />
 			);
 
 	const showContent = () => {
@@ -182,7 +182,7 @@ const AboutAuthorPage = () => {
 			<div className={`about-author ${modal && user == null ? 'active' : ''}`}>
 				<div className={`about-author__inner`}>
 					<div className={`about-author__shadow ${modal ? 'active' : ''}`}>
-						{modal ? changeModal() : null}	
+						{/* {modal && changeModal()}	 */}
 					</div>
 					<div className="about-author__aside">
 						<ul className="authors-items__list">

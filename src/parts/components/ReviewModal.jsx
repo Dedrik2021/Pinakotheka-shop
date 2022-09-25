@@ -1,37 +1,57 @@
 import { memo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuiv4 } from 'uuid';
-import { collection} from 'firebase/firestore/lite';
+import { collection, updateDoc, doc, arrayUnion} from 'firebase/firestore/lite';
 import { ref, set } from 'firebase/database';
+import { useParams } from 'react-router-dom';
+import { getAuth } from 'firebase/auth';
 
 import { database, realDb } from '../../firebase/firebaseConfig';
 import CleanInputIcon from '../../assets/images/sprite/clean-input-icon.svg';
 import Keyboard from '../../assets/images/sprite/keyboard-icon.svg';
 import logo from '../../assets/images/content/logo.svg';
-import image from '../../assets/images/content/unknow-photo.png'
+import unknowImage from '../../assets/images/content/unknow-photo.png'
 import { setAuthorInfoBtn } from '../../redux/slices/filtersSlice';
 
-const ReviewModal = memo(({ closeModal, user, authorInfo, authorID, id }) => {
+const ReviewModal = memo(({ closeModal }) => {
 	const dispatch = useDispatch();
-	const collectionRef = collection(database, 'userMessage');
+	const ID = useParams()
+	const auth = getAuth()
+	// const collectionRef = collection(database, 'userMessage');
 	const switchLanguageBtn = useSelector((state) => state.filters.switchLanguageBtn);
 	const switchBtn = switchLanguageBtn[0] === 0
+	const {authors, authorsStatus} = useSelector(state => state.authorsInfos)
+	const users = useSelector((state) => state.user.users);
+	const user = auth.currentUser !== null ? users.find(item => item.emailId === auth.currentUser.email) : null
 	const [textInput, setTextInput] = useState('');
+	const authorInfo = authors.find(item => item.id == ID.id)
 
 	const onSubmit = (e) => {
 		e.preventDefault();
-		const idMessage = uuiv4();
-		set(ref(realDb, `usersMessages/ ${id}/ ${idMessage}`), {
-			ID: user.id,
-			id: idMessage,
-			message: textInput,
-			name: user.name,
-			time: new Date().toLocaleTimeString(),
-			date: new Date().toLocaleDateString(),
-			rating: '',
-			avatar: user.image != '' ? user.image : image,
-			email: user.emailId
-		})
+		// const idMessage = uuiv4();
+		// set(ref(realDb, `usersMessages/ ${ID}/ ${idMessage}`), {
+		// 	ID: user.id,
+		// 	id: idMessage,
+		// 	message: textInput,
+		// 	name: user.name,
+		// 	time: new Date().toLocaleTimeString(),
+		// 	date: new Date().toLocaleDateString(),
+		// 	rating: '',
+		// 	avatar: user.image != '' ? user.image : image,
+		// 	email: user.emailId
+		// })
+			const docToUpdate = doc(database, 'authors', authorInfo.ID)
+			updateDoc(docToUpdate, {
+				feedBack: arrayUnion({
+					avatar: user.image !== '' ? user.image : unknowImage,
+					data: new Date().toLocaleDateString(),
+					timeToSend: new Date().toLocaleTimeString(),
+					message: textInput,
+					name: user.name,
+					rating: '',
+					id: authorInfo.feedBack.length + 1
+				})
+			})
 			.then(
 				setTextInput(''), 
 				dispatch(closeModal(false)),
@@ -60,7 +80,9 @@ const ReviewModal = memo(({ closeModal, user, authorInfo, authorID, id }) => {
 					<span>
 						{switchBtn ? 'Nachricht an den Autor' : 'Message to the author' }:
 					</span>
-					<span className="submit-message-modal__author">{authorInfo.name}</span>
+					<span className="submit-message-modal__author">
+						{authorInfo !== undefined ? authorInfo.name : ''}
+					</span>
 				</div>
 			</div>
             <div className='submit-message-modal__wrapper'>

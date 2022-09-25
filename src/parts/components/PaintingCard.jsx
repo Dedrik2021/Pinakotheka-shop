@@ -33,7 +33,7 @@ const Painting = memo(({ item, props }) => {
 			<article className="painting-card" tabIndex="0">
 				<Link
 					className="painting-card__img-link"
-					to={`/Autor/Einzelmalerei/${props.id}`}
+					to={`${switchBtn ? '/Autor/Einzelmalerei' : '/Author/SinglePainting'}/${props.id}`}
 					onClick={() => onAuthorInfo()}
 				>
 					<img src={item.img} alt={item.title} />
@@ -41,7 +41,7 @@ const Painting = memo(({ item, props }) => {
 				<Link
 					className="painting-card__link"
 					onClick={() => onAuthorInfo()}
-					to={`/Autor/Einzelmalerei/${props.id}`}
+					to={`${switchBtn ? '/Autor/Einzelmalerei' : '/Author/SinglePainting'}/${props.id}`}
 				>
 					<h3 className="painting-card__title">{item.title}</h3>
 				</Link>

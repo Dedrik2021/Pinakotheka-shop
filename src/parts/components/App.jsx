@@ -35,7 +35,7 @@ const App = () => {
 						<Route path="" element={<Home />} />
 						<Route path={switchBtn ? '/Autoren' : '/Authors'} element={<Authors />} />
 						<Route path={`${switchBtn ? '/Autor/' : '/Author/'}:id`} element={<AboutAuthor />} />
-						<Route path="/Autor/Einzelmalerei/:id" element={<SinglePainting />} />
+						<Route path={`${switchBtn ? '/Autor/Einzelmalerei' : '/Author/SinglePainting'}/:id`} element={<SinglePainting />} />
 						<Route path={switchBtn ? '/Nachrichten' : '/News'} element={<News />} />
 						<Route path={switchBtn ? '/Korb' : '/Cart'} element={<UserCart />} />
 						<Route path={switchBtn ? '/PersonlichesBuro' : '/PersonalOffice'} element={<UserAccount />} />

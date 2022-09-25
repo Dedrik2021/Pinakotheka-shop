@@ -11,7 +11,7 @@ const ShowModal = memo(({ modal, setModal }) => {
 			<button onClick={() => dispatch(setModal(!modal))} className="menu__enter-btn btn" type="button">
 				{switchBtn == 0 ? 'Eingang' : 'Entrance'}
 			</button>
-			{modal && <Modal closeModal={setModal} />}
+			{/* {modal && <Modal closeModal={setModal} />} */}
 		</div>
 	);
 });

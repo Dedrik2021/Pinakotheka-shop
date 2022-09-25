@@ -20,7 +20,7 @@ const BreadCrumbs = () => {
 						<Link
 							onClick={() => (dispatch(setBreadCrumbs(''), (dispatch(setAuthorInfoBtn(0)))))}
 							className="breadcrumbs__link"
-							to={`${breadCrumbsTitle[0] === switchBtn ? 'Nachrichten' : 'News' ? `/${breadCrumbsTitle[0]}` : `/${breadCrumbsTitle[0]}/${id}`}`}
+							to={breadCrumbsTitle[0].startsWith('N') ? `/${breadCrumbsTitle[0]}` : `/${breadCrumbsTitle[0]}/${id}`}
 						>
 							{item}
 						</Link>

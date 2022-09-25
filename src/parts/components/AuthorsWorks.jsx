@@ -38,14 +38,14 @@ const AuthorsWorks = memo(({ authorsWorks }) => {
 									<article className="painting-card" tabIndex="0">
 										<Link
 											className="painting-card__img-link"
-											to={`/Autor/Einzelmalerei/${id}`}
+											to={`${switchBtn ? '/Autor/Einzelmalerei' : '/Author/SinglePainting'}/${id}`}
 											onClick={() => onPainting(item.id)}
 										>
 											<img src={item.img} alt={item.title}/>
 										</Link>
 										<Link
 											className="painting-card__link"
-											to={`/Autor/Einzelmalerei/${id}`}
+											to={`${switchBtn ? '/Autor/Einzelmalerei' : '/Author/SinglePainting'}/${id}`}
 											onClick={() => onPainting(item.id)}
 										>
 											<h3 className="painting-card__title">{item.title}</h3>

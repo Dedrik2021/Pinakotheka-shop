@@ -36,6 +36,21 @@
     display: flex;
     align-items: flex-end;
 
+    &.active {
+
+        &::after {
+            position: absolute;
+            content: '';
+            background-color: rgba(0, 0, 0, 0.3);
+            height: 100vh;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 10;
+        }
+    }
+
     @include r($mobile-sm) {
         justify-content: space-between;
         align-items: flex-start;
@@ -464,17 +479,16 @@
             position: relative;
             margin-right: 0;
             max-width: 330px;
-            z-index: 1000;
+            z-index: 10;
 
             &__img {
                 position: absolute;
                 object-fit: cover;
-                padding: 45px 45px;
-                left: -120px;
+                left: -90px;
                 border-radius: 50%;
-                height: 150px;
-                width: 150px;
-                top: -52px;
+                height: 70px;
+                width: 70px;
+                top: -15px;
             }
 
             &-dropdown {
@@ -569,23 +583,23 @@
         }
     }
 
-    &__user-box {
+    // &__user-box {
 
-        &.active {
+    //     &.active {
 
-            &::after {
-                position: absolute;
-                content: '';
-                background-color: rgba(0, 0, 0, 0.3);
-                height: 100vh;
-                left: 0;
-                right: 0;
-                top: 0;
-                bottom: 0;
-                z-index: 10;
-            }
-        }
-    }
+    //         &::after {
+    //             position: absolute;
+    //             content: '';
+    //             background-color: rgba(0, 0, 0, 0.3);
+    //             height: 100vh;
+    //             left: 0;
+    //             right: 0;
+    //             top: 0;
+    //             bottom: 0;
+    //             z-index: 10;
+    //         }
+    //     }
+    // }
 
     &__enter-btn {
         text-transform: uppercase;

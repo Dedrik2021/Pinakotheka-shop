@@ -36,9 +36,6 @@ const Header = () => {
 	const modal = useSelector((state) => state.authorsInfos.modal);
 	// const userEmail = useSelector(state => state.user.userEmail)
 
-	console.log(authorUsers);
-	console.log(clientUsers);
-
 	const [scroll, setScroll] = useState(false);
 	// const [modal, setModal] = useState(false);
 	const [dropdown, setDropdown] = useState(false);
@@ -303,9 +300,10 @@ const Header = () => {
 	};
 
 	const changeAuth = () => {
-		if (user != null) {
+		if (user !== null) {
 			const findUser = users.find((item) => item.emailId === user.email);
-			const userContent = usersStatus === 'loading' ? (
+			const userContent = usersStatus === 'loading' || 
+			usersStatus === 'error' ? (
 				<UserAuthSkeleton />
 			) : (
 				<UserContent
@@ -315,9 +313,10 @@ const Header = () => {
 					switchBtn={switchBtn}
 				/>
 			);
-			return user ? userContent : null;
+			return user ? userContent : <UserAuthSkeleton />;
 		} else {
-			return <ShowModal modal={modal} setModal={setModal} /> ;
+			// return <ShowModal modal={modal} setModal={setModal} /> ;
+			return user ? <UserAuthSkeleton /> : <ShowModal modal={modal} setModal={setModal} /> ;
 			// return modalContent;
 		}
 	};
@@ -335,7 +334,8 @@ const Header = () => {
 	return (
 		<header className={`header ${scroll ? 'sticky' : ''}`}>
 			<div className="container">
-				<nav className="menu">
+				{modal && <Modal closeModal={setModal} />}
+				<nav className={`menu ${modal ? 'active' : ''}`}>
 					<Link className="logo header__logo" to={'/'}>
 						<img src={logo} alt="logo" width="180" height="50" />
 					</Link>
@@ -430,7 +430,7 @@ const Header = () => {
 					</div>
 					<div className={`menu__box ${burgerBtn ? 'active' : ''}`}>
 						<ul className="language-switcher">
-							{languageBtns.map(({ id, title, lang }) => (
+							{languageBtns.map(({ id, title }) => (
 								<li className="language-switcher__item" key={id}>
 									<button
 										className={`language-switcher__btn btn ${switchBtn[0] === id ? 'active' : ''}`}
@@ -563,8 +563,8 @@ const UserContent = memo((props) => {
 
 	if (findUser != undefined) {
 		return (
-			<div className="user" ref={userDropdownRefs}>
-				<img className="user__img" src={findUser.image != '' ? findUser.image : img} alt={findUser.name} />
+			<div className={`user`} ref={userDropdownRefs}>
+				<img className={`user__img`} src={findUser.image != '' ? findUser.image : img} alt={findUser.name} />
 				<button
 					className={`user__btn btn btn--red ${userDropdown ? 'active' : ''}`}
 					type="button"
