@@ -289,8 +289,6 @@ const Header = () => {
 		navigate('/');
 	};
 
-	console.log(user);
-
 	const changeAuth = () => {
 		if (user !== null) {
 			const findUser = user && 

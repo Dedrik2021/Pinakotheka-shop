@@ -26,7 +26,9 @@ const SinglePaintingPage = () => {
 
 	useEffect(() => {
 		dispatch(setBreadCrumbs(''));
-		const pathName = window.location.pathname.substring(1, 20);
+		const pathName = switchBtn ?
+			window.location.pathname.substring(1, 20) :
+			window.location.pathname.substring(1, 22);
 		const name = pathName.split('/');
 		dispatch(setBreadCrumbs(name));
 	}, []);
