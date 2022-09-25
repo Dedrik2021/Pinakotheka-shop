@@ -96,73 +96,29 @@ const RegisterModal = memo(({ closeModal }) => {
 			emailId: emailInput,
 			id: authors.length + 1,
 			name: nameInput,
-			email: emailInput,
+			mail: emailInput,
 			tel: Number(telInput),
 			password: passwordInput,
 			user: checkedAuthor ? authorInput : clientInput,
 			dateOfRegister: new Date().toLocaleString(),
 			faceBook: '',
-			instagram: '',
+			insta: '',
 			image: '',
-			addressStreet: '',
 			city: '',
 			country: '',
 			chat: [],
-			review: [],
-			myWorks: [],
+			works: [],
 			quote: '',
-			biography: []
+			biography: [],
+			rating: 5,
+			cite: '',
+			info: [],
+			feedBack: [],
 		})
 		.catch((err) => {
 			alert(err.message);
 		});
 	};
-
-	// const addData = () => {
-	// 	const ID = uuiv4();
-	// 	set(ref(realDb, `users/ ${ID}`), {
-	// 		emailId: emailInput,
-	// 		id: ID,
-	// 		name: nameInput,
-	// 		email: emailInput,
-	// 		tel: Number(telInput),
-	// 		password: passwordInput,
-	// 		user: checkedAuthor ? authorInput : clientInput,
-	// 		dateOfRegister: new Date().toLocaleString(),
-	// 		faceBook: '',
-	// 		instagram: '',
-	// 		image: '',
-	// 		addressStreet: '',
-	// 		city: '',
-	// 		country: '',
-	// 	}).catch((err) => {
-	// 		console.log(err.message);
-	// 	});
-	// };
-
-	// const identify = checkedAuthor ? authorInput : clientInput;
-
-	// const addDataUserRealDB = () => {
-	// 	const ID = uuiv4();
-	// 	set(ref(realDb, `usersIdentify/ ${identify}/ ${ID}`), {
-	// 		emailId: emailInput,
-	// 		id: ID,
-	// 		name: nameInput,
-	// 		email: emailInput,
-	// 		tel: Number(telInput),
-	// 		password: passwordInput,
-	// 		user: checkedAuthor ? authorInput : clientInput,
-	// 		dateOfRegister: new Date().toLocaleString(),
-	// 		faceBook: '',
-	// 		instagram: '',
-	// 		image: '',
-	// 		addressStreet: '',
-	// 		city: '',
-	// 		country: '',
-	// 	}).catch((err) => {
-	// 		console.log(err.message);
-	// 	});
-	// };
 
 	return (
 		<>

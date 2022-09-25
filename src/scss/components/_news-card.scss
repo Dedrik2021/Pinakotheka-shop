@@ -105,9 +105,11 @@
     }
 
     &__author {
-
+        transition: color 0.3s;
+        
         span {
             color: $red;
+            transition: color 0.3s;
         }
     }
 

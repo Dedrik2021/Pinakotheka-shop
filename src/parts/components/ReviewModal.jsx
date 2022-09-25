@@ -17,7 +17,6 @@ const ReviewModal = memo(({ closeModal }) => {
 	const dispatch = useDispatch();
 	const ID = useParams()
 	const auth = getAuth()
-	// const collectionRef = collection(database, 'userMessage');
 	const switchLanguageBtn = useSelector((state) => state.filters.switchLanguageBtn);
 	const switchBtn = switchLanguageBtn[0] === 0
 	const {authors, authorsStatus} = useSelector(state => state.authorsInfos)
@@ -80,10 +79,9 @@ const ReviewModal = memo(({ closeModal }) => {
 					<span>
 						{switchBtn ? 'Nachricht an den Autor' : 'Message to the author' }:
 					</span>
-					<span className="submit-message-modal__author">
-						{authorInfo !== undefined ? authorInfo.name : ''}
-					</span>
-				</div>
+
+					<span className="submit-message-modal__author">{authorInfo !== undefined ? authorInfo.name : ''}</span>
+</div>
 			</div>
             <div className='submit-message-modal__wrapper'>
 				{textInput ? (
