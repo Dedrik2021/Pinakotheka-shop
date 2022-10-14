@@ -1,4 +1,9 @@
 .creations-details {
+    transition: filter 0.2s;
+
+    &.active {
+        filter: blur(10px);
+    }
 
     &__info {
         margin-bottom: 145px;

@@ -213,6 +213,16 @@
         transition: background-color 0.4s, color 0.4s, border-color 0.4s;
         word-wrap: break-word;
 
+        &.active {
+            background-color: $red;
+            color: $white;
+            pointer-events: none;
+
+            svg {
+                fill: $white;
+            }
+        }
+
         &--message {
             width: 70%;
         }

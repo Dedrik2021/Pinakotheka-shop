@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { getAuth } from 'firebase/auth';
 
 import { setAuthorInfoBtn } from '../../redux/slices/filtersSlice';
 import unknowImg from '../../assets/images/content/unknow-photo.png';
@@ -8,12 +9,16 @@ import AuthorsBlockSkeleton from '../../skeletons/authorsBlockSkeleton';
 
 const AuthorsBlock = () => {
 	// const [authors, setAuthors] = useState([]);
+	const auth = getAuth();
 	const dispatch = useDispatch();
 	const modal = useSelector((state) => state.authorsInfos.modal);
 	const { authors, authorsStatus } = useSelector((state) => state.authorsInfos);
+	const foundUser = useSelector((state) => state.user.foundUser);
 	const switchLanguageBtn = useSelector((state) => state.filters.switchLanguageBtn);
 	const switchBtn = switchLanguageBtn[0] === 0;
 
+	// console.log(authors);
+	// const userOnline = authors.find
 	// useEffect(() => {
 	// 	const getAuthors = async () => {
 	// 		try {
@@ -28,37 +33,40 @@ const AuthorsBlock = () => {
 
 	const authorsItems = () => {
 		if (authorsStatus === 'loading' || authorsStatus === 'error') {
-			return ([...new Array(11)].map((_, i) => <AuthorsBlockSkeleton key={i} />))
+			return [...new Array(11)].map((_, i) => <AuthorsBlockSkeleton key={i} />);
 		} else {
 			return (
 				<>
-					{authors.map(({ id, name, img, works }) => {
+					{authors.map((item) => {
+						
 						return (
-							<li className="authors-list__item" key={id}>
+							<li className="authors-list__item" key={item.id}>
 								<article className="author-card">
 									<Link
 										className="author-card__img-link"
-										to={`${switchBtn ? '/Autor' : '/Author'}/${id}`}
+										to={`${switchBtn ? '/Autor' : '/Author'}/${item.id}`}
 										onClick={() => dispatch(setAuthorInfoBtn(0))}
 									>
 										<img
-											src={img !== undefined ? img : unknowImg}
-											alt={name}
+											src={item.img !== undefined ? item.img : unknowImg}
+											alt={item.name}
 											width="122"
 											height="125"
 										/>
 
-										<span className="author-card__portfolio">{works.length}</span>
+										<span className="author-card__portfolio">{item.works.length}</span>
 
-										<span className="author-card__online @@online"></span>
+										<span className={`author-card__online ${foundUser !== null && item.emailId === foundUser.emailId ? 'active' : ''}`}></span>
+										
 									</Link>
 
 									<div className="author-card__box">
 										<Link
 											className="author-card__link"
-											to={`${switchBtn ? '/Autor' : '/Author'}/${id}`}
+											to={`${switchBtn ? '/Autor' : '/Author'}/${item.id}`}
+											onClick={() => dispatch(setAuthorInfoBtn(0))}
 										>
-											<h2 className="author-card__user">{name}</h2>
+											<h2 className="author-card__user">{item.name}</h2>
 										</Link>
 									</div>
 								</article>
@@ -75,9 +83,7 @@ const AuthorsBlock = () => {
 			<div className="container">
 				<span className="authors-list__title title">{switchBtn ? 'Autoren' : 'Authors'}</span>
 				<div className="authors-list__content">
-					<ul className="authors-list__list">
-						{authorsItems()}
-					</ul>
+					<ul className="authors-list__list">{authorsItems()}</ul>
 					<Link className="authors-list__btn btn btn--red-hover" to={switchBtn ? `/Autoren` : '/Authors'}>
 						Aussehen alle Autoren
 					</Link>

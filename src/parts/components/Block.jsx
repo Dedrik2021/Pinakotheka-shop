@@ -40,7 +40,7 @@ const Block = memo(({ items, blockInfo }) => {
 							return (
 								<li className="block__item" key={i}>
 									<span key={i} className="block__author-item block__author-item--thing">
-										{item.info}
+										{item}
 									</span>
 								</li>
 							);
@@ -65,7 +65,7 @@ const Block = memo(({ items, blockInfo }) => {
 							return (
 								<li className="block__item" key={i}>
 									<span key={i} className="block__author-item block__author-item--thing">
-										{item.info}
+										{item}
 									</span>
 								</li>
 							);

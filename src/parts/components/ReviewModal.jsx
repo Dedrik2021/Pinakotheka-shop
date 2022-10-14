@@ -1,17 +1,14 @@
 import { memo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { v4 as uuiv4 } from 'uuid';
-import { collection, updateDoc, doc, arrayUnion} from 'firebase/firestore/lite';
-import { ref, set } from 'firebase/database';
+import { updateDoc, doc, arrayUnion} from 'firebase/firestore/lite';
 import { useParams } from 'react-router-dom';
 import { getAuth } from 'firebase/auth';
 
-import { database, realDb } from '../../firebase/firebaseConfig';
+import { database } from '../../firebase/firebaseConfig';
 import CleanInputIcon from '../../assets/images/sprite/clean-input-icon.svg';
 import Keyboard from '../../assets/images/sprite/keyboard-icon.svg';
 import logo from '../../assets/images/content/logo.svg';
 import unknowImage from '../../assets/images/content/unknow-photo.png'
-import { setAuthorInfoBtn } from '../../redux/slices/filtersSlice';
 
 const ReviewModal = memo(({ closeModal }) => {
 	const dispatch = useDispatch();
@@ -22,31 +19,23 @@ const ReviewModal = memo(({ closeModal }) => {
 	const {authors, authorsStatus} = useSelector(state => state.authorsInfos)
 	const users = useSelector((state) => state.user.users);
 	const user = auth.currentUser !== null ? users.find(item => item.emailId === auth.currentUser.email) : null
+	const userAuthor = auth.currentUser !== null ? authors.find(item => item.emailId === auth.currentUser.email) : null
 	const [textInput, setTextInput] = useState('');
 	const authorInfo = authors.find(item => item.id == ID.id)
 
+	const userImg = user !== undefined && user.image !== '' ? user.image : unknowImage
+	const authorImg = userAuthor !== undefined && userAuthor.image !== '' ? userAuthor.image : unknowImage
+
 	const onSubmit = (e) => {
 		e.preventDefault();
-		// const idMessage = uuiv4();
-		// set(ref(realDb, `usersMessages/ ${ID}/ ${idMessage}`), {
-		// 	ID: user.id,
-		// 	id: idMessage,
-		// 	message: textInput,
-		// 	name: user.name,
-		// 	time: new Date().toLocaleTimeString(),
-		// 	date: new Date().toLocaleDateString(),
-		// 	rating: '',
-		// 	avatar: user.image != '' ? user.image : image,
-		// 	email: user.emailId
-		// })
 			const docToUpdate = doc(database, 'authors', authorInfo.ID)
 			updateDoc(docToUpdate, {
 				feedBack: arrayUnion({
-					avatar: user.image !== '' ? user.image : unknowImage,
+					avatar: user !== undefined ? userImg : authorImg,
 					data: new Date().toLocaleDateString(),
 					timeToSend: new Date().toLocaleTimeString(),
 					message: textInput,
-					name: user.name,
+					name: user !== undefined ? user.name : userAuthor.name,
 					rating: '',
 					id: authorInfo.feedBack.length + 1
 				})

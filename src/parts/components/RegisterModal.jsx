@@ -85,6 +85,8 @@ const RegisterModal = memo(({ closeModal }) => {
 			city: '',
 			country: '',
 			chat: [],
+			cart: [],
+			likeMe: []
 		})
 		.catch((err) => {
 			alert(err.message);
@@ -114,6 +116,8 @@ const RegisterModal = memo(({ closeModal }) => {
 			cite: '',
 			info: [],
 			feedBack: [],
+			cart: [],
+			likeMe: []
 		})
 		.catch((err) => {
 			alert(err.message);

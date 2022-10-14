@@ -3,10 +3,23 @@ body {
     height: 100%;
 }
 
-body {
+#root {
+    height: 100%;
+}
+
+.app {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    height: 100%;
+
+    &.lock {
+        overflow: hidden;
+        @include overlay;
+    }
+}
+
+body {
     font-family: $gilroy;
     font-size: 18px;
     font-weight: 500;
@@ -14,11 +27,6 @@ body {
     line-height: 1.2;
     letter-spacing: 0.05rem;
     background-color: $white;
-
-    &.lock {
-        overflow: hidden;
-        @include overlay;
-    }
 }
 
 main {

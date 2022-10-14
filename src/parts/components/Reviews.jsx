@@ -1,9 +1,10 @@
 import React, { memo, useEffect, useState } from 'react';
 import Helmet from 'react-helmet';
-import { ref, set, get, child, update, remove, push, onValue } from 'firebase/database';
+// import { ref, set, get, child, update, remove, push, onValue } from 'firebase/database';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { doc, arrayRemove, updateDoc } from 'firebase/firestore/lite';
 
 import logo from '../../assets/images/content/logo.svg';
 import background from '../../assets/images/content/error-404.png';
@@ -11,51 +12,87 @@ import backgroundBlur from '../../assets/images/content/error-404.png';
 import { database, realDb } from '../../firebase/firebaseConfig';
 import { setAuthorInfoBtn } from '../../redux/slices/filtersSlice';
 import { setUserChanged } from '../../redux/slices/userSlice';
+import CaretIcon from '../../assets/images/sprite/caret-icon.svg';
 
 const Reviews = memo(({ reviews, changeModal, authorsMessages, id, authorInfo }) => {
 	const dispatch = useDispatch();
 	const switchLanguageBtn = useSelector((state) => state.filters.switchLanguageBtn);
 	const switchBtn = switchLanguageBtn[0] === 0;
+	const [deleteItem, setDeleteItem] = useState(false);
+	const [itemId, setItemId] = useState();
+
+	const onDelete = (id) => {
+		const collectionReff = doc(database, 'authors', authorInfo.ID)
+		const docToDelete = authorInfo.feedBack.find(item => item.id == id)
+
+		updateDoc(collectionReff, {
+			feedBack: arrayRemove(docToDelete)
+		})
+	}
 
 	const message = () => {
 		if (authorInfo !== null) {
-			return authorInfo.feedBack.map((item, i) => {
-
-				return (
-					<li className="reviews__item" key={i}>
-						<article className="user-message">
-							<Link 
-							className="user-message__link" 
-							to={`${switchBtn ? '/PersonlichesBuro' : '/PersonalOffice'}`}
-							onClick={() => dispatch(setUserChanged(item))}
-							>
-								<div className="user-message__img-wrapper">
-									<img src={item.avatar} alt={item.name} />
-								</div>
-							</Link>
-							<div className="user-message__wrapper">
-								<time>
-									{item.timeToSend}
-									<span className='user-message__slash' >/</span>
-									<span>{item.data}</span>
-								</time>
-								<div className="user-message__box">
-									<Link 
-
-										className="user-message__link user-message__link--name" 
-										to={`${switchBtn ? '/PersonlichesBuro' : '/PersonalOffice'}`}
-										>
-										<span>{item.name}</span>
-									</Link>
+			return (
+				authorInfo &&
+				authorInfo.feedBack.map((item) => {
+					return (
+						<li className={`reviews__item`} key={item.id}>
+							<article className="user-message">
+								<Link
+									className="user-message__link"
+									to={`${switchBtn ? '/PersonlichesBuro' : '/PersonalOffice'}`}
+									onClick={() => dispatch(setUserChanged(item))}
+								>
+									<div className="user-message__img-wrapper">
+										<img src={item.avatar} alt={item.name} />
+									</div>
+								</Link>
+								<div className="user-message__wrapper">
+									<div className="user-message__wrapper-box">
+										<time>
+											{item.timeToSend}
+											<span className="user-message__slash">/</span>
+											<span>{item.data}</span>
+										</time>
+										<div className="user-message__box">
+											<Link
+												className="user-message__link user-message__link--name"
+												to={`${switchBtn ? '/PersonlichesBuro' : '/PersonalOffice'}`}
+											>
+												<span>{item.name}</span>
+											</Link>
+										</div>
+									</div>
 									<div className="user-message__text">
-										<p>{item.message}</p>
+										<p className={itemId === item.id ? 'active' : ''}>{item.message}</p>
+									</div>
+									<div className="user-message__wrapper-btns">
+										{item.message.length > 300 && (
+											<button
+												className={`user-message__btn btn btn--universal btn--red ${
+													itemId === item.id ? 'active' : ''
+												}`}
+												type="button"
+												onClick={() => setItemId(item.id)}
+											>
+												{itemId === item.id
+													? `${switchBtn ? 'Alle Nachrichten' : 'All message'}`
+													: `${switchBtn ? 'Mehr anzeigen' : 'Show more'}`}
+												<svg width="20" height="20">
+													<use href={`${CaretIcon}#caret`}></use>
+												</svg>
+											</button>
+										)}
+										<button className='user-message__delete btn btn--universal' onClick={() => onDelete(item.id)} type={'button'}>
+											Delete
+										</button>
 									</div>
 								</div>
-							</div>
-						</article>
-					</li>
-				);
-			});
+							</article>
+						</li>
+					);
+				})
+			);
 		} else {
 			return (
 				<>

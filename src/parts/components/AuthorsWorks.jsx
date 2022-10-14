@@ -32,7 +32,7 @@ const AuthorsWorks = memo(({ authorsWorks }) => {
 				</h1>
 				<div className="authors-works__content">
 					<ul className="gallery__list cards-list">
-						{authorsWorks.works.map((item) => {
+						{authorsWorks && authorsWorks.works.map((item) => {
 							return (
 								<li className="gallery__item" key={item.id}>
 									<article className="painting-card" tabIndex="0">

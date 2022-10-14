@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { Suspense } from 'react';
-import { useSelector } from 'react-redux';
+import { Suspense, useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { collection, getDocs, query, orderBy } from 'firebase/firestore/lite';
 
 import {
 	Home,
@@ -19,12 +20,40 @@ import {
 	EditNews,
 	ReviewUserInfo
 } from '../pages/indexPage';
-
+import { database } from '../../firebase/firebaseConfig';
+import { setGetAuthors } from '../../redux/slices/authorsInfosSlice';
+import { setGetUsers } from '../../redux/slices/userSlice';
 import '../../scss/style.scss';
 
 const App = () => {
+
+	const dispatch = useDispatch()
+	const authors = useSelector(state => state.authorsInfos.authors)
+	const users = useSelector(state => state.user.users)
 	const switchLanguageBtn = useSelector((state) => state.filters.switchLanguageBtn);
 	const switchBtn = switchLanguageBtn[0] === 0
+	const collectionAuthorsRef = collection(database, 'authors')
+	const collectionUsersrsRef = collection(database, 'users')
+	const collectionAuthorsQuery = query(collectionAuthorsRef, orderBy('id', 'asc'));
+	const collectionUsersQuery = query(collectionUsersrsRef, orderBy('id', 'asc'));
+
+	useEffect(() => {
+		getDocs(collectionAuthorsQuery).then((response) => {
+			const data = response.docs.map((item) => {
+				return { ...item.data(), ID: item.id };
+			})
+			dispatch(setGetAuthors(data))
+		});
+	}, [authors])
+
+	useEffect(() => {
+		getDocs(collectionUsersQuery).then((response) => {
+			const data = response.docs.map((item) => {
+				return { ...item.data(), ID: item.id };
+			})
+			dispatch(setGetUsers(data))
+		});
+	}, [users])
 
 	return (
 		

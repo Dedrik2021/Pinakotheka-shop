@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import Helmet from 'react-helmet';
+import { collection, getDocs, doc, updateDoc } from 'firebase/firestore/lite';
+import { getAuth } from 'firebase/auth';
 
 import { setBreadCrumbs } from '../../redux/slices/breadCrumbsSlice';
 import BreadCrumbs from '../components/BreadCrumbs';
@@ -13,16 +15,47 @@ import {
 	fetchAuthorInfo,
 	fetchSinglePainting,
 } from '../../redux/slices/authorsInfosSlice';
+import { setAuthorInfoBtn } from '../../redux/slices/filtersSlice';
+import { database } from '../../firebase/firebaseConfig';
 
 const SinglePaintingPage = () => {
 	const {id} = useParams()
+	const auth = getAuth()
 	const dispatch = useDispatch();
 	const [filterBtn, setFilterBtn] = useState(0);
-	const { singlePainting } = useSelector((state) => state.authorsInfos);
-	const {authors, authorsStatus} = useSelector(state => state.authorsInfos)
+	// const [users, setUsers] = useState([])
+	// const [authors, setAuthors] = useState([])
+	// const [oneLike, setOneLike] = useState()
+	// const { singlePainting } = useSelector((state) => state.authorsInfos);
+	const { authorsStatus, modal, authors, singlePainting} = useSelector(state => state.authorsInfos)
+	const {users, foundUser} = useSelector(state => state.user)
 	const authorInfo = authors.find(item => item.id == id)
+	// const foundUser = users !== undefined && users.find(item => item.emailId == auth.currentUser.email) 
+	// const foundUser = auth.currentUser && users.find(item => item.emailId == auth.currentUser.email)
+	const authorCli = auth.currentUser && authors.find(item => item.emailId == auth.currentUser.email)
+	const userCli = foundUser !== undefined ? foundUser : authorCli
 	const switchLanguageBtn = useSelector((state) => state.filters.switchLanguageBtn);
 	const switchBtn = switchLanguageBtn[0] === 0
+	const authorsCollectionRef = collection(database, 'authors')
+	const usersCollectionRef = collection(database, 'users')
+
+	// useEffect(() => {
+	// 	getDocs(authorsCollectionRef).then((response) => {
+	// 		const data = response.docs.map((item) => {
+	// 			return { ...item.data(), ID: item.id };
+	// 		})
+	// 		setAuthors(data)
+	// 	});
+	// }, [authors])
+
+	// useEffect(() => {
+	// 	getDocs(usersCollectionRef).then((response) => {
+	// 		const data = response.docs.map((item) => {
+	// 			return { ...item.data(), ID: item.id };
+	// 		})
+	// 		setUsers(data)
+	// 	});
+	// }, [users])
 
 	useEffect(() => {
 		dispatch(setBreadCrumbs(''));
@@ -47,13 +80,21 @@ const SinglePaintingPage = () => {
 		);
 	}
 
-	const elements = authorInfo.works.map((item) => {
+	const elements = authorInfo && authorInfo.works.map((item) => {
 		if (item.id === singlePainting.painting) {
 			return (
 				<div key={item.id}>
 					<section className="creations-details__info">
 						<h2 className="sr-only">Einzelheiten</h2>
-						<PaintingCartInfo {...item} />
+						<PaintingCartInfo 
+							{...item} 
+							authorInfo={authorInfo} 
+							authorId={id} 
+							dispatch={dispatch}
+							setAuthorInfoBtn={setAuthorInfoBtn}
+							userCli={userCli}
+							userInfo={foundUser}
+							/>
 					</section>
 					<section className="creations-details__tabs">
 						<h2 className="sr-only">Besonderheiten</h2>
@@ -73,7 +114,7 @@ const SinglePaintingPage = () => {
 					{switchBtn ? 'Details das Bildes' : 'Details the picture'}
 				</title>
 			</Helmet>
-			<div className="creations-details">
+			<div className={`creations-details ${modal ? 'active' : ''}`}>
 				<div className="container">
 					<BreadCrumbs />
 

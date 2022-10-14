@@ -18,6 +18,7 @@ import {
 	setAuthorUsers,
 	setUsers,
 	setDataUsers,
+	setFoundUser,
 	setUserChanged,
 	fetchUsersData,
 } from '../../redux/slices/userSlice';
@@ -65,7 +66,15 @@ const Header = () => {
 
 	const auth = getAuth();
 	const user = auth.currentUser;
+	const findUser = user && 
+	(users.find((item) => item.emailId === user.email) || 
+	authors.find(item => item.emailId === user.email))
 
+	useEffect(() => {
+		dispatch(setFoundUser(findUser))
+	}, [findUser])
+
+	// console.log(foundUser);
 	// useEffect(() => {
 	// 	axios
 	// 		.get('https://libretranslate.com/languages', {
@@ -251,10 +260,10 @@ const Header = () => {
 		dispatch(fetchAuthorsData());
 	}, []);
 
-	useEffect(() => {
-		dispatch(setClientUsers(user !== null ? users.find((el) => el.emailId === user.email) : null));
-		dispatch(setAuthorUsers(user !== null ? authors.find((el) => el.emailId === user.email) : null));
-	}, [users, authors]);
+	// useEffect(() => {
+	// 	dispatch(setClientUsers(user !== null ? users.find((el) => el.emailId === user.email) : null));
+	// 	dispatch(setAuthorUsers(user !== null ? authors.find((el) => el.emailId === user.email) : null));
+	// }, [users, authors]);
 
 	useEffect(() => {
 		const checkScroll = () => {
@@ -291,10 +300,9 @@ const Header = () => {
 
 	const changeAuth = () => {
 		if (user !== null) {
-			const findUser = user && 
-				(users.find((item) => item.emailId === user.email) || 
-				authors.find(item => item.emailId === user.email))
-			
+			// const findUser = user && 
+			// 	(users.find((item) => item.emailId === user.email) || 
+			// 	authors.find(item => item.emailId === user.email))
 			const userContent = usersStatus === 'loading' || 
 			usersStatus === 'error' ? (
 				<UserAuthSkeleton />
@@ -306,15 +314,12 @@ const Header = () => {
 					switchBtn={switchBtn}
 				/>
 			);
-			return user ? userContent : <UserAuthSkeleton />;
+			return userContent;
 		} else {
-			// return <ShowModal modal={modal} setModal={setModal} /> ;
-			return user ? <UserAuthSkeleton /> : <ShowModal modal={modal} setModal={setModal} /> ;
-			// return modalContent;
-
+			return usersStatus === 'loading' || 
+			usersStatus === 'error' ? <UserAuthSkeleton /> : <ShowModal modal={modal} setModal={setModal} />;
 		}
 	};
-
 	// const changeModal = () => {
 	// 	if (user !== null || dataAuthor !== null) {
 	// 		return <ReviewModal 
@@ -482,13 +487,15 @@ const UserContent = memo((props) => {
 		},
 		{
 			id: 1,
-			title: switchBtn ? 'Was dir gefällt' : 'What you like',
+			title: switchBtn ? 'Was dir gefällt:' : 'What you like:',
 			path: switchBtn ? '/DieIhnenGefallen' : '/WhatYouLike',
+			countItems: findUser && findUser.likeMe.length
 		},
 		{
 			id: 2,
-			title: switchBtn ? 'Korb' : 'Cart',
+			title: switchBtn ? 'Korb:' : 'Cart:',
 			path: switchBtn ? '/Korb' : '/Cart',
+			countItems: findUser && findUser.cart.length 
 		},
 	];
 
@@ -500,13 +507,15 @@ const UserContent = memo((props) => {
 		},
 		{
 			id: 1,
-			title: switchBtn ? 'Was dir gefällt' : 'What you like',
+			title: switchBtn ? 'Was dir gefällt:' : 'What you like:',
 			path: switchBtn ? '/DieIhnenGefallen' : '/WhatYouLike',
+			countItems: findUser && findUser.likeMe.length
 		},
 		{
 			id: 2,
-			title: switchBtn ? 'Korb' : 'Cart',
+			title: switchBtn ? 'Korb:' : 'Cart:',
 			path: switchBtn ? '/Korb' : '/Cart',
+			countItems: findUser && findUser.cart.length 
 		},
 	];
 
@@ -604,7 +613,7 @@ const UserContent = memo((props) => {
 					</div>
 					<ul className="user__list">
 						{findUser.user === 'author' ? 
-						authorLinks.map(({ id, title, path }) => {
+						authorLinks.map(({ id, title, path, countItems }) => {
 							return (
 								<li className="user__item" key={id}>
 									<Link
@@ -617,12 +626,12 @@ const UserContent = memo((props) => {
 											dispatch(setUserChanged(findUser))
 										)}
 									>
-										{title}
+										{title} <span>{countItems}</span>
 									</Link>
 								</li>
 							);
 						}): 
-						userLinks.map(({ id, title, path }) => {
+						userLinks.map(({ id, title, path, countItems }) => {
 							return (
 								<li className="user__item" key={id}>
 									<Link
@@ -636,7 +645,7 @@ const UserContent = memo((props) => {
 											dispatch(setUserChanged(findUser))
 										)}
 									>
-										{title}
+										{title} <span>{countItems}</span>
 									</Link>
 								</li>
 							);

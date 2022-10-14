@@ -11,7 +11,7 @@ const PaintingDetailsList = memo(({ item, filterBtn, painting }) => {
 
 				<div>
 					{painting.info.map((item, i) => {
-						return <p key={i}>{item.bio}</p>;
+						return <p key={i}>{item}</p>;
 					})}
 				</div>
 			</li>
@@ -23,7 +23,7 @@ const PaintingDetailsList = memo(({ item, filterBtn, painting }) => {
 				<Block blockInfo={item} />
 				<div>
 					{painting.info.map((item, i) => {
-						return <p key={i}>{item.bio}</p>;
+						return <p key={i}>{item}</p>;
 					})}
 				</div>
 			</li>
@@ -35,7 +35,7 @@ const PaintingDetailsList = memo(({ item, filterBtn, painting }) => {
 				<img src={logo} alt="logo" width="180" height="50" />
 				<div>
 					{painting.info.map((item, i) => {
-						return <p key={i}>{item.bio}</p>;
+						return <p key={i}>{item}</p>;
 					})}
 				</div>
 			</li>
@@ -47,7 +47,7 @@ const PaintingDetailsList = memo(({ item, filterBtn, painting }) => {
 				<img src={logo} alt="logo" width="180" height="50" />
 				<div>
 					{painting.info.map((item, i) => {
-						return <p key={i}>{item.bio}</p>;
+						return <p key={i}>{item}</p>;
 					})}
 				</div>
 			</li>

@@ -69,8 +69,8 @@ const authorsInfosSlice = createSlice({
 		setSinglePainting(state, action) {
 			state.singlePainting = action.payload;
 		},
-		setAuthorId(state, action) {
-			state.authorId = action.payload;
+		setGetAuthors(state, action) {
+			state.authors = action.payload;
 		},
 		setUserDropdown(state, action) {
 			state.userDropdown = action.payload;
@@ -80,7 +80,7 @@ const authorsInfosSlice = createSlice({
 		},
 		setModal(state, action) {
 			state.modal = action.payload;
-		},
+		}
 	},
 	extraReducers: {
 
@@ -125,15 +125,12 @@ const authorsInfosSlice = createSlice({
 
 		[fetchAuthorsData.pending]: (state) => {
 			state.authorsStatus = 'loading';
-			state.authors = [];
 		},
-		[fetchAuthorsData.fulfilled]: (state, action) => {
+		[fetchAuthorsData.fulfilled]: (state) => {
 			state.authorsStatus = 'success';
-			state.authors = action.payload;
 		},
 		[fetchAuthorsData.rejected]: (state) => {
 			state.authorsStatus = 'error';
-			state.authors = [];
 		},
 
 		// [changeModal.pending]: (state) => {
@@ -151,5 +148,5 @@ const authorsInfosSlice = createSlice({
 	},
 });
 
-export const { setSinglePainting, setAuthorId, setUserDropdown, setSwitchModal, setModal } = authorsInfosSlice.actions;
+export const { setSinglePainting, setUserDropdown, setGetAuthors, setSwitchModal, setModal } = authorsInfosSlice.actions;
 export default authorsInfosSlice.reducer;

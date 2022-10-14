@@ -8,6 +8,7 @@ import unknownImage from '../../assets/images/content/unknow-photo.png';
 
 const AuthorsBio = memo((props) => {
 	const { authorInfo, setAuthorInfoBtn, setModal, authorsMessages } = props;
+	const {authorsStatus} = useSelector(state => state.authorsInfos)
 	// const authorInfo = useSelector(state => state.authorsInfos.authorInfo)
 	const switchLanguageBtn = useSelector((state) => state.filters.switchLanguageBtn);
 	const switchBtn = switchLanguageBtn[0] === 0;
@@ -37,12 +38,12 @@ const AuthorsBio = memo((props) => {
 							<div className="authors-works__img-box">
 								<img
 									className="authors-works__img"
-									src={authorInfo && authorInfo.image !== '' ? authorInfo.img : unknownImage}
+									src={authorInfo && authorInfo.image !== '' ? authorInfo.img : authorInfo && unknownImage}
 									alt={authorInfo && authorInfo.title}
 								/>
 								<img
 									className="authors-works__img authors-works__img--blur"
-									src={authorInfo && authorInfo.image !== '' ? authorInfo.img : unknownImage}
+									src={authorInfo && authorInfo.image !== '' ? authorInfo.img : authorInfo && unknownImage}
 									alt={authorInfo && authorInfo.title}
 								/>
 							</div>
@@ -55,7 +56,7 @@ const AuthorsBio = memo((props) => {
 							</button>
 						</div>
 						<div className="authors-works__box">
-							<span className="authors-works__name">{authorInfo ? authorInfo.name : ''}</span>
+							<span className="authors-works__name">{authorInfo ? authorInfo.name : '-- -- -- --'}</span>
 							<span className="authors-works__span">
 								<button
 									type="button"
@@ -63,7 +64,7 @@ const AuthorsBio = memo((props) => {
 									onClick={() => dispatch(setAuthorInfoBtn(2))}
 								>
 									<span>{switchBtn ? 'Bewertungen' : 'Review'}:</span>
-									<span>{authorInfo ? authorInfo.feedBack.length : '--'}</span>
+									<span>{authorInfo ? authorInfo.feedBack.length : '-- -- -- --'}</span>
 								</button>
 							</span>
 							<span className="authors-works__span">
@@ -73,27 +74,27 @@ const AuthorsBio = memo((props) => {
 									onClick={() => dispatch(setAuthorInfoBtn(1))}
 								>
 									<span>{switchBtn ? 'Gesamtarbeiten' : 'Overall works'}:</span>
-									<span>{authorInfo ? authorInfo.works.length : '--'}</span>
+									<span>{authorInfo ? authorInfo.works.length : '-- -- --'}</span>
 								</button>
 							</span>
 							<span>
 								<a className="authors-works__link" href={`tel: ${phone}`}>
-									{authorInfo ? authorInfo.tel : ''}
+									{authorInfo ? authorInfo.tel : '-- -- -- --'}
 								</a>
 							</span>
 							<span>
 								<a className="authors-works__link" target={'_blank'} href="www.facebook.com">
-									{authorInfo ? authorInfo.facebook : ''}
+									{authorInfo ? authorInfo.facebook : '-- -- --'}
 								</a>
 							</span>
 							<span>
 								<a className="authors-works__link" target={'_blank'} href="www.instagram.com">
-									{authorInfo ? authorInfo.insta : ''}
+									{authorInfo ? authorInfo.insta : '-- -- -- -- '}
 								</a>
 							</span>
 							<span>
 								<a className="authors-works__link" href="mailTo: TommaAbts@gmail.com">
-									{authorInfo ? authorInfo.mail : ''}
+									{authorInfo ? authorInfo.mail : '-- -- -- --'}
 								</a>
 							</span>
 						</div>
@@ -105,7 +106,7 @@ const AuthorsBio = memo((props) => {
 								authorInfo.quote && authorInfo.name}
 							</cite>
 						</blockquote>
-						{authorInfo && authorInfo.info.length !== 0 && (
+						{authorInfo && authorInfo.info.length > 0 && (
 							<h2 className="title">
 								{switchBtn ? 'Biographie' : 'Biography'}
 							</h2>

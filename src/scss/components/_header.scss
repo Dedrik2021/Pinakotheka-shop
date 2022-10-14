@@ -225,6 +225,7 @@
             &>.menu__form--btn {
                 display: block;
             }
+
             &>.keyboard {
                 opacity: 1;
                 visibility: visible;
@@ -253,7 +254,7 @@
         }
     }
 
-    
+
 
     &__search {
         max-width: 93%;
@@ -512,7 +513,15 @@
                     visibility: visible;
                 }
 
+                .user__link,
+                &__name,
                 &__title {
+                    font-family: $journalism;
+                    font-weight: 900;
+                }
+
+                &__title {
+                    font-size: 22px;
                     margin-bottom: 20px;
                     text-align: center;
                     background-color: $gray-300;
@@ -521,6 +530,7 @@
                 }
 
                 &__name {
+                    font-size: 25px !important;
                     padding-top: 10px;
                     color: #CE0020;
                     font-size: 20px;
@@ -547,6 +557,7 @@
 
             &__link {
                 border-bottom: 2px solid transparent;
+                font-size: 25px;
                 transition: border-bottom-color 0.3s ease-in-out, color 0.3s ease-in-out;
 
                 &:hover {
@@ -555,6 +566,14 @@
 
                 &.active {
                     border-bottom-color: $red;
+                }
+
+                span {
+                    padding-left: 10px;
+                    color: $red;
+                    font-family: $journalism;
+                    font-size: 25px;
+                    font-weight: 900;
                 }
             }
 

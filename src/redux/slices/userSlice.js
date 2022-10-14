@@ -3,7 +3,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 // import { ref, onValue, orderByKey, query } from "firebase/database";
 import { collection, getDocs, query, orderBy } from "firebase/firestore/lite";
 
-import { realDb, database } from "../../firebase/firebaseConfig";
+import { database } from "../../firebase/firebaseConfig";
 const auth = getAuth()
 
 export const fetchUsersData = createAsyncThunk('usersData/fetchUsersStatus', async () => {
@@ -60,7 +60,7 @@ const initialState = {
     authorUsers: [],
     dataUsers: [],
     userChanged: {},
-    usersStatus: 'loading'
+    usersStatus: 'loading',
 }
 
 const userSlice = createSlice({
@@ -90,26 +90,29 @@ const userSlice = createSlice({
         },
         setUserChanged(state, action) {
             state.userChanged = action.payload
+        },
+        setGetUsers(state, action) {
+            state.users = action.payload
         }
     },
     extraReducers: {
 		[fetchUsersData.pending]: (state) => {
 			state.usersStatus = 'loading';
-			state.users = [];
+			// state.users = [];
 		},
 		[fetchUsersData.fulfilled]: (state, action) => {
 			state.usersStatus = 'success';
-			state.users = action.payload;
+			// state.users = action.payload;
 		},
 		[fetchUsersData.rejected]: (state) => {
 			state.usersStatus = 'error';
-			state.users = [];
+			// state.users = [];
 		},
 	},
 })
 
 export const {
-    setUserInfoBtn, setFoundUser, setUserData, setUserImg, setAuthorUsers, setClientUsers, setDataUsers, setUserChanged
+    setUserInfoBtn, setFoundUser, setUserData, setUserImg, setAuthorUsers, setClientUsers, setDataUsers, setUserChanged, setGetUsers
 } = userSlice.actions
 
 export default userSlice.reducer

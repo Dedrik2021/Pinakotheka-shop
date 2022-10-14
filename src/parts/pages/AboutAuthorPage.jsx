@@ -26,14 +26,15 @@ const AboutAuthorPage = () => {
 	const { id } = useParams();
 	const dispatch = useDispatch();
 	const auth = getAuth();
-	const [authors, setAuthors] = useState([])
+	// const [authors, setAuthors] = useState([])
 	const collectionRef = collection(database, 'authors')
 	const authorInfoBtn = useSelector((state) => state.filters.authorInfoBtn);
-	const { modal } = useSelector((state) => state.authorsInfos);
-	const data = useSelector((state) => state.user.users);
+	const { modal, authors } = useSelector((state) => state.authorsInfos);
+	// const authors = useSelector((state) => state.authorsInfos.authorsAll);
+	const foundUser = useSelector((state) => state.user.foundUser);
 	const { authorsStatus} = useSelector(state => state.authorsInfos)
 	const userId = auth.currentUser;
-	const user = userId !== null ? data.find((item) => item.emailId == userId.email) : null
+	// const foundUser = foundUserId !== null ? data.find((item) => item.emailId == foundUserId.email) : null
 
 	const dataAuthor = userId !== null ? authors.find(item => item.emailId === userId.email) : null
 	const switchLanguageBtn = useSelector((state) => state.filters.switchLanguageBtn);
@@ -47,14 +48,14 @@ const AboutAuthorPage = () => {
 		{ id: 3, title: 'Chat' },
 	];
 
-	useEffect(() => {
-		getDocs(collectionRef).then((response) => {
-			const data = response.docs.map((item) => {
-				return { ...item.data(), ID: item.id };
-			})
-			setAuthors(data)
-		});
-	}, [authors])
+	// useEffect(() => {
+	// 	getDocs(collectionRef).then((response) => {
+	// 		const data = response.docs.map((item) => {
+	// 			return { ...item.data(), ID: item.id };
+	// 		})
+	// 		setAuthors(data)
+	// 	});
+	// }, [authors])
 
 	useEffect(() => {
 		dispatch(setBreadCrumbs(''));
@@ -78,7 +79,7 @@ const AboutAuthorPage = () => {
 				authorInfo={authorInfo}
 				setAuthorInfoBtn={setAuthorInfoBtn}
 				setModal={setModal}
-				user={user}
+				user={foundUser}
 			/>
 		);
 
@@ -93,11 +94,11 @@ const AboutAuthorPage = () => {
 			<AuthorsWorks authorsWorks={authorInfo} />
 		);
 	// const changeModal = () => {
-	// 	if (user != null) {
+	// 	if (foundUser != null) {
 
 	// 		return <ReviewModal 
 	// 			closeModal={setModal} 
-	// 			user={user}
+	// 			foundUser={foundUser}
 	// 			authorInfo={authorInfo}
 
 	// 			authorID={dataAuthor}
@@ -129,7 +130,7 @@ const AboutAuthorPage = () => {
 			case 2:
 				return reviews;
 			case 3:
-				return <AuthorsChat />;
+				return <AuthorsChat authorInfo={authorInfo} />;
 			default:
 				return authorsBio;
 		}
@@ -138,7 +139,7 @@ const AboutAuthorPage = () => {
 	return (
 		<div className="container">
 			<BreadCrumbs />
-			<div className={`about-author ${modal && user == null ? 'active' : ''}`}>
+			<div className={`about-author ${modal && foundUser == null ? 'active' : ''}`}>
 				<div className={`about-author__inner`}>
 					<div className={`about-author__shadow ${modal ? 'active' : ''}`}>
 						{/* {modal && changeModal()}	 */}
