@@ -18,7 +18,8 @@ import {
 	ForgottenPassword,
 	CreateNews,
 	EditNews,
-	ReviewUserInfo
+	ReviewUserInfo,
+	
 } from '../pages/indexPage';
 import { database } from '../../firebase/firebaseConfig';
 import { setGetAuthors } from '../../redux/slices/authorsInfosSlice';
@@ -40,30 +41,39 @@ const App = () => {
 	const collectionUsersQuery = query(collectionUsersrsRef, orderBy('id', 'asc'));
 
 	useEffect(() => {
-		getDocs(collectionAuthorsQuery).then((response) => {
-			const data = response.docs.map((item) => {
-				return { ...item.data(), ID: item.id };
-			})
-			dispatch(setGetAuthors(data))
-		});
+		const getAuthors = async () => {
+			await getDocs(collectionAuthorsQuery).then((response) => {
+				const data = response.docs.map((item) => {
+					return { ...item.data(), ID: item.id };
+				})
+				dispatch(setGetAuthors(data))
+			});
+		}
+		getAuthors()
 	}, [authors])
 
 	useEffect(() => {
-		getDocs(collectionUsersQuery).then((response) => {
-			const data = response.docs.map((item) => {
-				return { ...item.data(), ID: item.id };
-			})
-			dispatch(setGetUsers(data))
-		});
+		const getUsers = async () => {
+			await getDocs(collectionUsersQuery).then((response) => {
+				const data = response.docs.map((item) => {
+					return { ...item.data(), ID: item.id };
+				})
+				dispatch(setGetUsers(data))
+			});
+		}
+		getUsers()
 	}, [users])
 
 	useEffect(() => {
-		getDocs(collectionUserInfoRef).then((response) => {
-			const data = response.docs.map((item) => {
-				return item.data();
-			})
-			dispatch(setShowUserInfo(data))
-		});
+		const showUser = async () => {
+			await getDocs(collectionUserInfoRef).then((response) => {
+				const data = response.docs.map((item) => {
+					return item.data();
+				})
+				dispatch(setShowUserInfo(data))
+			});
+		}
+		showUser()
 	}, [showUserInfo])
 
 	return (

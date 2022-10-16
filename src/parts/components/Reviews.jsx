@@ -182,9 +182,9 @@ const Reviews = memo(({ authorInfo }) => {
 									>
 										{switchBtn ? 'Feedback hinterlassen' : 'leave a review'}
 									</button>
-									<a className="error-404__link more-link" href="/">
+									<Link className="error-404__link more-link" to="/">
 										{switchBtn ? 'Zurück zur Hauptseite' : 'Back to the HOME'}
-									</a>
+									</Link>
 								</div>
 							</div>
 						</div>
