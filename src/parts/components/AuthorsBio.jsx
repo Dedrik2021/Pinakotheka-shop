@@ -56,7 +56,9 @@ const AuthorsBio = memo((props) => {
 							</button>
 						</div>
 						<div className="authors-works__box">
-							<span className="authors-works__name">{authorInfo ? authorInfo.name : '-- -- -- --'}</span>
+							<span className="authors-works__name">
+								{/* <span>Name:</span> */}
+							{authorInfo ? authorInfo.name : '-- -- -- --'}</span>
 							<span className="authors-works__span">
 								<button
 									type="button"
@@ -79,6 +81,7 @@ const AuthorsBio = memo((props) => {
 							</span>
 							<span>
 								<a className="authors-works__link" href={`tel: ${phone}`}>
+									<span>Tel:</span>
 									{authorInfo ? authorInfo.tel : '-- -- -- --'}
 								</a>
 							</span>
@@ -94,6 +97,13 @@ const AuthorsBio = memo((props) => {
 							</span>
 							<span>
 								<a className="authors-works__link" href="mailTo: TommaAbts@gmail.com">
+									<span>Email:</span>
+									{authorInfo ? authorInfo.mail : '-- -- -- --'}
+								</a>
+							</span>
+							<span>
+								<a className="authors-works__link" href="mailTo: TommaAbts@gmail.com">
+									<span>Facebook:</span>
 									{authorInfo ? authorInfo.mail : '-- -- -- --'}
 								</a>
 							</span>

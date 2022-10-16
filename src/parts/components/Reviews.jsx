@@ -1,47 +1,68 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useState } from 'react';
 import Helmet from 'react-helmet';
-// import { ref, set, get, child, update, remove, push, onValue } from 'firebase/database';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { doc, arrayRemove, updateDoc } from 'firebase/firestore/lite';
+import { doc, arrayRemove, updateDoc, arrayUnion } from 'firebase/firestore/lite';
+import { getAuth } from 'firebase/auth';
 
 import logo from '../../assets/images/content/logo.svg';
 import background from '../../assets/images/content/error-404.png';
 import backgroundBlur from '../../assets/images/content/error-404.png';
-import { database, realDb } from '../../firebase/firebaseConfig';
+import { database } from '../../firebase/firebaseConfig';
 import { setAuthorInfoBtn } from '../../redux/slices/filtersSlice';
-import { setUserChanged } from '../../redux/slices/userSlice';
+import { setShowUserInfo } from '../../redux/slices/userSlice';
 import CaretIcon from '../../assets/images/sprite/caret-icon.svg';
+import { setModal } from '../../redux/slices/authorsInfosSlice';
 
-const Reviews = memo(({ reviews, changeModal, authorsMessages, id, authorInfo }) => {
+const Reviews = memo(({ authorInfo }) => {
+	const auth = getAuth();
 	const dispatch = useDispatch();
 	const switchLanguageBtn = useSelector((state) => state.filters.switchLanguageBtn);
 	const switchBtn = switchLanguageBtn[0] === 0;
 	const [deleteItem, setDeleteItem] = useState(false);
 	const [itemId, setItemId] = useState();
 
-	const onDelete = (id) => {
-		const collectionReff = doc(database, 'authors', authorInfo.ID)
-		const docToDelete = authorInfo.feedBack.find(item => item.id == id)
+	const onUserLink = (userInfo) => {
+		const docToUpdate = doc(database, 'showUserInfo', 'IezwG0ZPPzWGDNIxTiUI');
+		updateDoc(docToUpdate, {
+			user: userInfo,
+		}).catch((err) => {
+			alert(err.message);
+		});
+	};
 
-		updateDoc(collectionReff, {
-			feedBack: arrayRemove(docToDelete)
-		})
-	}
+	const onDeleteMessage = (id) => {
+		const collectionReff = doc(database, 'authors', authorInfo.ID);
+		const docToDelete = authorInfo.feedBack.find((item) => item.id == id);
+
+		if (window.confirm('Do you want to delite this message? Are you sure?')) {
+			updateDoc(collectionReff, {
+				feedBack: arrayRemove(docToDelete),
+			});
+		}
+	};
 
 	const message = () => {
 		if (authorInfo !== null) {
 			return (
 				authorInfo &&
-				authorInfo.feedBack.map((item) => {
+				authorInfo.feedBack.map((item, i) => {
 					return (
-						<li className={`reviews__item`} key={item.id}>
+						<li className={`reviews__item`} key={i}>
 							<article className="user-message">
 								<Link
 									className="user-message__link"
-									to={`${switchBtn ? '/PersonlichesBuro' : '/PersonalOffice'}`}
-									onClick={() => dispatch(setUserChanged(item))}
+									to={`${
+										auth.currentUser !== null
+											? switchBtn
+												? '/PersonlichesBuro'
+												: '/PersonalOffice'
+											: ''
+									}`}
+									onClick={() => (
+										onUserLink(item),
+										auth.currentUser === null && dispatch(setModal(true))
+									)}
 								>
 									<div className="user-message__img-wrapper">
 										<img src={item.avatar} alt={item.name} />
@@ -57,14 +78,27 @@ const Reviews = memo(({ reviews, changeModal, authorsMessages, id, authorInfo })
 										<div className="user-message__box">
 											<Link
 												className="user-message__link user-message__link--name"
-												to={`${switchBtn ? '/PersonlichesBuro' : '/PersonalOffice'}`}
+												to={`${
+													auth.currentUser !== null
+														? switchBtn
+															? '/PersonlichesBuro'
+															: '/PersonalOffice'
+														: ''
+												}`}
+												onClick={() => (
+													onUserLink(item),
+													auth.currentUser === null &&
+														dispatch(setModal(true))
+												)}
 											>
 												<span>{item.name}</span>
 											</Link>
 										</div>
 									</div>
 									<div className="user-message__text">
-										<p className={itemId === item.id ? 'active' : ''}>{item.message}</p>
+										<p className={itemId === item.id ? 'active' : ''}>
+											{item.message}
+										</p>
 									</div>
 									<div className="user-message__wrapper-btns">
 										{item.message.length > 300 && (
@@ -76,14 +110,26 @@ const Reviews = memo(({ reviews, changeModal, authorsMessages, id, authorInfo })
 												onClick={() => setItemId(item.id)}
 											>
 												{itemId === item.id
-													? `${switchBtn ? 'Alle Nachrichten' : 'All message'}`
-													: `${switchBtn ? 'Mehr anzeigen' : 'Show more'}`}
+													? `${
+															switchBtn
+																? 'Alle Nachrichten'
+																: 'All message'
+													  }`
+													: `${
+															switchBtn
+																? 'Mehr anzeigen'
+																: 'Show more'
+													  }`}
 												<svg width="20" height="20">
 													<use href={`${CaretIcon}#caret`}></use>
 												</svg>
 											</button>
 										)}
-										<button className='user-message__delete btn btn--universal' onClick={() => onDelete(item.id)} type={'button'}>
+										<button
+											className="user-message__delete btn btn--universal"
+											onClick={() => onDeleteMessage(item.id)}
+											type={'button'}
+										>
 											Delete
 										</button>
 									</div>
@@ -98,19 +144,36 @@ const Reviews = memo(({ reviews, changeModal, authorsMessages, id, authorInfo })
 				<>
 					<section className="error-404">
 						<div className="container">
-							<div className="error-404__bg" style={{ backgroundImage: `url(${background})` }}>
+							<div
+								className="error-404__bg"
+								style={{
+									backgroundImage: `url(${background})`,
+								}}
+							>
 								<div
 									className="error-404__blur blur"
-									style={{ backgroundImage: `url(${backgroundBlur})` }}
+									style={{
+										backgroundImage: `url(${backgroundBlur})`,
+									}}
 								></div>
 								<span className="error-404__bg-color"></span>
 								<div className="error-404__box">
-									<img className="error-404__logo" width={200} height={50} src={logo} alt="logo" />
+									<img
+										className="error-404__logo"
+										width={200}
+										height={50}
+										src={logo}
+										alt="logo"
+									/>
 									<h1 className="error-404__title title">
 										{switchBtn ? 'Keine Bewertungen' : 'No reviews'}
 									</h1>
 									<div className="error-404__text">
-										<p>{switchBtn ? 'Hinterlassen Sie Ihre Nachricht' : 'Leave your message'}</p>
+										<p>
+											{switchBtn
+												? 'Hinterlassen Sie Ihre Nachricht'
+												: 'Leave your message'}
+										</p>
 									</div>
 									<button
 										className="error-404__btn btn btn--red btn--universal"
@@ -134,11 +197,16 @@ const Reviews = memo(({ reviews, changeModal, authorsMessages, id, authorInfo })
 	return (
 		<>
 			<Helmet>
-				<meta name="description" content={switchBtn ? 'Kunden-Feedback' : 'Customer Feedback'} />
+				<meta
+					name="description"
+					content={switchBtn ? 'Kunden-Feedback' : 'Customer Feedback'}
+				/>
 				<title>{switchBtn ? 'Kunden-Feedback' : 'Customer Feedback'}</title>
 			</Helmet>
 			<section className="authors-works">
-				<span className="sr-only">{switchBtn ? 'Kunden-Feedback' : 'Customer Feedback'}</span>
+				<span className="sr-only">
+					{switchBtn ? 'Kunden-Feedback' : 'Customer Feedback'}
+				</span>
 				<div className="authors-works__content">
 					{/* <h1 className="authors-works__title title">
 						{switchBtn ? 'Kunden-Feedback' : 'Customer Feedback'}

@@ -1,7 +1,7 @@
 import React, { memo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { getAuth } from 'firebase/auth';
 
@@ -10,9 +10,11 @@ import Spinner from '../../spinner/Spinner';
 import EditIcon from '../../assets/images/sprite/edit-icon.svg';
 import UserInfoSkeleton from '../../skeletons/userInfoSkeleton';
 import MessageIcon from '../../assets/images/sprite/message-icon.svg'
+import { setModal } from '../../redux/slices/authorsInfosSlice';
 
 const UserInfo = memo(({ user, setEditBtn }) => {
 	const auth = getAuth();
+	const dispatch = useDispatch()
 	// const fakeUser = user.find(item => item.emailId != auth.currentUser.email)
 	const switchLanguageBtn = useSelector((state) => state.filters.switchLanguageBtn);
 	const switchBtn = switchLanguageBtn[0] === 0;
@@ -38,7 +40,7 @@ const UserInfo = memo(({ user, setEditBtn }) => {
 			);
 		} else {
 			return (
-				<button type="button" className="user-account__btn-edit btn btn--universal ">
+				<button type="button" className="user-account__btn-edit btn btn--universal " onClick={() => dispatch(setModal(true))}>
 					{switchBtn ? 'Schreiben Sie eine Nachricht' : 'Write a message'}
 					<svg width="20" height="20">
 						<use href={`${MessageIcon}#message`}></use>

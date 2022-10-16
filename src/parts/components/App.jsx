@@ -22,18 +22,20 @@ import {
 } from '../pages/indexPage';
 import { database } from '../../firebase/firebaseConfig';
 import { setGetAuthors } from '../../redux/slices/authorsInfosSlice';
-import { setGetUsers } from '../../redux/slices/userSlice';
+import { setGetUsers, setShowUserInfo } from '../../redux/slices/userSlice';
 import '../../scss/style.scss';
 
 const App = () => {
 
 	const dispatch = useDispatch()
 	const authors = useSelector(state => state.authorsInfos.authors)
-	const users = useSelector(state => state.user.users)
+	const {users, showUserInfo} = useSelector(state => state.user)
 	const switchLanguageBtn = useSelector((state) => state.filters.switchLanguageBtn);
 	const switchBtn = switchLanguageBtn[0] === 0
 	const collectionAuthorsRef = collection(database, 'authors')
 	const collectionUsersrsRef = collection(database, 'users')
+	const collectionUserInfoRef = collection(database, 'showUserInfo')
+	
 	const collectionAuthorsQuery = query(collectionAuthorsRef, orderBy('id', 'asc'));
 	const collectionUsersQuery = query(collectionUsersrsRef, orderBy('id', 'asc'));
 
@@ -54,6 +56,15 @@ const App = () => {
 			dispatch(setGetUsers(data))
 		});
 	}, [users])
+
+	useEffect(() => {
+		getDocs(collectionUserInfoRef).then((response) => {
+			const data = response.docs.map((item) => {
+				return item.data();
+			})
+			dispatch(setShowUserInfo(data))
+		});
+	}, [showUserInfo])
 
 	return (
 		

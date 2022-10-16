@@ -19,37 +19,6 @@ export const fetchUsersData = createAsyncThunk('usersData/fetchUsersStatus', asy
 	return usersData
 });
 
-// export const fetchUserData = createAsyncThunk('userData/fetchUser', async () => {
-//     const [data, setData] = useState([])
-
-//     // let data
-//     // onAuthStateChanged(auth, (snapshot) => {
-//     //     if (snapshot) {
-//     //         onValue(ref(realDb, 'usersIdentify'), (snapshot) => {
-//     //             if (snapshot.exists()) {
-//     //                 data = Object.values(snapshot.val());
-//     //             } 
-//     //         });
-//     //     }
-//     // })
-//     // return data
-//     // let data = []
-//     onValue(ref(realDb, 'usersIdentify'), (snapshot) => {
-//         if (snapshot.exists()) {
-//             setData(Object.values(snapshot.val()))
-//         } 
-//     });
-// 	return data
-    
-// // 	// const collectionRef = collection(database, 'news')
-// // 	// const collectionQuery = query(collectionRef, orderBy('id', 'asc'));
-// // 	// const data = await getDocs(collectionQuery);
-// // 	// const newsData = data.docs.map((item) => {
-// // 	// 	return item.data();
-// // 	// });
-// // 	// return newsData
-// });
-
 const initialState = {
     userInfoBtn: 0,
     foundUser: {},
@@ -59,7 +28,7 @@ const initialState = {
     clientUsers: [],
     authorUsers: [],
     dataUsers: [],
-    userChanged: {},
+    showUserInfo: {},
     usersStatus: 'loading',
 }
 
@@ -88,8 +57,8 @@ const userSlice = createSlice({
         setDataUsers(state, action) {
             state.dataUsers = action.payload
         },
-        setUserChanged(state, action) {
-            state.userChanged = action.payload
+        setShowUserInfo(state, action) {
+            state.showUserInfo = action.payload
         },
         setGetUsers(state, action) {
             state.users = action.payload
@@ -112,7 +81,7 @@ const userSlice = createSlice({
 })
 
 export const {
-    setUserInfoBtn, setFoundUser, setUserData, setUserImg, setAuthorUsers, setClientUsers, setDataUsers, setUserChanged, setGetUsers
+    setUserInfoBtn, setFoundUser, setUserData, setUserImg, setAuthorUsers, setClientUsers, setDataUsers, setShowUserInfo, setGetUsers
 } = userSlice.actions
 
 export default userSlice.reducer

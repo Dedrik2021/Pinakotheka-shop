@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { collection, getDocs, query, onSnapshot } from 'firebase/firestore/lite';
+import { collection, getDocs, query, onSnapshot, doc, updateDoc } from 'firebase/firestore/lite';
 import { onAuthStateChanged, getAuth, signOut } from 'firebase/auth';
 import { ref, onValue, update } from 'firebase/database';
 // import axios from 'axios';
@@ -19,7 +19,7 @@ import {
 	setUsers,
 	setDataUsers,
 	setFoundUser,
-	setUserChanged,
+	setShowUserInfo,
 	fetchUsersData,
 } from '../../redux/slices/userSlice';
 import img from '../../assets/images/content/unknow-photo.png';
@@ -35,7 +35,7 @@ const Header = () => {
 	const switchBtn = useSelector((state) => state.filters.switchLanguageBtn);
 	const data = useSelector((state) => state.user.userData);
 	const { clientUsers, authorUsers, users, dataUsers, usersFirestore, usersStatus } = useSelector(
-		(state) => state.user
+		(state) => state.user,
 	);
 	const { modal, authors, authorsStatus } = useSelector((state) => state.authorsInfos);
 	// const userEmail = useSelector(state => state.user.userEmail)
@@ -66,13 +66,14 @@ const Header = () => {
 
 	const auth = getAuth();
 	const user = auth.currentUser;
-	const findUser = user && 
-	(users.find((item) => item.emailId === user.email) || 
-	authors.find(item => item.emailId === user.email))
+	const findUser =
+		user !== null &&
+		(users.find((item) => item.emailId === user.email) ||
+			authors.find((item) => item.emailId === user.email));
 
 	useEffect(() => {
-		dispatch(setFoundUser(findUser))
-	}, [findUser])
+		dispatch(setFoundUser(findUser));
+	}, [findUser]);
 
 	// console.log(foundUser);
 	// useEffect(() => {
@@ -289,41 +290,47 @@ const Header = () => {
 	const logOut = () => {
 		if (
 			window.confirm(
-				switchBtn == 0 ? 'Sie sind sicher, dass Sie gehen wollen ?' : 'You are sure that you want to log out?',
+				switchBtn == 0
+					? 'Sie sind sicher, dass Sie gehen wollen ?'
+					: 'Are you sure that you want to log out?',
 			)
-		)
+		) {
 			signOut(auth);
-		dispatch(setUserDropdown(false));
-		dispatch(setModal(false));
-		navigate('/');
+			dispatch(setUserDropdown(false));
+			dispatch(setModal(false));
+			navigate('/');
+		} 
 	};
 
 	const changeAuth = () => {
 		if (user !== null) {
-			// const findUser = user && 
-			// 	(users.find((item) => item.emailId === user.email) || 
+			// const findUser = user &&
+			// 	(users.find((item) => item.emailId === user.email) ||
 			// 	authors.find(item => item.emailId === user.email))
-			const userContent = usersStatus === 'loading' || 
-			usersStatus === 'error' ? (
-				<UserAuthSkeleton />
-			) : (
-				<UserContent
-					logOut={logOut}
-					findUser={findUser}
-					userDropdownRefs={userDropdownRefs}
-					switchBtn={switchBtn}
-				/>
-			);
+			const userContent =
+				usersStatus === 'loading' || usersStatus === 'error' ? (
+					<UserAuthSkeleton />
+				) : (
+					<UserContent
+						logOut={logOut}
+						findUser={findUser}
+						userDropdownRefs={userDropdownRefs}
+						switchBtn={switchBtn}
+					/>
+				);
 			return userContent;
 		} else {
-			return usersStatus === 'loading' || 
-			usersStatus === 'error' ? <UserAuthSkeleton /> : <ShowModal modal={modal} setModal={setModal} />;
+			return usersStatus === 'loading' || usersStatus === 'error' ? (
+				<UserAuthSkeleton />
+			) : (
+				<ShowModal modal={modal} setModal={setModal} />
+			);
 		}
 	};
 	// const changeModal = () => {
 	// 	if (user !== null || dataAuthor !== null) {
-	// 		return <ReviewModal 
-	// 			closeModal={setModal} 
+	// 		return <ReviewModal
+	// 			closeModal={setModal}
 	// 			user={user}
 	// 			authorInfo={authorInfo}
 	// 			authorID={dataAuthor}
@@ -332,7 +339,7 @@ const Header = () => {
 	// 	} else {
 	// 		return <Modal closeModal={setModal}/>
 	// 	}
-	// } 
+	// }
 
 	const switchLanguage = (id) => {
 		// dispatch(setSwitchLanguageBtn(id))
@@ -357,7 +364,9 @@ const Header = () => {
 						type="button"
 						onClick={() => setBurgerBtn(!burgerBtn)}
 					>
-						<span className="sr-only">{switchBtn == 0 ? 'Öffne das Menü' : 'Open the menu'}</span>
+						<span className="sr-only">
+							{switchBtn == 0 ? 'Öffne das Menü' : 'Open the menu'}
+						</span>
 						<span></span>
 					</button>
 					<div className={`menu__inner ${burgerBtn ? 'active' : ''}`}>
@@ -368,7 +377,9 @@ const Header = () => {
 							onFocus={() => setSearch(true)}
 						>
 							<label className="menu__label" htmlFor="nav-search">
-								<span className="sr-only">{switchBtn == 0 ? 'Suche' : 'Search'}</span>
+								<span className="sr-only">
+									{switchBtn == 0 ? 'Suche' : 'Search'}
+								</span>
 							</label>
 							<input
 								className={`menu__search ${search ? 'active' : ''}`}
@@ -377,14 +388,22 @@ const Header = () => {
 								value={inputValue}
 								onChange={(e) => setInputValue(e.target.value)}
 								name="[nav]search"
-								placeholder={switchBtn == 0 ? 'Tippe um zu suchen' : 'Tap to search'}
+								placeholder={
+									switchBtn == 0 ? 'Tippe um zu suchen' : 'Tap to search'
+								}
 								id="nav-search"
 								required
 							/>
 							{inputValue ? (
-								<button className="menu__form--btn btn" type="button" onClick={() => setInputValue('')}>
+								<button
+									className="menu__form--btn btn"
+									type="button"
+									onClick={() => setInputValue('')}
+								>
 									<span className="sr-only">
-										{switchBtn == 0 ? 'Eingabefeld löschen' : 'Delete input field'}
+										{switchBtn == 0
+											? 'Eingabefeld löschen'
+											: 'Delete input field'}
 									</span>
 									<svg width="20" height="20">
 										<use href={`${CleanInputIcon}#clean-input`}></use>
@@ -395,8 +414,14 @@ const Header = () => {
 									<use href={`${Keyboard}#keyboard`}></use>
 								</svg>
 							)}
-							<button className="menu__btn btn" type="submit" onBlur={() => setSearch(false)}>
-								<span className="sr-only">{switchBtn == 0 ? 'Suche drücken' : 'Press Search'}</span>
+							<button
+								className="menu__btn btn"
+								type="submit"
+								onBlur={() => setSearch(false)}
+							>
+								<span className="sr-only">
+									{switchBtn == 0 ? 'Suche drücken' : 'Press Search'}
+								</span>
 								<svg width="16" height="16">
 									<use href={`${SearchIcon}#search-icon`}></use>
 								</svg>
@@ -404,7 +429,9 @@ const Header = () => {
 						</form>
 						<ul className="menu__list">
 							<li
-								className={`menu__item menu__item--dropdown ${dropdown ? 'active' : ''}`}
+								className={`menu__item menu__item--dropdown ${
+									dropdown ? 'active' : ''
+								}`}
 								onFocus={() => setDropdown(true)}
 								onBlur={() => setDropdown(false)}
 							>
@@ -443,7 +470,9 @@ const Header = () => {
 							{languageBtns.map(({ id, title }) => (
 								<li className="language-switcher__item" key={id}>
 									<button
-										className={`language-switcher__btn btn ${switchBtn[0] === id ? 'active' : ''}`}
+										className={`language-switcher__btn btn ${
+											switchBtn[0] === id ? 'active' : ''
+										}`}
 										type="button"
 										onClick={() => (
 											switchLanguage(id),
@@ -489,13 +518,13 @@ const UserContent = memo((props) => {
 			id: 1,
 			title: switchBtn ? 'Was dir gefällt:' : 'What you like:',
 			path: switchBtn ? '/DieIhnenGefallen' : '/WhatYouLike',
-			countItems: findUser && findUser.likeMe.length
+			countItems: findUser && findUser.likeMe.length,
 		},
 		{
 			id: 2,
 			title: switchBtn ? 'Korb:' : 'Cart:',
 			path: switchBtn ? '/Korb' : '/Cart',
-			countItems: findUser && findUser.cart.length 
+			countItems: findUser && findUser.cart.length,
 		},
 	];
 
@@ -503,19 +532,19 @@ const UserContent = memo((props) => {
 		{
 			id: 0,
 			title: switchBtn ? 'Persönliches Büro' : 'Personal Office',
-			path: `${switchBtn ? '/Autor/' : '/Author/'}${findUser ? findUser.id : null}`
+			path: `${switchBtn ? '/Autor/' : '/Author/'}${findUser ? findUser.id : null}`,
 		},
 		{
 			id: 1,
 			title: switchBtn ? 'Was dir gefällt:' : 'What you like:',
 			path: switchBtn ? '/DieIhnenGefallen' : '/WhatYouLike',
-			countItems: findUser && findUser.likeMe.length
+			countItems: findUser && findUser.likeMe.length,
 		},
 		{
 			id: 2,
 			title: switchBtn ? 'Korb:' : 'Cart:',
 			path: switchBtn ? '/Korb' : '/Cart',
-			countItems: findUser && findUser.cart.length 
+			countItems: findUser && findUser.cart.length,
 		},
 	];
 
@@ -593,10 +622,23 @@ const UserContent = memo((props) => {
 		linkRefs.current[id].focus();
 	};
 
+	const onUserLink = (userInfo) => {
+		const docToUpdate = doc(database, 'showUserInfo', 'IezwG0ZPPzWGDNIxTiUI');
+		updateDoc(docToUpdate, {
+			user: userInfo,
+		}).catch((err) => {
+			alert(err.message);
+		});
+	};
+
 	if (findUser != undefined) {
 		return (
 			<div className={`user`} ref={userDropdownRefs}>
-				<img className={`user__img`} src={findUser.image != '' ? findUser.image : img} alt={findUser.name} />
+				<img
+					className={`user__img`}
+					src={findUser.image != '' ? findUser.image : img}
+					alt={findUser.name}
+				/>
 				<button
 					className={`user__btn btn btn--red ${userDropdown ? 'active' : ''}`}
 					type="button"
@@ -612,46 +654,54 @@ const UserContent = memo((props) => {
 						{getDate()}!<span className="user-dropdown__name">{findUser.name}</span>
 					</div>
 					<ul className="user__list">
-						{findUser.user === 'author' ? 
-						authorLinks.map(({ id, title, path, countItems }) => {
-							return (
-								<li className="user__item" key={id}>
-									<Link
-										ref={(el) => (linkRefs.current[id] = el)}
-										className={`user__link ${activeLink ? 'active' : ''}`}
-										to={path}
-										onClick={() => (
-											dispatch(setUserDropdown(!userDropdown)),
-											focusOnLink(id),
-											dispatch(setUserChanged(findUser))
-										)}
-									>
-										{title} <span>{countItems}</span>
-									</Link>
-								</li>
-							);
-						}): 
-						userLinks.map(({ id, title, path, countItems }) => {
-							return (
-								<li className="user__item" key={id}>
-									<Link
-										ref={(el) => (linkRefs.current[id] = el)}
-										className={`user__link ${activeLink ? 'active' : ''}`}
-										to={path}
-										// state={{ changeUser: findUser }}
-										onClick={() => (
-											dispatch(setUserDropdown(!userDropdown)),
-											focusOnLink(id),
-											dispatch(setUserChanged(findUser))
-										)}
-									>
-										{title} <span>{countItems}</span>
-									</Link>
-								</li>
-							);
-						})}
+						{findUser.user === 'author'
+							? authorLinks.map(({ id, title, path, countItems }) => {
+									return (
+										<li className="user__item" key={id}>
+											<Link
+												ref={(el) => (linkRefs.current[id] = el)}
+												className={`user__link ${
+													activeLink ? 'active' : ''
+												}`}
+												to={path}
+												onClick={() => (
+													dispatch(setUserDropdown(!userDropdown)),
+													focusOnLink(id),
+													onUserLink(findUser)
+												)}
+											>
+												{title} <span>{countItems}</span>
+											</Link>
+										</li>
+									);
+							})
+							: userLinks.map(({ id, title, path, countItems }) => {
+									return (
+										<li className="user__item" key={id}>
+											<Link
+												ref={(el) => (linkRefs.current[id] = el)}
+												className={`user__link ${
+													activeLink ? 'active' : ''
+												}`}
+												to={path}
+												// state={{ changeUser: findUser }}
+												onClick={() => (
+													dispatch(setUserDropdown(!userDropdown)),
+													focusOnLink(id),
+													onUserLink(findUser)
+												)}
+											>
+												{title} <span>{countItems}</span>
+											</Link>
+										</li>
+									);
+							})}
 					</ul>
-					<button className="user__btn user__btn--logout btn btn--red" type="button" onClick={logOut}>
+					<button
+						className="user__btn user__btn--logout btn btn--red"
+						type="button"
+						onClick={logOut}
+					>
 						Log out
 					</button>
 				</div>

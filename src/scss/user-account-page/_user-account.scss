@@ -96,9 +96,8 @@
 
 .user-info {
     width: 800px;
-    padding-top: 30px;
+    padding-top: 70px;
     column-count: 2;
-    margin: auto 0;
 }
 
 .user-info__item {
@@ -203,11 +202,13 @@
     }
 
     &__label {
-        font-size: 12px;
+        font-size: 14px;
         background-color: $white;
         position: absolute;
         top: -7px;
         left: 20px;
+        padding: 0 3px;
+        color: $red;
 
         &--img {
             height: 0;

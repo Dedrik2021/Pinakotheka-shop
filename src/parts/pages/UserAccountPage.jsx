@@ -19,6 +19,7 @@ import UserChat from '../components/UserChat';
 import EditUserInfo from '../components/EditUserInfo';
 import { storage } from '../../firebase/firebaseConfig';
 import { setUserImg } from '../../redux/slices/userSlice';
+import UserInfoSkeleton from '../../skeletons/userInfoSkeleton';
 
 // import { fetchUserData } from '../../redux/slices/userSlice';
 // import { setFoundUser } from '../../redux/slices/userSlice';
@@ -29,20 +30,25 @@ const UserAccount = () => {
 	// const [userImg, setUserImg] = useState([]);
 	const [loadingProgress, setLoadingProgress] = useState(0);
 	const [editBtn, setEditBtn] = useState(false);
-	// const [userChanged, setUserChanged] = useState({});
+	// const [showUserInfo, setshowUserInfo] = useState({});
 	const auth = getAuth();
 	const userId = auth.currentUser;
 	// const location = useLocation();
 	// const changeUser = location.state
 
 	const dispatch = useDispatch();
-	const data = useSelector((state) => state.user.users);
-	const { userInfoBtn, userImg, userChanged } = useSelector((state) => state.user);
+	// const data = useSelector((state) => state.user.users);
+	const { userInfoBtn, userImg, showUserInfo, users, usersStatus } = useSelector((state) => state.user);
+	const authors = useSelector(state => state.authorsInfos.authors)
 
-	const user = data.find((item) => item.emailId === userId.email);
-	const userFromReview = data.find((item) => item.emailId === userChanged.email);
+	// const user = data.find((item) => item.emailId === userId.email);
+	// const userFromReview = data.find((item) => item.emailId === showUserInfo.email);
 	const switchLanguageBtn = useSelector((state) => state.filters.switchLanguageBtn);
 	const switchBtn = switchLanguageBtn[0] === 0;
+
+	const userInfo = showUserInfo[0] !== undefined && users.find(item => item.emailId === showUserInfo[0].user.emailId)
+
+	const user = userInfo !== undefined ? userInfo : authors.find(item => item.emailId === showUserInfo[0].user.emailId)
 
 	const contentBtn = [
 		{ id: 0, title: switchBtn ? 'Persönliche Informationen' : 'Personal Information' },
@@ -61,7 +67,7 @@ const UserAccount = () => {
 	// 	for (const item in changeUser) {
 	// 		if (Object.hasOwnProperty.call(changeUser, item)) {
 	// 			const element = changeUser[item];
-	// 			setUserChanged(element);
+	// 			setshowUserInfo(element);
 	// 		}
 	// 	}
 	// }, [changeUser]);
@@ -107,66 +113,122 @@ const UserAccount = () => {
 
 	// console.log(isPending);
 	// console.log(userFromReview);
-	// console.log(userChanged);
+	// console.log(showUserInfo);
 	// console.log(changeUser);
 
 	const showContent = () => {
-		if (userId != null && user != undefined ? user.emailId === userChanged.email : null) {
-			switch (userInfoBtn) {
-				case 0:
-					return editBtn ? (
-						<EditUserInfo
-							onStorage={onStorage}
-							setDataStorage={setDataStorage}
-							setEditBtn={setEditBtn}
-							userInfo={user}
-							userImg={userImg}
-							loading={loading}
-							loadingProgress={loadingProgress}
-						/>
-					) : (
-						<UserInfo loading={loading} user={user} setEditBtn={setEditBtn} />
-					);
-				case 1:
-					return <UserNotificationSettings />;
-				case 2:
-					return <UserChatArchive />;
-				case 3:
-					return <UserChat />;
-				default:
-					return <UserInfo user={user} />;
+		if (userId !== null) {
+			if (user !== undefined ? user.emailId === showUserInfo.email : null) {
+				switch (userInfoBtn) {
+					case 0:
+						return editBtn ? (
+							<EditUserInfo
+								onStorage={onStorage}
+								setDataStorage={setDataStorage}
+								setEditBtn={setEditBtn}
+								userInfo={user}
+								userImg={userImg}
+								loading={loading}
+								loadingProgress={loadingProgress}
+							/>
+						) : (
+							<UserInfo loading={loading} user={user} setEditBtn={setEditBtn} />
+						);
+					case 1:
+						return <UserNotificationSettings />;
+					case 2:
+						return <UserChatArchive />;
+					case 3:
+						return <UserChat />;
+					default:
+						return <UserInfo user={user} />;
+				}
+			} else {
+				switch (userInfoBtn) {
+					case 0:
+						return editBtn ? (
+							<EditUserInfo
+								onStorage={onStorage}
+								setDataStorage={setDataStorage}
+								setEditBtn={setEditBtn}
+								userInfo={user}
+								userImg={userImg}
+								loading={loading}
+								loadingProgress={loadingProgress}
+							/>
+						) : (
+							<UserInfo loading={loading} user={user} setEditBtn={setEditBtn} />
+						);
+					case 1:
+						return <UserNotificationSettings />;
+					case 2:
+						return <UserChat />;
+					default:
+						return <UserInfo user={user} />;
+				}
 			}
 		} else {
-			switch (userInfoBtn) {
-				case 0:
-					return editBtn ? (
-						<EditUserInfo
-							onStorage={onStorage}
-							setDataStorage={setDataStorage}
-							setEditBtn={setEditBtn}
-							userInfo={user}
-							userImg={userImg}
-							loading={loading}
-							loadingProgress={loadingProgress}
-						/>
-					) : (
-						<UserInfo loading={loading} user={userFromReview} setEditBtn={setEditBtn} />
-					);
-				case 1:
-					return <UserNotificationSettings />;
-				case 2:
-					return <UserChat />;
-				default:
-					return <UserInfo user={userFromReview} />;
-			}
+			return <UserInfoSkeleton/>
 		}
+		
 	};
+	// const showContent = () => {
+	// 	if (userId !== null && user !== undefined ? user.emailId === showUserInfo.email : null) {
+	// 		switch (userInfoBtn) {
+	// 			case 0:
+	// 				return editBtn ? (
+	// 					<EditUserInfo
+	// 						onStorage={onStorage}
+	// 						setDataStorage={setDataStorage}
+	// 						setEditBtn={setEditBtn}
+	// 						userInfo={user}
+	// 						userImg={userImg}
+	// 						loading={loading}
+	// 						loadingProgress={loadingProgress}
+	// 					/>
+	// 				) : (
+	// 					<UserInfo loading={loading} user={user} setEditBtn={setEditBtn} />
+	// 				);
+	// 			case 1:
+	// 				return <UserNotificationSettings />;
+	// 			case 2:
+	// 				return <UserChatArchive />;
+	// 			case 3:
+	// 				return <UserChat />;
+	// 			default:
+	// 				return <UserInfo user={user} />;
+	// 		}
+	// 	} else {
+	// 		switch (userInfoBtn) {
+	// 			case 0:
+	// 				return editBtn ? (
+	// 					<EditUserInfo
+	// 						onStorage={onStorage}
+	// 						setDataStorage={setDataStorage}
+	// 						setEditBtn={setEditBtn}
+	// 						userInfo={user}
+	// 						userImg={userImg}
+	// 						loading={loading}
+	// 						loadingProgress={loadingProgress}
+	// 					/>
+	// 				) : (
+	// 					<UserInfo loading={loading} user={user} setEditBtn={setEditBtn} />
+	// 				);
+	// 			case 1:
+	// 				return <UserNotificationSettings />;
+	// 			case 2:
+	// 				return <UserChat />;
+	// 			default:
+	// 				return <UserInfo user={user} />;
+	// 		}
+	// 	}
+	// };
 
 	const showBtns = () => {
 		if (
 			userId != null && 
 			user != undefined ? 
-			user.emailId === userChanged.email : null
+			user.emailId === showUserInfo.email : null
 			) {
 			return contentBtn.map(({ id, title }) => {
 				return (

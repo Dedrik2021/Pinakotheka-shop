@@ -1,9 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getAuth } from 'firebase/auth';
-import { getDocs, collection } from 'firebase/firestore/lite';
-import { ref, set, get, child, update, remove, push, onValue, orderByChild, query, startAt, limitToFirst } from 'firebase/database';
+import { collection } from 'firebase/firestore/lite';
 
 import BreadCrumbs from '../components/BreadCrumbs';
 import AuthorsWorks from '../components/AuthorsWorks';
@@ -15,30 +14,27 @@ import AuthorsBioSkeleton from '../../skeletons/autorsBioSkeleton';
 import GallerySkeleton from '../../skeletons/gallerySkeleton';
 import Reviews from '../components/Reviews';
 import ReviewsSkeleton from '../../skeletons/reviewsSkeleton';
-import ReviewModal from '../components/ReviewModal';
 import AuthorsChat from '../components/AuthorsChat';
-import Modal from '../components/Modal';
-import { database, realDb } from '../../firebase/firebaseConfig';
-import Spinner from '../../spinner/Spinner';
-import ShowModal from '../components/ShowModal';
+import { database } from '../../firebase/firebaseConfig';
 
 const AboutAuthorPage = () => {
 	const { id } = useParams();
 	const dispatch = useDispatch();
 	const auth = getAuth();
 	// const [authors, setAuthors] = useState([])
-	const collectionRef = collection(database, 'authors')
+	const collectionRef = collection(database, 'authors');
 	const authorInfoBtn = useSelector((state) => state.filters.authorInfoBtn);
 	const { modal, authors } = useSelector((state) => state.authorsInfos);
 	// const authors = useSelector((state) => state.authorsInfos.authorsAll);
 	const foundUser = useSelector((state) => state.user.foundUser);
-	const { authorsStatus} = useSelector(state => state.authorsInfos)
+	const { authorsStatus } = useSelector((state) => state.authorsInfos);
 	const userId = auth.currentUser;
 	// const foundUser = foundUserId !== null ? data.find((item) => item.emailId == foundUserId.email) : null
 
-	const dataAuthor = userId !== null ? authors.find(item => item.emailId === userId.email) : null
+	const dataAuthor =
+		userId !== null ? authors.find((item) => item.emailId === userId.email) : null;
 	const switchLanguageBtn = useSelector((state) => state.filters.switchLanguageBtn);
-	const authorInfo = authors.find(item => item.id == id)
+	const authorInfo = authors.find((item) => item.id == id);
 	const switchBtn = switchLanguageBtn[0] === 0;
 
 	const aboutBtn = [
@@ -59,9 +55,9 @@ const AboutAuthorPage = () => {
 
 	useEffect(() => {
 		dispatch(setBreadCrumbs(''));
-		const pathName = 
-			switchBtn ? window.location.pathname.substring(1, 6) :
-			window.location.pathname.substring(1, 7)
+		const pathName = switchBtn
+			? window.location.pathname.substring(1, 6)
+			: window.location.pathname.substring(1, 7);
 		const name = pathName.split('/');
 		dispatch(setBreadCrumbs(name));
 	}, []);
@@ -96,8 +92,8 @@ const AboutAuthorPage = () => {
 	// const changeModal = () => {
 	// 	if (foundUser != null) {
 
-	// 		return <ReviewModal 
-	// 			closeModal={setModal} 
+	// 		return <ReviewModal
+	// 			closeModal={setModal}
 	// 			foundUser={foundUser}
 	// 			authorInfo={authorInfo}
 
@@ -108,18 +104,18 @@ const AboutAuthorPage = () => {
 	// 		return <Modal closeModal={setModal}/>
 	// 	}
 
-	// } 
+	// }
 
-	const reviews = 
-			authorsStatus === 'loading' || authorsStatus === 'error' ? (
-				<div className="authors-works__content">
-					{[...new Array(10)].map((_, i) => (
-						<ReviewsSkeleton key={i} />
-					))}
-				</div>
-			) : (
-				<Reviews reviews={dataAuthor} id={id} authorInfo={authorInfo} />
-			);
+	const reviews =
+		authorsStatus === 'loading' || authorsStatus === 'error' ? (
+			<div className="authors-works__content">
+				{[...new Array(10)].map((_, i) => (
+					<ReviewsSkeleton key={i} />
+				))}
+			</div>
+		) : (
+			<Reviews authorInfo={authorInfo} />
+		);
 
 	const showContent = () => {
 		switch (authorInfoBtn) {
@@ -141,9 +137,7 @@ const AboutAuthorPage = () => {
 			<BreadCrumbs />
 			<div className={`about-author ${modal && foundUser == null ? 'active' : ''}`}>
 				<div className={`about-author__inner`}>
-					<div className={`about-author__shadow ${modal ? 'active' : ''}`}>
-						{/* {modal && changeModal()}	 */}
-					</div>
+					<div className={`about-author__shadow ${modal ? 'active' : ''}`}></div>
 					<div className="about-author__aside">
 						<ul className="authors-items__list">
 							{aboutBtn.map(({ id, title }) => {
