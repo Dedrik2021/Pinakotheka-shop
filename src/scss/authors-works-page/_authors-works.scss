@@ -5,8 +5,7 @@
     &__img-wrapper {
         position: relative;
         margin-right: 100px;
-        max-width: 279px;
-        width: 100%;
+        max-width: 100%;
     }
 
     &__img {
@@ -130,14 +129,6 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
 
-        span {
-            display: block;
-
-            &:not(:last-child) {
-                margin-bottom: 30px;
-            }
-        }
-
         .authors-works__btn {
             padding: 12px 30px;
             width: 70%;
@@ -150,6 +141,20 @@
                 }
             }
         }
+    }
+
+    &__name,
+    &__span,
+    &__item {
+        display: block;
+
+            &:not(:last-child) {
+                margin-bottom: 30px;
+            }
+    }
+
+    &__item {
+        padding-top: 9px;
     }
 
     &__btn {

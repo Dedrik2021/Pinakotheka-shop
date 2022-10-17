@@ -3,14 +3,22 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getAuth } from 'firebase/auth';
 
 import logo from '../../assets/images/content/logo.svg';
-import RegisterModal from './RegisterModal';
-import SignInModal from './SignInModal';
+import SignInModals from './SignInModals';
 import ReviewModal from './ReviewModal';
 import { setSwitchModal } from '../../redux/slices/authorsInfosSlice';
 
 const Modal = memo(({ closeModal }) => {
 	const auth = getAuth()
 	const dispatch = useDispatch()
+	const [nameInput, setNameInput] = useState('');
+	const [clientInput, setClientInput] = useState('');
+	const [authorInput, setAuthorInput] = useState('');
+	const [telInput, setTelInput] = useState('');
+	const [emailInput, setEmailInput] = useState('');
+	const [passwordInput, setPasswordInput] = useState('');
+	const [doublePasswordInput, setDoublePasswordInput] = useState('');
+	const [checkedAuthor, setCheckedAuthor] = useState(false);
+	const [checkedClient, setCheckedClient] = useState(false);
 	const switchModal = useSelector(state => state.authorsInfos.switchModal)
 	const switchLanguageBtn = useSelector((state) => state.filters.switchLanguageBtn);
 
@@ -18,17 +26,6 @@ const Modal = memo(({ closeModal }) => {
 		{ id: 0, title: switchLanguageBtn[0] === 0 ? 'Eingang' : 'Entrance' },
 		{ id: 1, title: switchLanguageBtn[0] === 0 ? 'Anmeldung' : 'Registration' },
 	];
-
-	const switchMod = () => {
-		switch (switchModal) {
-			case 0:
-				return <SignInModal closeModal={closeModal} />;
-			case 1:
-				return <RegisterModal closeModal={closeModal} />;
-			default:
-				return <SignInModal closeModal={closeModal}  />;
-		}
-	};
 
 	const switchContent = () => {
 		if (auth.currentUser !== null) {
@@ -53,7 +50,19 @@ const Modal = memo(({ closeModal }) => {
 										className={`btns-tabs__btn btn ${switchModal === id ? 'active' : ''}`}
 										data-content="modal-form__item--enter"
 										type="button"
-										onClick={() => dispatch(setSwitchModal(id))}
+										onClick={() => (
+												dispatch(setSwitchModal(id)),
+												setNameInput(''),
+												setClientInput(''),
+												setAuthorInput(''),
+												setTelInput(''),
+												setEmailInput(''),
+												setPasswordInput(''),
+												setDoublePasswordInput(''),
+												setCheckedAuthor(false),
+												setCheckedClient(false)
+											)
+										}
 									>
 										{title}
 									</button>
@@ -61,7 +70,7 @@ const Modal = memo(({ closeModal }) => {
 							);
 						})}
 					</ul>
-					{switchMod()}
+					<SignInModals closeModal={closeModal} nameInput={nameInput} setNameInput={setNameInput} clientInput={clientInput} setClientInput={setClientInput} authorInput={authorInput} setAuthorInput={setAuthorInput} telInput={telInput} setTelInput={setTelInput} emailInput={emailInput} setEmailInput={setEmailInput} passwordInput={passwordInput} setPasswordInput={setPasswordInput} doublePasswordInput={doublePasswordInput} setDoublePasswordInput={setDoublePasswordInput} checkedAuthor={checkedAuthor} setCheckedAuthor={setCheckedAuthor} checkedClient={checkedClient} setCheckedClient={setCheckedClient} />
 				</div>
 				
 			);

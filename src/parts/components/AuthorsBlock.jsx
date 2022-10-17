@@ -56,7 +56,7 @@ const AuthorsBlock = () => {
 
 										<span className="author-card__portfolio">{item.works.length}</span>
 
-										<span className={`author-card__online ${foundUser !== null && item.emailId === foundUser.emailId ? 'active' : ''}`}></span>
+										<span className={`author-card__online ${foundUser !== undefined && item.emailId === foundUser.emailId ? 'active' : ''}`}></span>
 										
 									</Link>
 

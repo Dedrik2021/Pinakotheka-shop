@@ -119,7 +119,7 @@ const AuthorsBio = memo((props) => {
 										</span>
 									</div>
 									<div className="authors-work__box-wrapper">
-										<span>
+										<span className='authors-works__item'>
 											<a
 												className="authors-works__link"
 												href={`tel: ${phone}`}
@@ -128,7 +128,7 @@ const AuthorsBio = memo((props) => {
 												{authorInfo ? authorInfo.tel : '-- -- -- --'}
 											</a>
 										</span>
-										<span>
+										<span className='authors-works__item'>
 											<a
 												className="authors-works__link"
 												href={`mailto:${authorInfo.mail}`}
@@ -137,7 +137,7 @@ const AuthorsBio = memo((props) => {
 												{authorInfo ? authorInfo.mail : '-- -- -- --'}
 											</a>
 										</span>
-										<span>
+										<span className='authors-works__item'>
 											<a
 												className="authors-works__link"
 												href={authorInfo.facebook}
@@ -148,7 +148,7 @@ const AuthorsBio = memo((props) => {
 													: '-- -- -- --'}
 											</a>
 										</span>
-										<span>
+										<span className='authors-works__item'>
 											<a
 												className="authors-works__link"
 												href={authorInfo.insta}
